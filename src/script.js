@@ -28,6 +28,7 @@ const gradientTexture = textureLoader.load('/textures/gradients/5.jpg')
 dooorColorTexture.colorSpace = THREE.SRGBColorSpace
 matcapTexture.colorSpace = THREE.SRGBColorSpace
 
+gradientTexture.colorSpace = THREE.SRGBColorSpace
 // gradientTexture.minFilter = THREE.NearestFilter
 gradientTexture.magFilter = THREE.NearestFilter
 gradientTexture.generateMipmaps = false

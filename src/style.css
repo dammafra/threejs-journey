@@ -14,3 +14,11 @@ body {
   left: 0;
   outline: none;
 }
+
+canvas {
+  cursor: grab;
+}
+
+canvas:active {
+  cursor: grabbing;
+}

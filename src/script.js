@@ -7,9 +7,16 @@ const gui = new GUI({ width: 300 })
 const debug = {
   selectedTexture: 'door',
   rotationDegrees: 0,
-  reset: () => gui.reset(),
+  reset: () => {
+    controllerValues = {}
+    gui.folders.forEach(folder => folder.reset())
+  },
 }
-gui.add(debug, 'reset').name('Reset GUI')
+
+let controllerValues = {}
+gui.onFinishChange(({ controller, value }) => {
+  controllerValues[controller._name] = value
+})
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -46,6 +53,7 @@ const colorTextureMap = {
 // const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 
 gui.add(debug, 'selectedTexture').options(Object.keys(colorTextureMap)).onChange(loadTexture)
+gui.add(debug, 'reset').name('Reset GUI')
 
 loadTexture(debug.selectedTexture)
 
@@ -109,35 +117,92 @@ function destroyTextureGUI() {
 function setupTextureGUI(texture) {
   // Transform
   const transformFolder = gui.addFolder('Transform')
-  transformFolder.add(texture.repeat, 'x').min(1).max(5).step(1).name('repeat x')
-  transformFolder.add(texture.repeat, 'y').min(1).max(5).step(1).name('repeat y')
-  transformFolder.add(texture, 'wrapS').options({
-    RepeatWrapping: THREE.RepeatWrapping,
-    ClampToEdgeWrapping: THREE.ClampToEdgeWrapping,
-    MirroredRepeatWrapping: THREE.MirroredRepeatWrapping,
-  })
-  transformFolder.add(texture, 'wrapT').options({
-    RepeatWrapping: THREE.RepeatWrapping,
-    ClampToEdgeWrapping: THREE.ClampToEdgeWrapping,
-    MirroredRepeatWrapping: THREE.MirroredRepeatWrapping,
-  })
-  transformFolder.add(texture.offset, 'x').min(-1).max(1).step(0.01).name('offset x')
-  transformFolder.add(texture.offset, 'y').min(-1).max(1).step(0.01).name('offset y')
-  transformFolder.add(debug, 'rotationDegrees').min(0).max(360).step(1).onChange(value => (texture.rotation = THREE.MathUtils.degToRad(value))).setValue(0) //prettier-ignore
-  transformFolder.add(texture.center, 'x').min(0).max(1).step(0.01).name('center x')
-  transformFolder.add(texture.center, 'y').min(0).max(1).step(0.01).name('center y')
+  transformFolder
+    .add(texture.repeat, 'x')
+    .min(1)
+    .max(5)
+    .step(1)
+    .name('repeat x')
+    .setValue(controllerValues['repeat x'] || 1)
+  transformFolder
+    .add(texture.repeat, 'y')
+    .min(1)
+    .max(5)
+    .step(1)
+    .name('repeat y')
+    .setValue(controllerValues['repeat y'] || 1)
+  transformFolder
+    .add(texture, 'wrapS')
+    .options({
+      RepeatWrapping: THREE.RepeatWrapping,
+      ClampToEdgeWrapping: THREE.ClampToEdgeWrapping,
+      MirroredRepeatWrapping: THREE.MirroredRepeatWrapping,
+    })
+    .setValue(controllerValues['wrapS'] || THREE.RepeatWrapping)
+  transformFolder
+    .add(texture, 'wrapT')
+    .options({
+      RepeatWrapping: THREE.RepeatWrapping,
+      ClampToEdgeWrapping: THREE.ClampToEdgeWrapping,
+      MirroredRepeatWrapping: THREE.MirroredRepeatWrapping,
+    })
+    .setValue(controllerValues['wrapT'] || THREE.RepeatWrapping)
+  transformFolder
+    .add(texture.offset, 'x')
+    .min(-1)
+    .max(1)
+    .step(0.01)
+    .name('offset x')
+    .setValue(controllerValues['offset x'] || 0)
+  transformFolder
+    .add(texture.offset, 'y')
+    .min(-1)
+    .max(1)
+    .step(0.01)
+    .name('offset y')
+    .setValue(controllerValues['offset y'] || 0)
+  transformFolder
+    .add(debug, 'rotationDegrees')
+    .min(0)
+    .max(360)
+    .step(1)
+    .onChange(value => (texture.rotation = THREE.MathUtils.degToRad(value)))
+    .setValue(0)
+    .setValue(controllerValues['rotationDegrees'] || 0)
+  transformFolder
+    .add(texture.center, 'x')
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name('center x')
+    .setValue(controllerValues['center x'] || 0.5)
+  transformFolder
+    .add(texture.center, 'y')
+    .min(0)
+    .max(1)
+    .step(0.01)
+    .name('center y')
+    .setValue(controllerValues['center y'] || 0.5)
   transformFolder.onChange(() => (texture.needsUpdate = true))
 
   // Filtering
   const filteringFolder = gui.addFolder('Filtering')
-  filteringFolder.add(texture, 'generateMipmaps')
-  filteringFolder.add(texture, 'minFilter').options({
-    NearestFilter: THREE.NearestFilter,
-    Default: THREE.LinearMipmapLinearFilter,
-  })
-  filteringFolder.add(texture, 'magFilter').options({
-    NearestFilter: THREE.NearestFilter,
-    Default: THREE.LinearFilter,
-  })
+  filteringFolder
+    .add(texture, 'generateMipmaps')
+    .setValue(controllerValues['generateMipmaps'] || false)
+  filteringFolder
+    .add(texture, 'minFilter')
+    .options({
+      NearestFilter: THREE.NearestFilter,
+      Default: THREE.LinearMipmapLinearFilter,
+    })
+    .setValue(controllerValues['minFilter'] || THREE.NearestFilter)
+  filteringFolder
+    .add(texture, 'magFilter')
+    .options({
+      NearestFilter: THREE.NearestFilter,
+      Default: THREE.LinearFilter,
+    })
+    .setValue(controllerValues['magFilter'] || THREE.NearestFilter)
   filteringFolder.onChange(() => (texture.needsUpdate = true))
 }

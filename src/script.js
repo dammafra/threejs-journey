@@ -1,5 +1,14 @@
+import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
+// Debug
+const gui = new GUI({ width: 300 })
+const debug = {
+  rotationDegrees: 0,
+  reset: () => gui.reset(),
+}
+gui.add(debug, 'reset').name('Reset GUI')
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -20,22 +29,45 @@ const textureLoader = new THREE.TextureLoader(loadingManager)
 // const colorTexture = textureLoader.load('/textures/checkerboard-8x8.png')
 const colorTexture = textureLoader.load('/textures/minecraft.png')
 colorTexture.colorSpace = THREE.SRGBColorSpace
-colorTexture.wrapS = THREE.RepeatWrapping
-colorTexture.wrapT = THREE.RepeatWrapping
 
-// colorTexture.repeat.x = 2
-// colorTexture.repeat.y = 3
+const transformFolder = gui.addFolder('Transform')
+transformFolder.add(colorTexture.repeat, 'x').min(1).max(5).step(1).name('repeat x')
+transformFolder.add(colorTexture.repeat, 'y').min(1).max(5).step(1).name('repeat y')
+transformFolder.add(colorTexture, 'wrapS').options({
+  RepeatWrapping: THREE.RepeatWrapping,
+  ClampToEdgeWrapping: THREE.ClampToEdgeWrapping,
+  MirroredRepeatWrapping: THREE.MirroredRepeatWrapping,
+})
+transformFolder.add(colorTexture, 'wrapT').options({
+  RepeatWrapping: THREE.RepeatWrapping,
+  ClampToEdgeWrapping: THREE.ClampToEdgeWrapping,
+  MirroredRepeatWrapping: THREE.MirroredRepeatWrapping,
+})
+transformFolder.add(colorTexture.offset, 'x').min(-1).max(1).step(0.01).name('offset x')
+transformFolder.add(colorTexture.offset, 'y').min(-1).max(1).step(0.01).name('offset y')
+transformFolder
+  .add(debug, 'rotationDegrees')
+  .min(0)
+  .max(360)
+  .step(1)
+  .onChange(value => {
+    colorTexture.rotation = THREE.MathUtils.degToRad(value)
+  })
+transformFolder.add(colorTexture.center, 'x').min(0).max(1).step(0.01).name('center x')
+transformFolder.add(colorTexture.center, 'y').min(0).max(1).step(0.01).name('center y')
 
-// colorTexture.offset.x = 0.5
-// colorTexture.offset.y = 0.5
+const filteringFolder = gui.addFolder('Filtering')
+filteringFolder.add(colorTexture, 'generateMipmaps')
+filteringFolder.add(colorTexture, 'minFilter').options({
+  NearestFilter: THREE.NearestFilter,
+  Default: THREE.LinearMipmapLinearFilter,
+})
+filteringFolder.add(colorTexture, 'magFilter').options({
+  NearestFilter: THREE.NearestFilter,
+  Default: THREE.LinearFilter,
+})
 
-// colorTexture.rotation = Math.PI * 0.25
-// colorTexture.center.x = 0.5
-// colorTexture.center.y = 0.5
-
-colorTexture.generateMipmaps = false
-colorTexture.minFilter = THREE.NearestFilter
-colorTexture.magFilter = THREE.NearestFilter
+gui.onChange(() => (colorTexture.needsUpdate = true))
 
 // const alphaTexture = textureLoader.load('/textures/door/alpha.jpg')
 // const heightTexture = textureLoader.load('/textures/door/height.jpg')
@@ -74,7 +106,7 @@ window.addEventListener('resize', () => {
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 1
 camera.position.y = 1
-camera.position.z = 1
+camera.position.z = 2
 scene.add(camera)
 
 // Controls

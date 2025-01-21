@@ -31,27 +31,14 @@ object3.position.x = 2
 
 scene.add(object1, object2, object3)
 
+const objectsToTest = [object1, object2, object3]
+
 // Raycaster
 const raycaster = new THREE.Raycaster()
 const rayOrigin = new THREE.Vector3(-3, 0, 0)
 const rayDirection = new THREE.Vector3(1, 0, 0)
 // rayDirection.normalize()
 raycaster.set(rayOrigin, rayDirection)
-
-/**
- * Three.js updates the objects’ coordinates (called matrices) right before rendering them.
- * Since we do the ray casting immediately, none of the objects have been rendered.
- * You can fix that by updating the matrices manually before ray casting.
- */
-object1.updateMatrixWorld()
-object2.updateMatrixWorld()
-object3.updateMatrixWorld()
-
-const intersect = raycaster.intersectObject(object2)
-console.log(intersect)
-
-const intersects = raycaster.intersectObjects([object1, object2, object3])
-console.log(intersects)
 
 // Sizes
 const sizes = {
@@ -94,6 +81,18 @@ const clock = new THREE.Clock()
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
+
+  // Animate objects
+  object1.position.y = Math.sin(elapsedTime * 0.3) * 1.5
+  object2.position.y = Math.sin(elapsedTime * 0.8) * 1.5
+  object3.position.y = Math.sin(elapsedTime * 1.4) * 1.5
+
+  // Test for intersects
+  const intersects = raycaster.intersectObjects(objectsToTest)
+  // console.log(intersects.length)
+
+  objectsToTest.forEach(object => object.material.color.set('#ff0000'))
+  intersects.forEach(intersect => intersect.object.material.color.set('#0000ff')) //prettier-ignore
 
   // Update controls
   controls.update()

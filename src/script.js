@@ -77,10 +77,11 @@ scene.add(directionalLight)
 
 // Sizes
 const container = document.querySelector('.webgl-container')
+const bounding = container.getBoundingClientRect()
 
 const sizes = {
-  width: container.getBoundingClientRect().width,
-  height: container.getBoundingClientRect().height,
+  width: bounding.width,
+  height: bounding.height,
 }
 
 // Camera
@@ -104,8 +105,9 @@ optimizeRender()
 
 window.addEventListener('resize', () => {
   // Update sizes
-  sizes.width = container.getBoundingClientRect().width
-  sizes.height = container.getBoundingClientRect().height
+  const bounding = container.getBoundingClientRect()
+  sizes.width = bounding.width
+  sizes.height = bounding.height
 
   optimizeRender()
 

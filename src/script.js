@@ -4,7 +4,6 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { EXRLoader } from 'three/addons/loaders/EXRLoader.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
-import { GroundedSkybox } from 'three/addons/objects/GroundedSkybox.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 // Loaders
@@ -82,22 +81,52 @@ gui.add(scene.environmentRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name
 // scene.environment = environmentMap
 
 // Ground projected skybox
-rgbeLoader.load('./environmentMaps/2/2k.hdr', environmentMap => {
-  environmentMap.mapping = THREE.EquirectangularReflectionMapping
-  scene.environment = environmentMap
+// rgbeLoader.load('./environmentMaps/2/2k.hdr', environmentMap => {
+//   environmentMap.mapping = THREE.EquirectangularReflectionMapping
+//   scene.environment = environmentMap
 
-  // Skybox
-  const skybox = new GroundedSkybox(environmentMap, 15, 70)
-  // skybox.material.wireframe = true
-  skybox.position.y = 15
-  scene.add(skybox)
+//   // Skybox
+//   const skybox = new GroundedSkybox(environmentMap, 15, 70)
+//   // skybox.material.wireframe = true
+//   skybox.position.y = 15
+//   scene.add(skybox)
+// })
+
+// Real time environment map
+const environmentMap = textureLoader.load('./environmentMaps/blockadesLabsSkybox/interior_views_cozy_wood_cabin_with_cauldron_and_p.jpg') //prettier-ignore
+environmentMap.mapping = THREE.EquirectangularReflectionMapping
+environmentMap.colorSpace = THREE.SRGBColorSpace
+scene.background = environmentMap
+
+const holyDonut = new THREE.Mesh(
+  new THREE.TorusGeometry(8, 0.5),
+  new THREE.MeshBasicMaterial({ color: new THREE.Color(10, 4, 2) }),
+)
+holyDonut.position.y = 3.5
+holyDonut.layers.enable(1)
+scene.add(holyDonut)
+
+const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256, {
+  /**
+   * The type of values that will be stored.
+   *
+   * Default is for LDR, we need values that can go higher in order to have an effect HDR like:
+   * use THREE.FloatType (32 bits) or THREE.HalfFloatType (16 bits, better for performance, half size)
+   *
+   * This enables us to use values bigger than 1 for the RGB parameters in THREE.Color constructor in the material above
+   */
+  type: THREE.HalfFloatType,
 })
+scene.environment = cubeRenderTarget.texture
+
+const cubeCamera = new THREE.CubeCamera(0.1, 100, cubeRenderTarget)
+cubeCamera.layers.set(1)
 
 // Objects
 const torusKnot = new THREE.Mesh(
   new THREE.TorusKnotGeometry(1, 0.4, 100, 16),
   new THREE.MeshStandardMaterial({
-    roughness: 0.3,
+    roughness: 0,
     metalness: 1,
     color: 0xaaaaaa,
     // envMap: environmentMap,
@@ -155,6 +184,12 @@ const clock = new THREE.Clock()
 const tick = () => {
   // Time
   const elapsedTime = clock.getElapsedTime()
+
+  // Real time environment map
+  if (holyDonut) {
+    holyDonut.rotation.x = Math.sin(elapsedTime) * 2
+    cubeCamera.update(renderer, scene)
+  }
 
   // Update controls
   controls.update()

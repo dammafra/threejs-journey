@@ -30,6 +30,7 @@ const parameters = {
   radius: 5,
   branches: 3,
   spin: 1,
+  spinFrequency: 0,
   randomness: 0.2,
   randomnessPower: 3,
   concentration: 3,
@@ -63,7 +64,9 @@ const generateGalaxy = () => {
 
     // Position
     const radius = Math.pow(Math.random(), parameters.concentration) * parameters.radius // prettier-ignore
-    const spinAngle = radius * parameters.spin
+    const spinAngle = parameters.spinFrequency
+      ? Math.cos(radius * parameters.spin * parameters.spinFrequency)
+      : radius * parameters.spin
     const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2 // prettier-ignore
 
     const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius // prettier-ignore
@@ -107,6 +110,7 @@ gui.add(parameters, 'size').min(0.001).max(0.1).step(0.001).onFinishChange(gener
 gui.add(parameters, 'radius').min(0.01).max(20).step(0.01).onFinishChange(generateGalaxy) // prettier-ignore
 gui.add(parameters, 'branches').min(2).max(20).step(1).onFinishChange(generateGalaxy) // prettier-ignore
 gui.add(parameters, 'spin').min(-5).max(5).step(0.001).onFinishChange(generateGalaxy) // prettier-ignore
+gui.add(parameters, 'spinFrequency').min(0).max(10).step(1).onFinishChange(generateGalaxy) // prettier-ignore
 gui.add(parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateGalaxy) // prettier-ignore
 gui.add(parameters, 'randomnessPower').min(1).max(10).step(0.001).onFinishChange(generateGalaxy) // prettier-ignore
 gui.add(parameters, 'concentration').min(1).max(10).step(0.001).onFinishChange(generateGalaxy) // prettier-ignore

@@ -11,6 +11,11 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+// Textures
+const textureLoader = new THREE.TextureLoader()
+const bakedShadow = textureLoader.load('/textures/bakedShadow.jpg')
+bakedShadow.colorSpace = THREE.SRGBColorSpace
+
 // Ambient light
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.3)
 scene.add(ambientLight)
@@ -101,19 +106,21 @@ folder4.add(pointLight.position, 'y').min(-5).max(5).step(0.001)
 folder4.add(pointLight.position, 'z').min(-5).max(5).step(0.001)
 folder4.add(pointLightCameraHelper, 'visible').name('helper')
 
-// Materials
-const material = new THREE.MeshStandardMaterial()
-material.roughness = 0.7
-
-const folder5 = gui.addFolder('Material').close()
-folder5.add(material, 'metalness').min(0).max(1).step(0.001)
-folder5.add(material, 'roughness').min(0).max(1).step(0.001)
-
 // Objects
-const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), material)
+const sphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.5, 32, 32),
+  new THREE.MeshStandardMaterial({ roughness: 0.7 }),
+)
 sphere.castShadow = true
 
-const plane = new THREE.Mesh(new THREE.PlaneGeometry(5, 5), material)
+const folder5 = gui.addFolder('Sphere').close()
+folder5.add(sphere.material, 'metalness').min(0).max(1).step(0.001)
+folder5.add(sphere.material, 'roughness').min(0).max(1).step(0.001)
+
+const plane = new THREE.Mesh(
+  new THREE.PlaneGeometry(5, 5),
+  new THREE.MeshBasicMaterial({ map: bakedShadow }),
+)
 plane.rotation.x = -Math.PI * 0.5
 plane.position.y = -0.5
 plane.receiveShadow = true
@@ -157,7 +164,7 @@ controls.enableDamping = true
 const renderer = new THREE.WebGLRenderer({ canvas })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-renderer.shadowMap.enabled = true
+renderer.shadowMap.enabled = false
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 // Animate

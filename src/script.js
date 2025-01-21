@@ -24,11 +24,11 @@ const scene = new THREE.Scene()
 const textureLoader = new THREE.TextureLoader()
 
 // Floor
-const floorAlphaTexture = textureLoader.load('./floor/alpha.jpg')
-const floorColorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.jpg') //prettier-ignore
-const floorARMTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.jpg') //prettier-ignore
-const floorNormalTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.jpg') //prettier-ignore
-const floorDisplacementTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.jpg') //prettier-ignore
+const floorAlphaTexture = textureLoader.load('./floor/alpha.webp')
+const floorColorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.webp') //prettier-ignore
+const floorARMTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.webp') //prettier-ignore
+const floorNormalTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.webp') //prettier-ignore
+const floorDisplacementTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.webp') //prettier-ignore
 
 floorColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -48,16 +48,16 @@ floorNormalTexture.wrapT = THREE.RepeatWrapping
 floorDisplacementTexture.wrapT = THREE.RepeatWrapping
 
 // Wall
-const wallColorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.jpg') //prettier-ignore
-const wallARMTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.jpg') //prettier-ignore
-const wallNormalTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.jpg') //prettier-ignore
+const wallColorTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.webp') //prettier-ignore
+const wallARMTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.webp') //prettier-ignore
+const wallNormalTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.webp') //prettier-ignore
 
 wallColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Roof
-const roofColorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_diff_1k.jpg') //prettier-ignore
-const roofARMTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_arm_1k.jpg') //prettier-ignore
-const roofNormalTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.jpg') //prettier-ignore
+const roofColorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_diff_1k.webp') //prettier-ignore
+const roofARMTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_arm_1k.webp') //prettier-ignore
+const roofNormalTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.webp') //prettier-ignore
 
 roofColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -70,20 +70,20 @@ roofARMTexture.wrapS = THREE.RepeatWrapping
 roofNormalTexture.wrapS = THREE.RepeatWrapping
 
 // Door
-const doorAlphaTexture = textureLoader.load('./door/alpha.jpg')
-const doorColorTexture = textureLoader.load('./door/color.jpg')
-const doorAmbientOcclusionTexture = textureLoader.load('./door/ambientOcclusion.jpg') //prettier-ignore
-const doorRoughnessTexture = textureLoader.load('./door/roughness.jpg')
-const doorMetalnessTexture = textureLoader.load('./door/metalness.jpg')
-const doorNormalTexture = textureLoader.load('./door/normal.jpg')
-const doorDisplacementTexture = textureLoader.load('./door/height.jpg')
+const doorAlphaTexture = textureLoader.load('./door/alpha.webp')
+const doorColorTexture = textureLoader.load('./door/color.webp')
+const doorAmbientOcclusionTexture = textureLoader.load('./door/ambientOcclusion.webp') //prettier-ignore
+const doorRoughnessTexture = textureLoader.load('./door/roughness.webp')
+const doorMetalnessTexture = textureLoader.load('./door/metalness.webp')
+const doorNormalTexture = textureLoader.load('./door/normal.webp')
+const doorDisplacementTexture = textureLoader.load('./door/height.webp')
 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Bush
-const bushColorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.jpg') //prettier-ignore
-const bushARMTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.jpg') //prettier-ignore
-const bushNormalTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.jpg') //prettier-ignore
+const bushColorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.webp') //prettier-ignore
+const bushARMTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.webp') //prettier-ignore
+const bushNormalTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.webp') //prettier-ignore
 
 bushColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -96,9 +96,9 @@ bushARMTexture.wrapS = THREE.RepeatWrapping
 bushNormalTexture.wrapS = THREE.RepeatWrapping
 
 // Grave
-const graveColorTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.jpg') //prettier-ignore
-const graveARMTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.jpg') //prettier-ignore
-const graveNormalTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.jpg') //prettier-ignore
+const graveColorTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.webp') //prettier-ignore
+const graveARMTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.webp') //prettier-ignore
+const graveNormalTexture = textureLoader.load('./grave/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.webp') //prettier-ignore
 
 graveColorTexture.colorSpace = THREE.SRGBColorSpace
 

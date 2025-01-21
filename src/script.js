@@ -34,6 +34,7 @@ const parameters = {
   randomness: 0.2,
   randomnessPower: 3,
   concentration: 3,
+  minSpread: 1,
   rotationSpeed: 0.05,
   insideColor: '#ff6030',
   outsideColor: '#1b3984',
@@ -69,9 +70,9 @@ const generateGalaxy = () => {
       : radius * parameters.spin
     const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2 // prettier-ignore
 
-    const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius // prettier-ignore
-    const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius // prettier-ignore
-    const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius // prettier-ignore
+    const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * (radius + parameters.minSpread) // prettier-ignore
+    const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * (radius + parameters.minSpread) // prettier-ignore
+    const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * (radius + parameters.minSpread) // prettier-ignore
 
     positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX
     positions[i3 + 1] = randomY
@@ -114,6 +115,7 @@ gui.add(parameters, 'spinFrequency').min(0).max(10).step(1).onFinishChange(gener
 gui.add(parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateGalaxy) // prettier-ignore
 gui.add(parameters, 'randomnessPower').min(1).max(10).step(0.001).onFinishChange(generateGalaxy) // prettier-ignore
 gui.add(parameters, 'concentration').min(1).max(10).step(0.001).onFinishChange(generateGalaxy) // prettier-ignore
+gui.add(parameters, 'minSpread').min(0).max(3).step(0.01).onFinishChange(generateGalaxy) // prettier-ignore
 gui.add(parameters, 'rotationSpeed').min(0).max(2).step(0.001)
 gui.addColor(parameters, 'insideColor').onFinishChange(generateGalaxy)
 gui.addColor(parameters, 'outsideColor').onFinishChange(generateGalaxy)

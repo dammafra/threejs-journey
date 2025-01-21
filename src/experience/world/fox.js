@@ -40,6 +40,7 @@ export default class Fox {
     this.animation = {
       mixer,
       actions,
+      last: 'idle',
       current: 'idle',
     }
 
@@ -52,14 +53,14 @@ export default class Fox {
   }
 
   playAnimation = name => {
-    const newAction = this.animation.actions[name]
-    const oldAction = this.animation.actions[this.animation.current]
+    const currentAction = this.animation.actions[name]
+    const lastAction = this.animation.actions[this.animation.last]
 
-    newAction.reset()
-    newAction.play()
-    newAction.crossFadeFrom(oldAction, 1)
+    currentAction.reset()
+    currentAction.play()
+    currentAction.crossFadeFrom(lastAction, 1)
 
-    this.animation.current = name
+    this.animation.last = name
   }
 
   update() {

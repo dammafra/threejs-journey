@@ -5,6 +5,16 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 // Debug
 const gui = new GUI()
+const debug = {
+  createSphere: () =>
+    createSphere(Math.random() * 0.5, {
+      x: (Math.random() - 0.5) * 3,
+      y: 3,
+      z: (Math.random() - 0.5) * 3,
+    }),
+}
+
+gui.add(debug, 'createSphere')
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -50,17 +60,6 @@ const defaultContactMaterial = new CANNON.ContactMaterial(defaultMaterial, defau
 // world.addContactMaterial(defaultContactMaterial)
 world.defaultContactMaterial = defaultContactMaterial
 
-const sphereShape = new CANNON.Sphere(0.5)
-const sphereBody = new CANNON.Body({
-  mass: 1,
-  position: new CANNON.Vec3(0, 3, 0),
-  shape: sphereShape,
-  // material: plasticMaterial,
-  // material: defaultMaterial,
-})
-sphereBody.applyLocalForce(new CANNON.Vec3(150, 0, 0), new CANNON.Vec3(0, 0, 0))
-world.addBody(sphereBody)
-
 const floorShape = new CANNON.Plane()
 const floorBody = new CANNON.Body()
 // floorBody.mass = 0 // default
@@ -70,20 +69,6 @@ floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
 // floorBody.material = concreteMaterial
 // floorBody.material = defaultMaterial
 world.addBody(floorBody)
-
-// Test Sphere
-const sphere = new THREE.Mesh(
-  new THREE.SphereGeometry(0.5, 32, 32),
-  new THREE.MeshStandardMaterial({
-    metalness: 0.3,
-    roughness: 0.4,
-    envMap: environmentMapTexture,
-    envMapIntensity: 0.5,
-  }),
-)
-sphere.castShadow = true
-sphere.position.y = 0.5
-scene.add(sphere)
 
 // Floor
 const floor = new THREE.Mesh(
@@ -153,6 +138,36 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+// Utils
+const objectsToUpdate = []
+const sphereGeometry = new THREE.SphereGeometry(1, 20, 20)
+const sphereMaterial = new THREE.MeshStandardMaterial({
+  metalness: 0.3,
+  roughness: 0.4,
+  envMap: environmentMapTexture,
+})
+
+const createSphere = (radius, position) => {
+  // Threee.js mesh
+  const mesh = new THREE.Mesh(sphereGeometry, sphereMaterial)
+  mesh.scale.setScalar(radius)
+  mesh.position.copy(position)
+  mesh.castShadow = true
+  scene.add(mesh)
+
+  // Cannon.js body
+  const shape = new CANNON.Sphere(radius)
+  const body = new CANNON.Body({
+    mass: 1,
+    shape,
+  })
+  body.position.copy(position)
+  world.addBody(body)
+
+  // Save in objects to update
+  objectsToUpdate.push({ mesh, body })
+}
+
 // Animate
 const clock = new THREE.Clock()
 let oldElapsedTime = 0
@@ -163,10 +178,10 @@ const tick = () => {
   oldElapsedTime = elapsedTime
 
   // Update physics world
-  sphereBody.applyForce(new CANNON.Vec3(-0.5, 0, 0), sphereBody.position)
   world.step(1 / 60, deltaTime, 3)
 
-  sphere.position.copy(sphereBody.position)
+  // Update objects
+  objectsToUpdate.forEach(({ mesh, body }) => mesh.position.copy(body.position))
 
   // Update controls
   controls.update()

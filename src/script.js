@@ -1,5 +1,7 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 // Debug
@@ -10,6 +12,24 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+// Models
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('/draco/')
+
+const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+
+let mixer = null
+
+gltfLoader.load('./models/Fox/glTF/Fox.gltf', gltf => {
+  gltf.scene.scale.setScalar(0.025)
+  scene.add(gltf.scene)
+
+  mixer = new THREE.AnimationMixer(gltf.scene)
+  const action = mixer.clipAction(gltf.animations[0])
+  action.play()
+})
 
 // Floor
 const floor = new THREE.Mesh(
@@ -86,6 +106,9 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime()
   const deltaTime = elapsedTime - previousTime
   previousTime = elapsedTime
+
+  // Update mixer
+  mixer && mixer.update(deltaTime)
 
   // Update controls
   controls.update()

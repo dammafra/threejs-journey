@@ -15,7 +15,7 @@ const scene = new THREE.Scene()
 
 // Textures
 const textureLoader = new THREE.TextureLoader()
-const flagTexture = textureLoader.load('./textures/flag-italy.png')
+const flagTexture = textureLoader.load('./textures/flag-pride.png')
 
 // Geometry
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32)

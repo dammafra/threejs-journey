@@ -25,6 +25,7 @@ const scene = new THREE.Scene()
 // Textures
 const textureLoader = new THREE.TextureLoader()
 const gradientTexture = textureLoader.load('./textures/gradients/3.jpg')
+gradientTexture.colorSpace = THREE.SRGBColorSpace
 gradientTexture.magFilter = THREE.NearestFilter
 
 // Meshes

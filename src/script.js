@@ -6,15 +6,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 // Debug
 const gui = new GUI()
 const debug = {
-  createSphere: () =>
-    createSphere(Math.random() * 0.5, {
-      x: (Math.random() - 0.5) * 3,
-      y: 3,
-      z: (Math.random() - 0.5) * 3,
-    }),
+  createSphere: () => createSphere(Math.random() * 0.5, randomPosition()),
+  createBox: () => createBox(Math.random(), Math.random(), Math.random(), randomPosition()), //prettier-ignore
 }
 
 gui.add(debug, 'createSphere')
+gui.add(debug, 'createBox')
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -140,8 +137,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 // Utils
 const objectsToUpdate = []
+
 const sphereGeometry = new THREE.SphereGeometry(1, 20, 20)
-const sphereMaterial = new THREE.MeshStandardMaterial({
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
+
+const meshesMaterial = new THREE.MeshStandardMaterial({
   metalness: 0.3,
   roughness: 0.4,
   envMap: environmentMapTexture,
@@ -149,7 +149,7 @@ const sphereMaterial = new THREE.MeshStandardMaterial({
 
 const createSphere = (radius, position) => {
   // Threee.js mesh
-  const mesh = new THREE.Mesh(sphereGeometry, sphereMaterial)
+  const mesh = new THREE.Mesh(sphereGeometry, meshesMaterial)
   mesh.scale.setScalar(radius)
   mesh.position.copy(position)
   mesh.castShadow = true
@@ -168,6 +168,33 @@ const createSphere = (radius, position) => {
   objectsToUpdate.push({ mesh, body })
 }
 
+const createBox = (width, height, depth, position) => {
+  // Threee.js mesh
+  const mesh = new THREE.Mesh(boxGeometry, meshesMaterial)
+  mesh.scale.set(width, height, depth)
+  mesh.position.copy(position)
+  mesh.castShadow = true
+  scene.add(mesh)
+
+  // Cannon.js body
+  const shape = new CANNON.Box(new CANNON.Vec3(width * 0.5, height * 0.5, depth * 0.5)) //prettier-ignore
+  const body = new CANNON.Body({
+    mass: 1,
+    shape,
+  })
+  body.position.copy(position)
+  world.addBody(body)
+
+  // Save in objects to update
+  objectsToUpdate.push({ mesh, body })
+}
+
+const randomPosition = () => ({
+  x: (Math.random() - 0.5) * 3,
+  y: 3,
+  z: (Math.random() - 0.5) * 3,
+})
+
 // Animate
 const clock = new THREE.Clock()
 let oldElapsedTime = 0
@@ -181,7 +208,10 @@ const tick = () => {
   world.step(1 / 60, deltaTime, 3)
 
   // Update objects
-  objectsToUpdate.forEach(({ mesh, body }) => mesh.position.copy(body.position))
+  objectsToUpdate.forEach(({ mesh, body }) => {
+    mesh.position.copy(body.position)
+    mesh.quaternion.copy(body.quaternion)
+  })
 
   // Update controls
   controls.update()

@@ -4,7 +4,14 @@ import { Timer } from 'three/addons/misc/Timer.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 // Debug
-const gui = new GUI()
+const gui = new GUI({ width: 300 })
+gui.hide()
+
+window.addEventListener('keydown', event => {
+  if (event.key === 'h') {
+    gui.show(gui._hidden)
+  }
+})
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -254,13 +261,25 @@ for (let i = 0; i < 30; i++) {
 
 // Lights -------------------------------------------------------------------------------
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#ffffff', 0.5)
+const ambientLight = new THREE.AmbientLight('#86cdff', 0.275)
 scene.add(ambientLight)
 
+gui.add(ambientLight, 'intensity').min(0).max(3).step(0.001).name('ambientLightIntensity') //prettier-ignore
+
 // Directional light
-const directionalLight = new THREE.DirectionalLight('#ffffff', 1.5)
+const directionalLight = new THREE.DirectionalLight('#86cdff', 1)
 directionalLight.position.set(3, 2, -8)
 scene.add(directionalLight)
+
+gui.add(directionalLight, 'intensity').min(0).max(3).step(0.001).name('directionalLightIntensity') //prettier-ignore
+
+// Door light
+const doorLight = new THREE.PointLight('#ff7d46', 5)
+doorLight.position.set(0, 2.2, 2.5)
+house.add(doorLight)
+
+gui.add(doorLight, 'intensity').min(0).max(5).step(0.001).name('doorLightIntensity') //prettier-ignore
+
 // --------------------------------------------------------------------------------------
 
 // Sizes

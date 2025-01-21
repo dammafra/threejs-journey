@@ -35,16 +35,20 @@ const objectsToTest = [object1, object2, object3]
 
 // Raycaster
 const raycaster = new THREE.Raycaster()
-const rayOrigin = new THREE.Vector3(-3, 0, 0)
-const rayDirection = new THREE.Vector3(1, 0, 0)
-// rayDirection.normalize()
-raycaster.set(rayOrigin, rayDirection)
 
 // Sizes
 const sizes = {
   width: window.innerWidth,
   height: window.innerHeight,
 }
+
+// Mouse
+const mouse = new THREE.Vector2()
+
+window.addEventListener('mousemove', event => {
+  mouse.x = (event.clientX / sizes.width) * 2 - 1
+  mouse.y = -((event.clientY / sizes.height) * 2 - 1)
+})
 
 window.addEventListener('resize', () => {
   // Update sizes
@@ -87,9 +91,15 @@ const tick = () => {
   object2.position.y = Math.sin(elapsedTime * 0.8) * 1.5
   object3.position.y = Math.sin(elapsedTime * 1.4) * 1.5
 
+  // Cast a ray
+  /**
+   * Avoid casting the ray in the `mousemove` event callback and do it in the `tick` function
+   * because some browsers fires more `mousemove` events than the framerate.
+   */
+  raycaster.setFromCamera(mouse, camera)
+
   // Test for intersects
   const intersects = raycaster.intersectObjects(objectsToTest)
-  // console.log(intersects.length)
 
   objectsToTest.forEach(object => object.material.color.set('#ff0000'))
   intersects.forEach(intersect => intersect.object.material.color.set('#0000ff')) //prettier-ignore

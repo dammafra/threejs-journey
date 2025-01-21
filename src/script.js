@@ -47,7 +47,7 @@ gltfLoader.setDRACOLoader(dracoLoader)
 
 let mixer = null
 
-gltfLoader.load('/models/hamburger.glb', gltf => {
+gltfLoader.load('/models/pizza.glb', gltf => {
   gltf.scene.children.forEach(mesh => {
     mesh.castShadow = true
     mesh.receiveShadow = true
@@ -79,12 +79,12 @@ scene.add(ambientLight)
 const directionalLight = new THREE.DirectionalLight(0xffffff, 3)
 directionalLight.castShadow = true
 directionalLight.shadow.mapSize.set(1024, 1024)
-directionalLight.shadow.camera.far = 20
-directionalLight.shadow.camera.left = -8
-directionalLight.shadow.camera.top = 7
-directionalLight.shadow.camera.right = 8
-directionalLight.shadow.camera.bottom = -7
-directionalLight.position.set(5, 5, 5)
+directionalLight.shadow.camera.far = 25
+directionalLight.shadow.camera.left = -12
+directionalLight.shadow.camera.top = 10
+directionalLight.shadow.camera.right = 12
+directionalLight.shadow.camera.bottom = -10
+directionalLight.position.set(8, 8, 8)
 scene.add(directionalLight)
 
 // Sizes
@@ -109,7 +109,7 @@ window.addEventListener('resize', () => {
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(-8, 4, 8)
+camera.position.set(-8, 4, 15)
 scene.add(camera)
 
 // Controls

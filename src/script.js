@@ -14,7 +14,9 @@ const scene = new THREE.Scene()
 // Textures
 const textureLoader = new THREE.TextureLoader()
 const bakedShadow = textureLoader.load('/textures/bakedShadow.jpg')
+const simpleShadow = textureLoader.load('/textures/simpleShadow.jpg')
 bakedShadow.colorSpace = THREE.SRGBColorSpace
+simpleShadow.colorSpace = THREE.SRGBColorSpace
 
 // Ambient light
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.3)
@@ -106,26 +108,35 @@ folder4.add(pointLight.position, 'y').min(-5).max(5).step(0.001)
 folder4.add(pointLight.position, 'z').min(-5).max(5).step(0.001)
 folder4.add(pointLightCameraHelper, 'visible').name('helper')
 
+// Materials
+const material = new THREE.MeshStandardMaterial()
+material.roughness = 0.7
+
+const folder5 = gui.addFolder('Material').close()
+folder5.add(material, 'metalness').min(0).max(1).step(0.001)
+folder5.add(material, 'roughness').min(0).max(1).step(0.001)
+
 // Objects
-const sphere = new THREE.Mesh(
-  new THREE.SphereGeometry(0.5, 32, 32),
-  new THREE.MeshStandardMaterial({ roughness: 0.7 }),
-)
+const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), material)
 sphere.castShadow = true
 
-const folder5 = gui.addFolder('Sphere').close()
-folder5.add(sphere.material, 'metalness').min(0).max(1).step(0.001)
-folder5.add(sphere.material, 'roughness').min(0).max(1).step(0.001)
-
-const plane = new THREE.Mesh(
-  new THREE.PlaneGeometry(5, 5),
-  new THREE.MeshBasicMaterial({ map: bakedShadow }),
-)
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(5, 5), material)
 plane.rotation.x = -Math.PI * 0.5
 plane.position.y = -0.5
 plane.receiveShadow = true
 
-scene.add(sphere, plane)
+const sphereShadow = new THREE.Mesh(
+  new THREE.PlaneGeometry(1.5, 1.5),
+  new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: true,
+    alphaMap: simpleShadow,
+  }),
+)
+sphereShadow.rotation.x = -Math.PI * 0.5
+sphereShadow.position.y = plane.position.y + 0.01
+
+scene.add(sphere, plane, sphereShadow)
 
 // Sizes
 const sizes = {
@@ -168,10 +179,22 @@ renderer.shadowMap.enabled = false
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 // Animate
-// const clock = new THREE.Clock()
+const clock = new THREE.Clock()
 
 const tick = () => {
-  // const elapsedTime = clock.getElapsedTime()
+  const elapsedTime = clock.getElapsedTime()
+
+  // Update the sphere
+  sphere.position.x = Math.cos(elapsedTime) * 1.5
+  sphere.position.z = Math.sin(elapsedTime) * 1.5
+  sphere.position.y = Math.abs(Math.sin(elapsedTime * 3))
+
+  // Update the sphere shadow
+  sphereShadow.position.x = sphere.position.x
+  sphereShadow.position.z = sphere.position.z
+  sphereShadow.material.opacity = 1 - sphere.position.y * 0.5
+  sphereShadow.scale.x = 1 - sphere.position.y * 0.5
+  sphereShadow.scale.y = 1 - sphere.position.y * 0.5
 
   // Update controls
   controls.update()

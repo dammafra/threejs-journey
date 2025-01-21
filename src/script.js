@@ -4,6 +4,8 @@ import * as THREE from 'three'
 
 //Debug
 const gui = new GUI()
+const debug = window.location.hash === '#debug'
+gui.show(debug)
 
 const parameters = {
   materialColor: '#ffeded',
@@ -41,12 +43,7 @@ const mesh3 = new THREE.Mesh(new THREE.TorusKnotGeometry(0.8, 0.35, 100, 16), ma
 mesh2.position.y = -objectsDistance * 1
 mesh3.position.y = -objectsDistance * 2
 
-mesh1.position.x = 2
-mesh2.position.x = -2
-mesh3.position.x = 2
-
 scene.add(mesh1, mesh2, mesh3)
-
 const sectionMeshes = [mesh1, mesh2, mesh3]
 
 // Particles
@@ -84,10 +81,20 @@ const sizes = {
   height: window.innerHeight,
 }
 
+const updateMeshesPositionX = () => {
+  sectionMeshes.forEach((mesh, index) => {
+    mesh.position.x = sizes.width > sizes.height ? 2 : (1 * index) % 2 ? -1 : 1
+  })
+}
+
+updateMeshesPositionX()
+
 window.addEventListener('resize', () => {
   // Update sizes
   sizes.width = window.innerWidth
   sizes.height = window.innerHeight
+
+  updateMeshesPositionX()
 
   // Update camera
   camera.aspect = sizes.width / sizes.height

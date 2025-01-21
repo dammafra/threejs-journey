@@ -1,5 +1,7 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 // Debug
@@ -10,6 +12,21 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+// Models
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('/draco/')
+
+const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+
+let model = null
+gltfLoader.load('./models/Duck/glTF-Binary/Duck.glb', gltf => {
+  model = gltf.scene
+  model.position.z = 1
+  model.position.y = -1.2
+  scene.add(model)
+})
 
 // Objects
 const object1 = new THREE.Mesh(
@@ -32,6 +49,14 @@ object3.position.x = 2
 scene.add(object1, object2, object3)
 
 const objectsToTest = [object1, object2, object3]
+
+// Lights
+const ambientLight = new THREE.AmbientLight('#ffffff', 0.9)
+scene.add(ambientLight)
+
+const directionalLight = new THREE.DirectionalLight('#ffffff', 2.1)
+directionalLight.position.set(1, 2, 3)
+scene.add(directionalLight)
 
 // Raycaster
 const raycaster = new THREE.Raycaster()
@@ -83,7 +108,7 @@ window.addEventListener('resize', () => {
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.z = 3
+camera.position.z = 5
 scene.add(camera)
 
 // Controls
@@ -131,6 +156,12 @@ const tick = () => {
       console.log('mouse leave')
     }
     currentIntersect = null
+  }
+
+  // Test intersect with model
+  if (model) {
+    const modelIntersects = raycaster.intersectObject(model)
+    modelIntersects.length ? model.scale.setScalar(1.5) : model.scale.setScalar(1)
   }
 
   // Update controls

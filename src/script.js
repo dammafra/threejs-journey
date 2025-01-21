@@ -1,6 +1,7 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
+import { EXRLoader } from 'three/addons/loaders/EXRLoader.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -14,6 +15,7 @@ gltfLoader.setDRACOLoader(dracoLoader)
 
 const cubeTextureLoader = new THREE.CubeTextureLoader()
 const rgbeLoader = new RGBELoader()
+const exrLoader = new EXRLoader()
 
 // Debug
 const gui = new GUI()
@@ -53,7 +55,15 @@ gui.add(scene.environmentRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name
 // scene.environment = environmentMap
 
 // HDR (RGBE) equirectangular
-rgbeLoader.load('./environmentMaps/blender-studio-2k.hdr', environmentMap => {
+// rgbeLoader.load('./environmentMaps/blender-studio-2k.hdr', environmentMap => {
+//   environmentMap.mapping = THREE.EquirectangularReflectionMapping
+
+//   scene.background = environmentMap
+//   scene.environment = environmentMap
+// })
+
+// HDR (EXR) equirectangular
+exrLoader.load('./environmentMaps/nvidiaCanvas-4k.exr', environmentMap => {
   environmentMap.mapping = THREE.EquirectangularReflectionMapping
 
   scene.background = environmentMap

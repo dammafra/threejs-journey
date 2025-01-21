@@ -24,7 +24,7 @@ You can try to
 - [ ] There is a lot of particles at the end of the branches; you can use the same technique we did with the power in order to have more particles at the center than particles on the outside
 - [ ] Test other galaxy shapes
 - [ ] Use a texture for the particles (use less particles to avoid performance issues)
-- [ ] Rotate the galaxy
+- [x] Rotate the galaxy
 - [ ] Create multiple galaxies
 - Etc.
 

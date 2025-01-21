@@ -8,10 +8,23 @@ const gui = new GUI()
 const debug = {
   createSphere: () => createSphere(Math.random() * 0.5, randomPosition()),
   createBox: () => createBox(Math.random(), Math.random(), Math.random(), randomPosition()), //prettier-ignore
+  reset: () => {
+    objectsToUpdate.forEach(({ mesh, body }) => {
+      // Remove body
+      body.removeEventListener('collude', playHitSound)
+      world.removeBody(body)
+
+      // Remove mesh
+      scene.remove(mesh)
+    })
+
+    objectsToUpdate.splice(0, objectsToUpdate.length)
+  },
 }
 
 gui.add(debug, 'createSphere')
 gui.add(debug, 'createBox')
+gui.add(debug, 'reset')
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')

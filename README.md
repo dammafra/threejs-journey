@@ -15,3 +15,11 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Going further
+
+If you want to go even further
+
+- [ ] Play slightly different hit sounds randomnly
+- [ ] Add a very short delay where the sound cannot play again after being played once
+- [ ] In addition to random volume, scale it accordinly to the impact strength

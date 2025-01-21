@@ -1,11 +1,17 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 
 // Loaders
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('./draco/')
+
 const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+
 const rgbeLoader = new RGBELoader()
 const textureLoader = new THREE.TextureLoader()
 
@@ -63,6 +69,7 @@ const floor = new THREE.Mesh(
     normalMap: floorNormalTexture,
   }),
 )
+floor.position.y = 2.5
 floor.rotation.x = -Math.PI * 0.5
 scene.add(floor)
 
@@ -76,7 +83,7 @@ const wall = new THREE.Mesh(
     normalMap: wallNormalTexture,
   }),
 )
-wall.position.y = 4
+wall.position.y = 6.5
 wall.position.z = -4
 scene.add(wall)
 

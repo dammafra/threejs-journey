@@ -16,6 +16,7 @@ gltfLoader.setDRACOLoader(dracoLoader)
 const cubeTextureLoader = new THREE.CubeTextureLoader()
 const rgbeLoader = new RGBELoader()
 const exrLoader = new EXRLoader()
+const textureLoader = new THREE.TextureLoader()
 
 // Debug
 const gui = new GUI()
@@ -63,12 +64,21 @@ gui.add(scene.environmentRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name
 // })
 
 // HDR (EXR) equirectangular
-exrLoader.load('./environmentMaps/nvidiaCanvas-4k.exr', environmentMap => {
-  environmentMap.mapping = THREE.EquirectangularReflectionMapping
+// exrLoader.load('./environmentMaps/nvidiaCanvas-4k.exr', environmentMap => {
+//   environmentMap.mapping = THREE.EquirectangularReflectionMapping
 
-  scene.background = environmentMap
-  scene.environment = environmentMap
-})
+//   scene.background = environmentMap
+//   scene.environment = environmentMap
+// })
+
+// LDR equirectangular
+const environmentMap = textureLoader.load('./environmentMaps/blockadesLabsSkybox/anime_art_style_japan_streets_with_cherry_blossom_.jpg') //prettier-ignore
+
+environmentMap.mapping = THREE.EquirectangularReflectionMapping
+environmentMap.colorSpace = THREE.SRGBColorSpace
+
+scene.background = environmentMap
+scene.environment = environmentMap
 
 // Objects
 const torusKnot = new THREE.Mesh(

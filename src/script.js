@@ -15,6 +15,7 @@ const scene = new THREE.Scene()
 
 // Textures
 const textureLoader = new THREE.TextureLoader()
+const flagTexture = textureLoader.load('./textures/flag-italy.png')
 
 // Geometry
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32)
@@ -32,10 +33,22 @@ geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1))
 const material = new THREE.RawShaderMaterial({
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,
+  side: THREE.DoubleSide,
+  uniforms: {
+    uFrequency: new THREE.Uniform(new THREE.Vector2(10, 5)),
+    uTime: new THREE.Uniform(0),
+    // uColor: new THREE.Uniform(new THREE.Color('orange')),
+    uTexture: new THREE.Uniform(flagTexture),
+  },
 })
+
+gui.add(material.uniforms.uFrequency.value, 'x').min(0).max(20).step(0.001).name('frequencyX') //prettier-ignore
+gui.add(material.uniforms.uFrequency.value, 'y').min(0).max(20).step(0.001).name('frequencyY') //prettier-ignore
+// gui.addColor(material.uniforms.uColor, 'value')
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
+mesh.scale.y = 2 / 3
 scene.add(mesh)
 
 // Sizes
@@ -79,6 +92,9 @@ const clock = new THREE.Clock()
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
+
+  // Update material
+  material.uniforms.uTime.value = elapsedTime
 
   // Update controls
   controls.update()

@@ -318,6 +318,13 @@ scene.add(camera)
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
+controls.screenSpacePanning = false
+
+controls.minDistance = 4
+controls.maxDistance = 60
+
+controls.maxPolarAngle = Math.PI / 2 - 0.05
+
 // Renderer
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,

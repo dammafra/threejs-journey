@@ -68,6 +68,53 @@ const wallNormalTexture = textureLoader.load('./wall/castle_brick_broken_06_1k/c
 
 wallColorTexture.colorSpace = THREE.SRGBColorSpace
 
+wallColorTexture.repeat.set(4, 4)
+wallARMTexture.repeat.set(4, 4)
+wallNormalTexture.repeat.set(4, 4)
+
+wallColorTexture.wrapS = THREE.RepeatWrapping
+wallARMTexture.wrapS = THREE.RepeatWrapping
+wallNormalTexture.wrapS = THREE.RepeatWrapping
+
+wallColorTexture.wrapT = THREE.RepeatWrapping
+wallARMTexture.wrapT = THREE.RepeatWrapping
+wallNormalTexture.wrapT = THREE.RepeatWrapping
+
+// Top
+const topAlphaTexture = textureLoader.load('./top/Glass_Window_004_SD/Glass_Window_004_opacity.jpg') //prettier-ignore
+const topColorTexture = textureLoader.load('./top/Glass_Window_004_SD/Glass_Window_004_basecolor.jpg') //prettier-ignore
+const topAmbientOcclusionTexture = textureLoader.load('./top/Glass_Window_004_SD/Glass_Window_004_ambientOcclusion.jpg') //prettier-ignore
+const topRoughnessTexture = textureLoader.load('./top/Glass_Window_004_SD/Glass_Window_004_roughness.jpg') //prettier-ignore
+const topMetalnessTexture = textureLoader.load('./top/Glass_Window_004_SD/Glass_Window_004_metallic.jpg') //prettier-ignore
+const topNormalTexture = textureLoader.load('./top/Glass_Window_004_SD/Glass_Window_004_normal.jpg') //prettier-ignore
+const topDisplacementTexture = textureLoader.load('./top/Glass_Window_004_SD/Glass_Window_004_height.png') //prettier-ignore
+
+topColorTexture.colorSpace = THREE.SRGBColorSpace
+
+topAlphaTexture.repeat.set(4, 4)
+topColorTexture.repeat.set(4, 4)
+topAmbientOcclusionTexture.repeat.set(4, 4)
+topRoughnessTexture.repeat.set(4, 4)
+topMetalnessTexture.repeat.set(4, 4)
+topNormalTexture.repeat.set(4, 4)
+topDisplacementTexture.repeat.set(4, 4)
+
+topAlphaTexture.wrapS = THREE.RepeatWrapping
+topColorTexture.wrapS = THREE.RepeatWrapping
+topAmbientOcclusionTexture.wrapS = THREE.RepeatWrapping
+topRoughnessTexture.wrapS = THREE.RepeatWrapping
+topRoughnessTexture.wrapS = THREE.RepeatWrapping
+topNormalTexture.wrapS = THREE.RepeatWrapping
+topDisplacementTexture.wrapS = THREE.RepeatWrapping
+
+topAlphaTexture.wrapT = THREE.RepeatWrapping
+topColorTexture.wrapT = THREE.RepeatWrapping
+topAmbientOcclusionTexture.wrapT = THREE.RepeatWrapping
+topRoughnessTexture.wrapT = THREE.RepeatWrapping
+topRoughnessTexture.wrapT = THREE.RepeatWrapping
+topNormalTexture.wrapT = THREE.RepeatWrapping
+topDisplacementTexture.wrapT = THREE.RepeatWrapping
+
 // Roof
 const roofColorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_diff_1k.webp') //prettier-ignore
 const roofARMTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_arm_1k.webp') //prettier-ignore
@@ -111,15 +158,15 @@ pathRoughnessTexture.wrapT = THREE.RepeatWrapping
 pathNormalTexture.wrapT = THREE.RepeatWrapping
 
 // Window
-const windowAlphaTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_opacity.webp') //prettier-ignore
-const windowColorTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_basecolor.webp') //prettier-ignore
-const windowAmbientOcclusionTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_ambientOcclusion.webp') //prettier-ignore
-const windowRoughnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_roughness.webp') //prettier-ignore
-const windowMetalnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_metallic.webp') //prettier-ignore
-const windowNormalTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_normal.webp') //prettier-ignore
-const windowDisplacementTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_height.webp') //prettier-ignore
+// const windowAlphaTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_opacity.webp') //prettier-ignore
+// const windowColorTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_basecolor.webp') //prettier-ignore
+// const windowAmbientOcclusionTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_ambientOcclusion.webp') //prettier-ignore
+// const windowRoughnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_roughness.webp') //prettier-ignore
+// const windowMetalnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_metallic.webp') //prettier-ignore
+// const windowNormalTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_normal.webp') //prettier-ignore
+// const windowDisplacementTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_height.webp') //prettier-ignore
 
-windowColorTexture.colorSpace = THREE.SRGBColorSpace
+// windowColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Bush
 const bushColorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.webp') //prettier-ignore
@@ -171,14 +218,15 @@ scene.add(floor)
 gui.add(floor.material, 'displacementScale').min(0).max(1).step(0.001).name('floorDisplacementScale') //prettier-ignore
 gui.add(floor.material, 'displacementBias').min(-1).max(1).step(0.001).name('floorDisplacementBias') //prettier-ignore
 
-// House
-const house = new THREE.Group()
-scene.add(house)
+// Lighthouse
+const lightHouse = new THREE.Group()
+scene.add(lightHouse)
 
 // Walls
 const walls = new THREE.Mesh(
-  new THREE.BoxGeometry(4, 2.5, 4),
+  new THREE.CylinderGeometry(1, 2, 10, 32, 1),
   new THREE.MeshStandardMaterial({
+    side: THREE.DoubleSide,
     map: wallColorTexture,
     aoMap: wallARMTexture,
     roughness: wallARMTexture,
@@ -186,9 +234,29 @@ const walls = new THREE.Mesh(
     normalMap: wallNormalTexture,
   }),
 )
-// walls.position.y += 1.25
-walls.position.y = 1.25
-house.add(walls)
+walls.position.y = 10 * 0.5
+lightHouse.add(walls)
+
+// Top
+const top = new THREE.Mesh(
+  new THREE.CapsuleGeometry(1.1, 0.5, 100, 100),
+  new THREE.MeshPhysicalMaterial({
+    transparent: true,
+    alphaMap: topAlphaTexture,
+    map: topColorTexture,
+    aoMap: topAmbientOcclusionTexture,
+    roughness: topRoughnessTexture,
+    metalnessMap: topMetalnessTexture,
+    normalMap: topNormalTexture,
+    displacementMap: topDisplacementTexture,
+    displacementScale: 0.03,
+    transmission: 1,
+    thickness: 10,
+    ior: 1.52,
+  }),
+)
+top.position.y = 10.7
+lightHouse.add(top)
 
 // Roof
 // prettier-ignore
@@ -256,16 +324,14 @@ const roof = new THREE.Mesh(
   }),
 )
 
-roof.scale.x = 2.5
-roof.scale.z = 2.5
-roof.scale.y = 1.5
-roof.position.y = 2.25
-
-house.add(roof)
+roof.scale.x = 1.5
+roof.scale.z = 1.5
+roof.position.y = 11.3
+lightHouse.add(roof)
 
 // Door
 const door = new THREE.Mesh(
-  new THREE.PlaneGeometry(2.2, 2.2, 100, 100),
+  new THREE.CylinderGeometry(1.8, 2, 2.2, 32, 100, true, -Math.PI * 0.15, Math.PI * 0.3),
   new THREE.MeshStandardMaterial({
     transparent: true,
     alphaMap: doorAlphaTexture,
@@ -275,13 +341,12 @@ const door = new THREE.Mesh(
     metalnessMap: doorMetalnessTexture,
     normalMap: doorNormalTexture,
     displacementMap: doorDisplacementTexture,
-    displacementScale: 0.15,
-    displacementBias: -0.04,
+    displacementScale: -0.003,
   }),
 )
 door.position.y = 1
-door.position.z = 2 + 0.001
-house.add(door)
+door.position.z = 0.01
+lightHouse.add(door)
 
 gui.add(door.material, 'displacementScale').min(0).max(1).step(0.001).name('doorDisplacementScale') //prettier-ignore
 gui.add(door.material, 'displacementBias').min(-1).max(1).step(0.001).name('doorDisplacementBias') //prettier-ignore
@@ -305,28 +370,28 @@ path.rotation.x = -Math.PI * 0.5
 scene.add(path)
 
 // Window
-const _window = new THREE.Mesh(
-  new THREE.PlaneGeometry(2.2, 2.2, 100, 100),
-  new THREE.MeshStandardMaterial({
-    transparent: false,
-    alphaMap: windowAlphaTexture,
-    map: windowColorTexture,
-    aoMap: windowAmbientOcclusionTexture,
-    roughness: windowRoughnessTexture,
-    metalnessMap: windowMetalnessTexture,
-    normalMap: windowNormalTexture,
-    displacementMap: windowDisplacementTexture,
-    displacementScale: 0.05,
-  }),
-)
-_window.scale.setScalar(0.5)
-_window.rotation.y = Math.PI * 0.5
-_window.position.y = 1.5
-_window.position.x = 2 + 0.001
-house.add(_window)
+// const _window = new THREE.Mesh(
+//   new THREE.PlaneGeometry(2.2, 2.2, 100, 100),
+//   new THREE.MeshStandardMaterial({
+//     transparent: false,
+//     alphaMap: windowAlphaTexture,
+//     map: windowColorTexture,
+//     aoMap: windowAmbientOcclusionTexture,
+//     roughness: windowRoughnessTexture,
+//     metalnessMap: windowMetalnessTexture,
+//     normalMap: windowNormalTexture,
+//     displacementMap: windowDisplacementTexture,
+//     displacementScale: 0.05,
+//   }),
+// )
+// _window.scale.setScalar(0.5)
+// _window.rotation.y = Math.PI * 0.5
+// _window.position.y = 1.5
+// _window.position.x = 2 + 0.001
+// lightHouse.add(_window)
 
-gui.add(_window.material, 'displacementScale').min(0).max(1).step(0.001).name('windowDisplacementScale') //prettier-ignore
-gui.add(_window.material, 'displacementBias').min(-1).max(1).step(0.001).name('windowDisplacementBias') //prettier-ignore
+// gui.add(_window.material, 'displacementScale').min(0).max(1).step(0.001).name('windowDisplacementScale') //prettier-ignore
+// gui.add(_window.material, 'displacementBias').min(-1).max(1).step(0.001).name('windowDisplacementBias') //prettier-ignore
 
 // Bushes
 const bushGeometry = new THREE.SphereGeometry(1, 16, 16)
@@ -359,7 +424,7 @@ bush4.scale.set(0.15, 0.15, 0.15)
 bush4.position.set(-1, 0.05, 2.6)
 bush4.rotation.x = -0.75
 
-house.add(bush1, bush2, bush3, bush4)
+lightHouse.add(bush1, bush2, bush3, bush4)
 
 // Graves
 const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
@@ -411,9 +476,32 @@ gui.add(directionalLight, 'intensity').min(0).max(3).step(0.001).name('direction
 // Door light
 const doorLight = new THREE.PointLight('#ff7d46', 5)
 doorLight.position.set(0, 2.25, 2.3)
-house.add(doorLight)
+lightHouse.add(doorLight)
 
 gui.add(doorLight, 'intensity').min(0).max(5).step(0.001).name('doorLightIntensity') //prettier-ignore
+
+// Beacon light
+const beacon = new THREE.Mesh(
+  new THREE.ConeGeometry(2, 20, 32, 1, true),
+  new THREE.MeshToonMaterial({
+    side: THREE.DoubleSide,
+    color: '#ffffff',
+  }),
+)
+beacon.position.y = 10.5
+beacon.rotation.x = Math.PI * 0.5
+lightHouse.add(beacon)
+
+const beaconLight = new THREE.SpotLight('#ffffff', 1000, 30, 0.2)
+beaconLight.position.y = 10.5
+beaconLight.target = beacon
+scene.add(beaconLight)
+
+const beaconLightHelper = new THREE.SpotLightHelper(beaconLight)
+beaconLightHelper.visible = debug
+scene.add(beaconLightHelper)
+
+gui.add(beaconLightHelper, 'visible').name('beaconLightHelper')
 // --------------------------------------------------------------------------------------
 
 // Ghosts -------------------------------------------------------------------------------
@@ -446,20 +534,35 @@ window.addEventListener('resize', () => {
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 4
-camera.position.y = debug ? 6 : 2
-camera.position.z = debug ? 8 : 5
+camera.position.y = 8
+camera.position.z = 12
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
+controls.autoRotate = !debug
+controls.autoRotateSpeed = 0.5
 controls.enableDamping = true
+controls.target.set(walls.position.x, walls.position.y, walls.position.z)
 
-controls.screenSpacePanning = false
+window.addEventListener('keydown', event => {
+  if (event.key === 'Alt') {
+    controls.screenSpacePanning = true
+  }
+})
 
-controls.minDistance = 4
-controls.maxDistance = 60
+window.addEventListener('keyup', event => {
+  if (event.key === 'Alt') {
+    controls.screenSpacePanning = false
+  }
+})
 
-controls.maxPolarAngle = Math.PI / 2 - 0.05
+if (!debug) {
+  controls.minDistance = 4
+  controls.maxDistance = 60
+
+  controls.maxPolarAngle = Math.PI / 2 - 0.05
+}
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -473,12 +576,14 @@ renderer.shadowMap.enabled = true
 renderer.shadowMap.shadowMap = THREE.PCFSoftShadowMap
 
 directionalLight.castShadow = true
+beaconLight.castShadow = true
 ghost1.castShadow = true
 ghost2.castShadow = true
 ghost3.castShadow = true
 
 walls.castShadow = true
 walls.receiveShadow = true
+top.castShadow = true
 roof.castShadow = true
 floor.receiveShadow = true
 path.receiveShadow = true
@@ -528,7 +633,7 @@ gui.add(sky, 'visible').name('sky')
 
 // Fog ----------------------------------------------------------------------------------
 // scene.fog = new THREE.Fog('#02343F', 1, 13)
-scene.fog = new THREE.FogExp2('#02343F', debug ? 0 : 0.1)
+scene.fog = new THREE.FogExp2('#02343F', debug ? 0 : 0.05)
 gui.add(scene.fog, 'density').min(0).max(1).step(0.001).name('fogDensity')
 // --------------------------------------------------------------------------------------
 
@@ -560,7 +665,14 @@ const tick = () => {
     Math.sin(ghost3Angle) * Math.sin(ghost3Angle * 2.34) * Math.sin(ghost3Angle * 3.45)
   // ------------------------------------------------------------------------------------
 
+  // Door light flicker
   doorLight.intensity = Math.random() > 0.98 ? 5 : Math.sin(elapsedTime) > 0 ? 5 : 0
+
+  // Beacon rotation
+  beacon.position.x = Math.cos(elapsedTime * -0.25) * 10
+  beacon.position.z = Math.sin(elapsedTime * -0.25) * 10
+  beacon.rotation.z = elapsedTime * -0.25 + Math.PI * 0.5
+  beaconLightHelper.update()
 
   // Update controls
   controls.update()

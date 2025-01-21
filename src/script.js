@@ -76,14 +76,16 @@ directionalLight.position.set(1, 1, 0)
 scene.add(directionalLight)
 
 // Sizes
+const container = document.querySelector('.webgl-container')
+
 const sizes = {
-  width: window.innerWidth,
-  height: window.innerHeight,
+  width: container.getBoundingClientRect().width,
+  height: container.getBoundingClientRect().height,
 }
 
 const updateMeshesPositionX = () => {
   sectionMeshes.forEach((mesh, index) => {
-    mesh.position.x = sizes.width > sizes.height ? 2 : (1 * index) % 2 ? -1 : 1
+    mesh.position.x = (sizes.width > sizes.height ? 2 : 1) * (index % 2 ? -1 : 1) //prettier-ignore
   })
 }
 
@@ -91,8 +93,8 @@ updateMeshesPositionX()
 
 window.addEventListener('resize', () => {
   // Update sizes
-  sizes.width = window.innerWidth
-  sizes.height = window.innerHeight
+  sizes.width = container.getBoundingClientRect().width
+  sizes.height = container.getBoundingClientRect().height
 
   updateMeshesPositionX()
 

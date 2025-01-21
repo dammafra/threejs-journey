@@ -72,6 +72,17 @@ const doorDisplacementTexture = textureLoader.load('./door/height.webp')
 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace
 
+// Window
+const windowAlphaTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_opacity.jpg') //prettier-ignore
+const windowColorTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_basecolor.jpg') //prettier-ignore
+const windowAmbientOcclusionTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_ambientOcclusion.jpg') //prettier-ignore
+const windowRoughnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_roughness.jpg') //prettier-ignore
+const windowMetalnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_metallic.jpg') //prettier-ignore
+const windowNormalTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_normal.jpg') //prettier-ignore
+const windowDisplacementTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_height.png') //prettier-ignore
+
+windowColorTexture.colorSpace = THREE.SRGBColorSpace
+
 // Bush
 const bushColorTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.webp') //prettier-ignore
 const bushARMTexture = textureLoader.load('./bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.webp') //prettier-ignore
@@ -236,6 +247,30 @@ house.add(door)
 
 gui.add(door.material, 'displacementScale').min(0).max(1).step(0.001).name('doorDisplacementScale') //prettier-ignore
 gui.add(door.material, 'displacementBias').min(-1).max(1).step(0.001).name('doorDisplacementBias') //prettier-ignore
+
+// Window
+const _window = new THREE.Mesh(
+  new THREE.PlaneGeometry(2.2, 2.2, 100, 100),
+  new THREE.MeshStandardMaterial({
+    transparent: false,
+    alphaMap: windowAlphaTexture,
+    map: windowColorTexture,
+    aoMap: windowAmbientOcclusionTexture,
+    roughness: windowRoughnessTexture,
+    metalnessMap: windowMetalnessTexture,
+    normalMap: windowNormalTexture,
+    displacementMap: windowDisplacementTexture,
+    displacementScale: 0.05,
+  }),
+)
+_window.scale.setScalar(0.5)
+_window.rotation.y = Math.PI * 0.5
+_window.position.y = 1.5
+_window.position.x = 2 + 0.001
+house.add(_window)
+
+gui.add(_window.material, 'displacementScale').min(0).max(1).step(0.001).name('windowDisplacementScale') //prettier-ignore
+gui.add(_window.material, 'displacementBias').min(-1).max(1).step(0.001).name('windowDisplacementBias') //prettier-ignore
 
 // Bushes
 const bushGeometry = new THREE.SphereGeometry(1, 16, 16)

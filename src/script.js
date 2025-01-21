@@ -86,6 +86,30 @@ const doorDisplacementTexture = textureLoader.load('./door/height.webp')
 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace
 
+// Path
+const pathAlphaTexture = textureLoader.load('./path/alpha.webp')
+const pathColorTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_basecolor.jpg') //prettier-ignore
+const pathAmbientOcclusionTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_ambientOcclusion.jpg') //prettier-ignore
+const pathRoughnessTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_roughness.jpg') //prettier-ignore
+const pathNormalTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_normal.jpg') //prettier-ignore
+
+pathColorTexture.colorSpace = THREE.SRGBColorSpace
+
+pathColorTexture.repeat.set(12, 12)
+pathAmbientOcclusionTexture.repeat.set(12, 12)
+pathRoughnessTexture.repeat.set(12, 12)
+pathNormalTexture.repeat.set(12, 12)
+
+pathColorTexture.wrapS = THREE.RepeatWrapping
+pathAmbientOcclusionTexture.wrapS = THREE.RepeatWrapping
+pathRoughnessTexture.wrapS = THREE.RepeatWrapping
+pathNormalTexture.wrapS = THREE.RepeatWrapping
+
+pathColorTexture.wrapT = THREE.RepeatWrapping
+pathAmbientOcclusionTexture.wrapT = THREE.RepeatWrapping
+pathRoughnessTexture.wrapT = THREE.RepeatWrapping
+pathNormalTexture.wrapT = THREE.RepeatWrapping
+
 // Window
 const windowAlphaTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_opacity.jpg') //prettier-ignore
 const windowColorTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_basecolor.jpg') //prettier-ignore
@@ -262,6 +286,24 @@ house.add(door)
 gui.add(door.material, 'displacementScale').min(0).max(1).step(0.001).name('doorDisplacementScale') //prettier-ignore
 gui.add(door.material, 'displacementBias').min(-1).max(1).step(0.001).name('doorDisplacementBias') //prettier-ignore
 
+// Path
+const path = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 20, 100, 100),
+  new THREE.MeshStandardMaterial({
+    transparent: true,
+    alphaMap: pathAlphaTexture,
+    map: pathColorTexture,
+    aoMap: pathAmbientOcclusionTexture,
+    roughnessMap: pathRoughnessTexture,
+    normalMap: pathNormalTexture,
+    displacementMap: floorDisplacementTexture,
+    displacementScale: 0.3,
+    displacementBias: -0.2,
+  }),
+)
+path.rotation.x = -Math.PI * 0.5
+scene.add(path)
+
 // Window
 const _window = new THREE.Mesh(
   new THREE.PlaneGeometry(2.2, 2.2, 100, 100),
@@ -332,8 +374,8 @@ const graveMaterial = new THREE.MeshStandardMaterial({
 const graves = new THREE.Group()
 scene.add(graves)
 
-for (let i = 0; i < 30; i++) {
-  const angle = Math.random() * Math.PI * 2
+for (let i = 0; i < 40; i++) {
+  const angle = Math.PI * (0.2 + Math.random() * 1.6)
   const radius = 3 + Math.random() * 4
   const x = Math.sin(angle) * radius
   const z = Math.cos(angle) * radius
@@ -439,6 +481,7 @@ walls.castShadow = true
 walls.receiveShadow = true
 roof.castShadow = true
 floor.receiveShadow = true
+path.receiveShadow = true
 
 for (const grave of graves.children) {
   grave.castShadow = true
@@ -465,6 +508,8 @@ ghost2.shadow.camera.far = 10
 ghost3.shadow.mapSize.width = 256
 ghost3.shadow.mapSize.height = 256
 ghost3.shadow.camera.far = 10
+
+gui.add(renderer.shadowMap, 'enabled').name('shadows')
 // --------------------------------------------------------------------------------------
 
 // Sky ----------------------------------------------------------------------------------

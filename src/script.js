@@ -83,20 +83,31 @@ const sizes = {
   height: container.getBoundingClientRect().height,
 }
 
-const updateMeshesPositionX = () => {
+// Camera
+const cameraGroup = new THREE.Group()
+scene.add(cameraGroup)
+
+const camera = new THREE.PerspectiveCamera(35, sizes.width / sizes.height, 0.1, 100)
+camera.position.z = 6
+cameraGroup.add(camera)
+
+const optimizeRender = () => {
   sectionMeshes.forEach((mesh, index) => {
-    mesh.position.x = (sizes.width > sizes.height ? 2 : 1) * (index % 2 ? -1 : 1) //prettier-ignore
+    const isLandscape = sizes.width > sizes.height
+
+    mesh.position.x = (isLandscape ? 2 : 1) * (index % 2 ? -1 : 1)
+    camera.position.z = isLandscape ? 6 : 8
   })
 }
 
-updateMeshesPositionX()
+optimizeRender()
 
 window.addEventListener('resize', () => {
   // Update sizes
   sizes.width = container.getBoundingClientRect().width
   sizes.height = container.getBoundingClientRect().height
 
-  updateMeshesPositionX()
+  optimizeRender()
 
   // Update camera
   camera.aspect = sizes.width / sizes.height
@@ -106,14 +117,6 @@ window.addEventListener('resize', () => {
   renderer.setSize(sizes.width, sizes.height)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
-
-// Camera
-const cameraGroup = new THREE.Group()
-scene.add(cameraGroup)
-
-const camera = new THREE.PerspectiveCamera(35, sizes.width / sizes.height, 0.1, 100)
-camera.position.z = 6
-cameraGroup.add(camera)
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({

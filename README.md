@@ -28,5 +28,5 @@ There is room for improvement if you feel like continuing the project
 - [ ] Once you're done learning how to import models, you can get back to this lesson
 - [ ] Explore the Basis format
 - [ ] Add sounds
-- [ ] Make the door light flicker
+- [x] Make the door light flicker
 - Etc.

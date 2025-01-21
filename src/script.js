@@ -465,6 +465,8 @@ const tick = () => {
     Math.sin(ghost3Angle) * Math.sin(ghost3Angle * 2.34) * Math.sin(ghost3Angle * 3.45)
   // ------------------------------------------------------------------------------------
 
+  doorLight.intensity = Math.random() > 0.98 ? 5 : Math.sin(elapsedTime) > 0 ? 5 : 0
+
   // Update controls
   controls.update()
 

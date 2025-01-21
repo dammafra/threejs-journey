@@ -88,10 +88,10 @@ doorColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Path
 const pathAlphaTexture = textureLoader.load('./path/alpha.webp')
-const pathColorTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_basecolor.jpg') //prettier-ignore
-const pathAmbientOcclusionTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_ambientOcclusion.jpg') //prettier-ignore
-const pathRoughnessTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_roughness.jpg') //prettier-ignore
-const pathNormalTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_normal.jpg') //prettier-ignore
+const pathColorTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_basecolor.webp') //prettier-ignore
+const pathAmbientOcclusionTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_ambientOcclusion.webp') //prettier-ignore
+const pathRoughnessTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_roughness.webp') //prettier-ignore
+const pathNormalTexture = textureLoader.load('./path/Stone_Path_006_SD/Stone_Path_006_normal.webp') //prettier-ignore
 
 pathColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -111,13 +111,13 @@ pathRoughnessTexture.wrapT = THREE.RepeatWrapping
 pathNormalTexture.wrapT = THREE.RepeatWrapping
 
 // Window
-const windowAlphaTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_opacity.jpg') //prettier-ignore
-const windowColorTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_basecolor.jpg') //prettier-ignore
-const windowAmbientOcclusionTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_ambientOcclusion.jpg') //prettier-ignore
-const windowRoughnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_roughness.jpg') //prettier-ignore
-const windowMetalnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_metallic.jpg') //prettier-ignore
-const windowNormalTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_normal.jpg') //prettier-ignore
-const windowDisplacementTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_height.png') //prettier-ignore
+const windowAlphaTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_opacity.webp') //prettier-ignore
+const windowColorTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_basecolor.webp') //prettier-ignore
+const windowAmbientOcclusionTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_ambientOcclusion.webp') //prettier-ignore
+const windowRoughnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_roughness.webp') //prettier-ignore
+const windowMetalnessTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_metallic.webp') //prettier-ignore
+const windowNormalTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_normal.webp') //prettier-ignore
+const windowDisplacementTexture = textureLoader.load('./window/Wood_Window_001_SD/Wood_Window_001_height.webp') //prettier-ignore
 
 windowColorTexture.colorSpace = THREE.SRGBColorSpace
 

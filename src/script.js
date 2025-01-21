@@ -13,6 +13,31 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+// Textures
+const textureLoader = new THREE.TextureLoader()
+const ambientOcclusionTexture = textureLoader.load('./textures/Fabric_038_SD/Substance_Graph_AmbientOcclusion.jpg') //prettier-ignore
+const colorTexture = textureLoader.load('./textures/Fabric_038_SD/Substance_Graph_BaseColor.jpg') //prettier-ignore
+const heightTexture = textureLoader.load('./textures/Fabric_038_SD/Substance_Graph_height.jpg') //prettier-ignore
+const normalTexture = textureLoader.load('./textures/Fabric_038_SD/Substance_Graph_Normal.jpg') //prettier-ignore
+const roughnessTexture = textureLoader.load('./textures/Fabric_038_SD/Substance_Graph_Roughness.jpg') //prettier-ignore
+
+colorTexture.colorSpace = THREE.SRGBColorSpace
+
+const textures = [
+  ambientOcclusionTexture,
+  colorTexture,
+  heightTexture,
+  normalTexture,
+  roughnessTexture,
+]
+
+textures.forEach(texture => {
+  texture.repeat.x = 2
+  texture.repeat.y = 2
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
+})
+
 // Models
 const dracoLoader = new DRACOLoader()
 dracoLoader.setDecoderPath('/draco/')
@@ -30,30 +55,34 @@ gltfLoader.load('/models/hamburger.glb', gltf => {
   scene.add(gltf.scene)
 })
 
-// Floor
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(50, 50),
+// Table
+const table = new THREE.Mesh(
+  new THREE.PlaneGeometry(40, 40),
   new THREE.MeshStandardMaterial({
-    color: '#444444',
     metalness: 0,
     roughness: 0.5,
+    map: colorTexture,
+    aoMap: ambientOcclusionTexture,
+    displacementMap: heightTexture,
+    normalMap: normalTexture,
+    roughnessMap: roughnessTexture,
   }),
 )
-floor.receiveShadow = true
-floor.rotation.x = -Math.PI * 0.5
-scene.add(floor)
+table.receiveShadow = true
+table.rotation.x = -Math.PI * 0.5
+scene.add(table)
 
 // Lights
-const ambientLight = new THREE.AmbientLight(0xffffff, 2.4)
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.5)
 scene.add(ambientLight)
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 3)
 directionalLight.castShadow = true
 directionalLight.shadow.mapSize.set(1024, 1024)
 directionalLight.shadow.camera.far = 20
-directionalLight.shadow.camera.left = -7
+directionalLight.shadow.camera.left = -8
 directionalLight.shadow.camera.top = 7
-directionalLight.shadow.camera.right = 7
+directionalLight.shadow.camera.right = 8
 directionalLight.shadow.camera.bottom = -7
 directionalLight.position.set(5, 5, 5)
 scene.add(directionalLight)

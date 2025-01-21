@@ -144,15 +144,6 @@ house.add(walls)
 // Roof
 // prettier-ignore
 const positionArray = new Float32Array([
-  // base
-  -1, 0, -1,  // top left
-  1, 0, -1,   // top right
-  -1, 0, 1,   // bottom left
-
-  1, 0, -1,   // top right
-  1, 0, 1,    // bottom right
-  -1, 0, 1,   // bottom left
-
   // face 1
   -1, 0, -1,  // top left
   -1, 0, 1,   // bottom left
@@ -177,15 +168,6 @@ const positionAttribute = new THREE.BufferAttribute(positionArray, 3)
 
 // prettier-ignore
 const uvArray = new Float32Array([
-  // base (all zeros - no texture)  
-  0, 0,     // top left
-  0, 0,     // top right
-  0, 0,     // bottom left
-
-  0, 0,     // top right
-  0, 0,     // bottom right
-  0, 0,     // bottom left
-
   // face 1
   0, 0,     // top left
   1, 0,     // bottom left
@@ -216,6 +198,7 @@ roofGeometry.computeVertexNormals()
 const roof = new THREE.Mesh(
   roofGeometry,
   new THREE.MeshStandardMaterial({
+    side: THREE.DoubleSide,
     map: roofColorTexture,
     aoMap: roofARMTexture,
     roughness: roofARMTexture,
@@ -227,7 +210,7 @@ const roof = new THREE.Mesh(
 roof.scale.x = 2.5
 roof.scale.z = 2.5
 roof.scale.y = 1.5
-roof.position.y = 2.5
+roof.position.y = 2.25
 
 house.add(roof)
 
@@ -337,7 +320,7 @@ gui.add(directionalLight, 'intensity').min(0).max(3).step(0.001).name('direction
 
 // Door light
 const doorLight = new THREE.PointLight('#ff7d46', 5)
-doorLight.position.set(0, 2.2, 2.5)
+doorLight.position.set(0, 2.25, 2.3)
 house.add(doorLight)
 
 gui.add(doorLight, 'intensity').min(0).max(5).step(0.001).name('doorLightIntensity') //prettier-ignore

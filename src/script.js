@@ -4,6 +4,7 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { EXRLoader } from 'three/addons/loaders/EXRLoader.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+import { GroundedSkybox } from 'three/addons/objects/GroundedSkybox.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 // Loaders
@@ -72,13 +73,25 @@ gui.add(scene.environmentRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name
 // })
 
 // LDR equirectangular
-const environmentMap = textureLoader.load('./environmentMaps/blockadesLabsSkybox/anime_art_style_japan_streets_with_cherry_blossom_.jpg') //prettier-ignore
+// const environmentMap = textureLoader.load('./environmentMaps/blockadesLabsSkybox/anime_art_style_japan_streets_with_cherry_blossom_.jpg') //prettier-ignore
 
-environmentMap.mapping = THREE.EquirectangularReflectionMapping
-environmentMap.colorSpace = THREE.SRGBColorSpace
+// environmentMap.mapping = THREE.EquirectangularReflectionMapping
+// environmentMap.colorSpace = THREE.SRGBColorSpace
 
-scene.background = environmentMap
-scene.environment = environmentMap
+// scene.background = environmentMap
+// scene.environment = environmentMap
+
+// Ground projected skybox
+rgbeLoader.load('./environmentMaps/2/2k.hdr', environmentMap => {
+  environmentMap.mapping = THREE.EquirectangularReflectionMapping
+  scene.environment = environmentMap
+
+  // Skybox
+  const skybox = new GroundedSkybox(environmentMap, 15, 70)
+  // skybox.material.wireframe = true
+  skybox.position.y = 15
+  scene.add(skybox)
+})
 
 // Objects
 const torusKnot = new THREE.Mesh(

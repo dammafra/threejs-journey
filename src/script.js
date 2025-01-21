@@ -6,11 +6,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 // Debug
 const gui = new GUI({ width: 300 })
-gui.hide()
-
+const debug = window.location.hash === '#debug'
+gui.show(debug)
 window.addEventListener('keydown', event => {
   if (event.key === 'h') {
-    gui.show(gui._hidden)
+    window.location.hash = debug ? '' : '#debug'
+    window.location.reload()
   }
 })
 
@@ -19,6 +20,19 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+// Helpers
+const gridHelper = new THREE.GridHelper(20, 20)
+gridHelper.visible = debug
+gridHelper.position.y = 0.05
+scene.add(gridHelper)
+gui.add(gridHelper, 'visible').name('gridHelper')
+
+const axesHelper = new THREE.AxesHelper(10)
+axesHelper.visible = debug
+axesHelper.position.y = 0.051
+scene.add(axesHelper)
+gui.add(axesHelper, 'visible').name('axesHelper')
 
 // Textures -----------------------------------------------------------------------------
 const textureLoader = new THREE.TextureLoader()
@@ -115,7 +129,7 @@ graveNormalTexture.repeat.set(0.3, 0.4)
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(20, 20, 100, 100),
   new THREE.MeshStandardMaterial({
-    transparent: true,
+    transparent: !debug,
     alphaMap: floorAlphaTexture,
     map: floorColorTexture,
     aoMap: floorARMTexture,
@@ -284,8 +298,7 @@ const bushMaterial = new THREE.MeshStandardMaterial({
 })
 
 const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
-// bush1.scale.setScalar(0.5)
-bush1.scale.set(0.5, 0.5, 0.5)
+bush1.scale.set(0.5, 0.5, 0.5) // or bush1.scale.setScalar(0.5)
 bush1.position.set(0.8, 0.2, 2.2)
 bush1.rotation.x = -0.75
 
@@ -341,7 +354,7 @@ for (let i = 0; i < 30; i++) {
 
 // Lights -------------------------------------------------------------------------------
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#86cdff', 0.275)
+const ambientLight = new THREE.AmbientLight('#86cdff', debug ? 3 : 0.275)
 scene.add(ambientLight)
 
 gui.add(ambientLight, 'intensity').min(0).max(3).step(0.001).name('ambientLightIntensity') //prettier-ignore
@@ -391,8 +404,8 @@ window.addEventListener('resize', () => {
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 4
-camera.position.y = 2
-camera.position.z = 5
+camera.position.y = debug ? 6 : 2
+camera.position.z = debug ? 8 : 5
 scene.add(camera)
 
 // Controls
@@ -456,20 +469,22 @@ ghost3.shadow.camera.far = 10
 
 // Sky ----------------------------------------------------------------------------------
 const sky = new Sky()
-// sky.scale.setScalar(100)
-sky.scale.set(100, 100, 100)
-scene.add(sky)
-
+sky.scale.set(100, 100, 100) // or sky.scale.setScalar(100)
+sky.visible = !debug
 sky.material.uniforms['turbidity'].value = 10
 sky.material.uniforms['rayleigh'].value = 3
 sky.material.uniforms['mieCoefficient'].value = 0.1
 sky.material.uniforms['mieDirectionalG'].value = 0.95
 sky.material.uniforms['sunPosition'].value.set(0.3, -0.038, -0.95)
+scene.add(sky)
+
+gui.add(sky, 'visible').name('sky')
 // --------------------------------------------------------------------------------------
 
 // Fog ----------------------------------------------------------------------------------
 // scene.fog = new THREE.Fog('#02343F', 1, 13)
-scene.fog = new THREE.FogExp2('#02343F', 0.1)
+scene.fog = new THREE.FogExp2('#02343F', debug ? 0 : 0.1)
+gui.add(scene.fog, 'density').min(0).max(1).step(0.001).name('fogDensity')
 // --------------------------------------------------------------------------------------
 
 // Animate

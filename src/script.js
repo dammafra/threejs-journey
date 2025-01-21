@@ -61,14 +61,6 @@ const roofNormalTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slat
 
 roofColorTexture.colorSpace = THREE.SRGBColorSpace
 
-roofColorTexture.repeat.set(3, 1)
-roofARMTexture.repeat.set(3, 1)
-roofNormalTexture.repeat.set(3, 1)
-
-roofColorTexture.wrapS = THREE.RepeatWrapping
-roofARMTexture.wrapS = THREE.RepeatWrapping
-roofNormalTexture.wrapS = THREE.RepeatWrapping
-
 // Door
 const doorAlphaTexture = textureLoader.load('./door/alpha.webp')
 const doorColorTexture = textureLoader.load('./door/color.webp')
@@ -150,12 +142,79 @@ walls.position.y = 1.25
 house.add(walls)
 
 // Roof
+// prettier-ignore
+const positionArray = new Float32Array([
+  // base
+  -1, 0, -1,  // top left
+  1, 0, -1,   // top right
+  -1, 0, 1,   // bottom left
+
+  1, 0, -1,   // top right
+  1, 0, 1,    // bottom right
+  -1, 0, 1,   // bottom left
+
+  // face 1
+  -1, 0, -1,  // top left
+  -1, 0, 1,   // bottom left
+  0, 1, 0,    // apex
+
+  // face 2
+  -1, 0, -1,  // top left
+  0, 1, 0,    // apex
+  1, 0, -1,   // top right
+
+  // face 3
+  1, 0, -1,   // top right 
+  0, 1, 0,    // apex
+  1, 0, 1,    // bottom right
+  
+  // face 4
+  -1, 0, 1,   // bottom left 
+  1, 0, 1,    // bottom right
+  0, 1, 0,    // apex
+])
+const positionAttribute = new THREE.BufferAttribute(positionArray, 3)
+
+// prettier-ignore
+const uvArray = new Float32Array([
+  // base (all zeros - no texture)  
+  0, 0,     // top left
+  0, 0,     // top right
+  0, 0,     // bottom left
+
+  0, 0,     // top right
+  0, 0,     // bottom right
+  0, 0,     // bottom left
+
+  // face 1
+  0, 0,     // top left
+  1, 0,     // bottom left
+  0.5, 1,   // apex
+
+  // face 2
+  1, 0,     // top left
+  0.5, 1,   // apex
+  0, 0,     // top right
+
+  // face 3
+  1, 0,     // top right 
+  0.5, 1,   // apex
+  0, 0,     // bottom right
+
+  // face 4
+  0, 0,     // bottom left 
+  1, 0,     // bottom right
+  0.5, 1,   // apex
+]);
+const uvAttribute = new THREE.BufferAttribute(uvArray, 2)
+
+const roofGeometry = new THREE.BufferGeometry()
+roofGeometry.setAttribute('position', positionAttribute)
+roofGeometry.setAttribute('uv', uvAttribute)
+roofGeometry.computeVertexNormals()
+
 const roof = new THREE.Mesh(
-  // TODO: try to create custom buffer geometry in order to fix the UV unwrap and normals.
-  // - see lesson 08
-  // - set `position` and `uv` attributes
-  // - check `computeVertexNormals` method
-  new THREE.ConeGeometry(3.5, 1.5, 4),
+  roofGeometry,
   new THREE.MeshStandardMaterial({
     map: roofColorTexture,
     aoMap: roofARMTexture,
@@ -164,8 +223,12 @@ const roof = new THREE.Mesh(
     normalMap: roofNormalTexture,
   }),
 )
-roof.position.y = 2.5 + 0.75
-roof.rotation.y = Math.PI * 0.25
+
+roof.scale.x = 2.5
+roof.scale.z = 2.5
+roof.scale.y = 1.5
+roof.position.y = 2.5
+
 house.add(roof)
 
 // Door

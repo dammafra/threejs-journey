@@ -20,13 +20,13 @@ npm run build
 
 There is room for improvement if you feel like continuing the project
 
-- Build a custom geometry for the roof (see TODO comment in code)
-- Add more tweaks for things like the lights, the colors, the textures repetitions, the ghost speed, etc.
-- Add tweaks to the Sky as seen in the [example](https://threejs.org/examples/?q=sky#webgl_shaders_sky) (the [code](https://github.com/mrdoob/three.js/blob/master/examples/webgl_shaders_sky.html))
-- Stray away from the cube house and add more shapes to it like a garage, a tool shed, toilets in the back or whatever
-- Add more objects to the scene (fences, pathways, rocks, wood signs, windows, etc.)
-- Once you're done learning how to import models, you can get back to this lesson
-- Explore the Basis format
-- Add sounds
-- Make the door light flicker
+- [x] Build a custom geometry for the roof (see TODO comment in code)
+- [ ] Add more tweaks for things like the lights, the colors, the textures repetitions, the ghost speed, etc.
+- [ ] Add tweaks to the Sky as seen in the [example](https://threejs.org/examples/?q=sky#webgl_shaders_sky) (the [code](https://github.com/mrdoob/three.js/blob/master/examples/webgl_shaders_sky.html))
+- [ ] Stray away from the cube house and add more shapes to it like a garage, a tool shed, toilets in the back or whatever
+- [ ] Add more objects to the scene (fences, pathways, rocks, wood signs, windows, etc.)
+- [ ] Once you're done learning how to import models, you can get back to this lesson
+- [ ] Explore the Basis format
+- [ ] Add sounds
+- [ ] Make the door light flicker
 - Etc.

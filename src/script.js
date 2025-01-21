@@ -35,12 +35,7 @@ const objectsToTest = [object1, object2, object3]
 
 // Raycaster
 const raycaster = new THREE.Raycaster()
-
-// Sizes
-const sizes = {
-  width: window.innerWidth,
-  height: window.innerHeight,
-}
+let currentIntersect = null
 
 // Mouse
 const mouse = new THREE.Vector2()
@@ -49,6 +44,28 @@ window.addEventListener('mousemove', event => {
   mouse.x = (event.clientX / sizes.width) * 2 - 1
   mouse.y = -((event.clientY / sizes.height) * 2 - 1)
 })
+
+window.addEventListener('click', event => {
+  switch (currentIntersect?.object) {
+    case object1:
+      console.log('click on a sphere 1')
+      break
+    case object2:
+      console.log('click on a sphere 2')
+      break
+    case object3:
+      console.log('click on a sphere 3')
+      break
+    default:
+      break
+  }
+})
+
+// Sizes
+const sizes = {
+  width: window.innerWidth,
+  height: window.innerHeight,
+}
 
 window.addEventListener('resize', () => {
   // Update sizes
@@ -103,6 +120,18 @@ const tick = () => {
 
   objectsToTest.forEach(object => object.material.color.set('#ff0000'))
   intersects.forEach(intersect => intersect.object.material.color.set('#0000ff')) //prettier-ignore
+
+  if (intersects.length) {
+    if (currentIntersect === null) {
+      console.log('mouse enter')
+    }
+    currentIntersect = intersects[0]
+  } else {
+    if (currentIntersect) {
+      console.log('mouse leave')
+    }
+    currentIntersect = null
+  }
 
   // Update controls
   controls.update()

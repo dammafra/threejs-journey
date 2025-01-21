@@ -1,6 +1,17 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
+// Loaders
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('./draco/')
+
+const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+
+const cubeTextureLoader = new THREE.CubeTextureLoader()
 
 // Debug
 const gui = new GUI()
@@ -11,13 +22,53 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+// Environment Map
+scene.environmentIntensity = 1
+scene.backgroundBlurriness = 0
+scene.backgroundIntensity = 1
+
+scene.backgroundRotation.y = 0
+scene.environmentRotation.y = 0
+
+gui.add(scene, 'environmentIntensity').min(0).max(10).step(0.001)
+gui.add(scene, 'backgroundBlurriness').min(0).max(1).step(0.0001)
+gui.add(scene, 'backgroundIntensity').min(0).max(10).step(0.001)
+
+gui.add(scene.backgroundRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name('backgroundRotationY') //prettier-ignore
+gui.add(scene.environmentRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name('environmentRotationY') //prettier-ignore
+
+// LDR cube texture (Low Dynamic Range)
+const environmentMap = cubeTextureLoader.load([
+  './environmentMaps/0/px.png',
+  './environmentMaps/0/nx.png',
+  './environmentMaps/0/py.png',
+  './environmentMaps/0/ny.png',
+  './environmentMaps/0/pz.png',
+  './environmentMaps/0/nz.png',
+])
+
+scene.background = environmentMap
+scene.environment = environmentMap
+
 // Objects
 const torusKnot = new THREE.Mesh(
   new THREE.TorusKnotGeometry(1, 0.4, 100, 16),
-  new THREE.MeshBasicMaterial(),
+  new THREE.MeshStandardMaterial({
+    roughness: 0.3,
+    metalness: 1,
+    color: 0xaaaaaa,
+    // envMap: environmentMap,
+  }),
 )
 torusKnot.position.y = 4
+torusKnot.position.x = -4
 scene.add(torusKnot)
+
+// Models
+gltfLoader.load('./models/FlightHelmet/glTF/FlightHelmet.gltf', gltf => {
+  gltf.scene.scale.setScalar(10)
+  scene.add(gltf.scene)
+})
 
 // Sizes
 const sizes = {

@@ -6,7 +6,7 @@ export default class Fox {
     // Setup
     this.experience = Experience.instance
 
-    this.debug = this.experience.debug.ui.addFolder(Fox.name)
+    this.debug = this.experience.debug.ui.addFolder("fox")
     this.scene = this.experience.scene
     this.time = this.experience.time
     this.resources = this.experience.resources

@@ -7,6 +7,14 @@ import testVertexShader from './shaders/test/vertex.glsl'
 // Debug
 const gui = new GUI()
 
+const debug = {
+  cycle: false,
+  speed: 1,
+}
+
+const cycleTweak = gui.add(debug, 'cycle')
+gui.add(debug, 'speed').min(0.25).max(2).step(0.25)
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -17,11 +25,17 @@ const scene = new THREE.Scene()
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32)
 
 // Material
+const patternsCount = 46
 const material = new THREE.ShaderMaterial({
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,
   side: THREE.DoubleSide,
+  uniforms: {
+    uPattern: new THREE.Uniform(patternsCount),
+  },
 })
+
+const patternTweak = gui.add(material.uniforms.uPattern, 'value').min(1).max(patternsCount).step(1).name('pattern') //prettier-ignore
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
@@ -63,8 +77,28 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+const clock = new THREE.Clock(false)
+let lastElapsed = 0
+
+cycleTweak.onChange(value => {
+  if (value) {
+    clock.start()
+    clock.elapsedTime = lastElapsed
+  } else {
+    clock.stop()
+    lastElapsed = clock.elapsedTime
+  }
+})
+
 // Animate
 const tick = () => {
+  const elapsedTime = clock.getElapsedTime()
+
+  if (debug.cycle) {
+    material.uniforms.uPattern.value = Math.floor((elapsedTime * debug.speed) % patternsCount) + 1
+    patternTweak.updateDisplay()
+  }
+
   // Update controls
   controls.update()
 

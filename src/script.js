@@ -25,7 +25,7 @@ const scene = new THREE.Scene()
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32)
 
 // Material
-const patternsCount = 46
+const patternsCount = 50
 const material = new THREE.ShaderMaterial({
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,

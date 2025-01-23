@@ -32,12 +32,15 @@ const material = new THREE.ShaderMaterial({
   side: THREE.DoubleSide,
   uniforms: {
     uPattern: new THREE.Uniform(1),
-    uMixUVColor: new THREE.Uniform(false),
+    uMixUVColor: new THREE.Uniform(true),
+    uAnimate: new THREE.Uniform(true),
+    uTime: new THREE.Uniform(0),
   },
 })
 
 const patternTweak = gui.add(material.uniforms.uPattern, 'value').min(1).max(patternsCount).step(1).name('pattern') //prettier-ignore
-gui.add(material.uniforms.uMixUVColor, 'value').min(1).name('mixUVColor')
+gui.add(material.uniforms.uMixUVColor, 'value').name('mixUVColor')
+gui.add(material.uniforms.uAnimate, 'value').name('animate')
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
@@ -95,6 +98,8 @@ cycleTweak.onChange(value => {
 // Animate
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
+
+  material.uniforms.uTime.value = elapsedTime
 
   if (debug.cycle) {
     material.uniforms.uPattern.value = Math.floor((elapsedTime * debug.speed) % patternsCount) + 1

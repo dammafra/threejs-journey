@@ -2,6 +2,8 @@
 
 uniform int uPattern;
 uniform bool uMixUVColor;
+uniform bool uAnimate;
+uniform float uTime;
 
 varying vec2 vUv;
 
@@ -12,6 +14,18 @@ float random(vec2 st) {
 vec2 rotate(vec2 uv, float rotation, vec2 mid) {
   return vec2(cos(rotation) * (uv.x - mid.x) + sin(rotation) * (uv.y - mid.y) + mid.x,
               cos(rotation) * (uv.y - mid.y) - sin(rotation) * (uv.x - mid.x) + mid.y);
+}
+
+float animateTime() {
+  return uAnimate ? uTime : 0.0;
+}
+
+float animateSin(float value) {
+  return uAnimate ? value * abs(sin(uTime)) : value;
+}
+
+float animateCos(float value) {
+  return uAnimate ? value * abs(cos(uTime)) : value;
 }
 
 //	Classic Perlin 2D Noise
@@ -73,155 +87,162 @@ void main() {
     }
 
     case 3: {
-      strength = vUv.x;
+      strength = animateSin(vUv.x);
       break;
     }
 
     case 4: {
-      strength = vUv.y;
+      strength = animateSin(vUv.y);
       break;
     }
 
     case 5: {
-      strength = 1.0 - vUv.y;
+      strength = animateSin(1.0 - vUv.y);
       break;
     }
 
     case 6: {
-      strength = vUv.y * 10.0;
+      strength = vUv.y * animateSin(10.0);
       break;
     }
 
     case 7: {
-      strength = mod(vUv.y * 10.0, 1.0);
+      strength = mod(vUv.y * animateSin(10.0), 1.0);
       break;
     }
 
     case 8: {
       strength = mod(vUv.y * 10.0, 1.0);
-      strength = step(0.5, strength);
+      strength = step(animateSin(0.5), strength);
       break;
     }
 
     case 9: {
       strength = mod(vUv.y * 10.0, 1.0);
-      strength = step(0.8, strength);
+      strength = step(animateSin(0.8), strength);
       break;
     }
 
     case 10: {
       strength = mod(vUv.x * 10.0, 1.0);
-      strength = step(0.8, strength);
+      strength = step(animateSin(0.8), strength);
       break;
     }
 
     case 11: {
-      strength = step(0.8, mod(vUv.x * 10.0, 1.0));
-      strength += step(0.8, mod(vUv.y * 10.0, 1.0));
+      strength = step(animateSin(0.8), mod(vUv.x * 10.0, 1.0));
+      strength += step(animateCos(0.8), mod(vUv.y * 10.0, 1.0));
       break;
     }
 
     case 12: {
-      strength = step(0.8, mod(vUv.x * 10.0, 1.0));
-      strength *= step(0.8, mod(vUv.y * 10.0, 1.0));
+      strength = step(animateSin(0.8), mod(vUv.x * 10.0, 1.0));
+      strength *= step(animateCos(0.8), mod(vUv.y * 10.0, 1.0));
       break;
     }
 
     case 13: {
-      strength = step(0.4, mod(vUv.x * 10.0, 1.0));
-      strength *= step(0.8, mod(vUv.y * 10.0, 1.0));
+      strength = step(animateSin(0.4), mod(vUv.x * 10.0, 1.0));
+      strength *= step(animateCos(0.8), mod(vUv.y * 10.0, 1.0));
       break;
     }
 
     case 14: {
-      float barsX = step(0.4, mod(vUv.x * 10.0, 1.0)) * step(0.8, mod(vUv.y * 10.0, 1.0));
-      float barsY = step(0.8, mod(vUv.x * 10.0, 1.0)) * step(0.4, mod(vUv.y * 10.0, 1.0));
+      float barsX = step(animateSin(0.4), mod(vUv.x * 10.0, 1.0)) *
+                    step(animateCos(0.8), mod(vUv.y * 10.0, 1.0));
+      float barsY = step(animateCos(0.8), mod(vUv.x * 10.0, 1.0)) *
+                    step(animateSin(0.4), mod(vUv.y * 10.0, 1.0));
       strength = barsX + barsY;
       break;
     }
 
     case 15: {
       // offset = 0.8 - 0.4 / 2.0
-      float barsX = step(0.4, mod(vUv.x * 10.0, 1.0)) * step(0.8, mod(vUv.y * 10.0 + 0.2, 1.0));
-      float barsY = step(0.8, mod(vUv.x * 10.0 + 0.2, 1.0)) * step(0.4, mod(vUv.y * 10.0, 1.0));
+      float barsX = step(0.4, mod(vUv.x * 10.0, 1.0));
+      barsX *= step(0.8, mod(vUv.y * 10.0 + animateSin(0.2), 1.0));
+      float barsY = step(0.8, mod(vUv.x * 10.0 + animateCos(0.2), 1.0));
+      barsY *= step(0.4, mod(vUv.y * 10.0, 1.0));
       strength = barsX + barsY;
       break;
     }
 
     case 16: {
-      strength = abs(vUv.x - 0.5);
+      strength = abs(animateSin(vUv.x) - animateCos(0.5));
       break;
     }
 
     case 17: {
-      strength = min(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
+      strength = min(animateSin(abs(vUv.x - 0.5)), animateCos(abs(vUv.y - 0.5)));
       break;
     }
 
     case 18: {
-      strength = max(abs(vUv.x - 0.5), abs(vUv.y - 0.5));
+      strength = max(animateSin(abs(vUv.x - 0.5)), animateCos(abs(vUv.y - 0.5)));
       break;
     }
 
     case 19: {
-      strength = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+      strength = step(animateSin(0.2), max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
       break;
     }
 
     case 20: {
-      float square1 = step(0.2, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
-      float square2 = 1.0 - step(0.25, max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+      float square1 = step(animateSin(0.2), max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
+      float square2 = 1.0 - step(animateSin(0.25), max(abs(vUv.x - 0.5), abs(vUv.y - 0.5)));
       strength = square1 * square2;
       break;
     }
 
     case 21: {
-      strength = floor(vUv.x * 10.0) / 10.0;
+      strength = floor(vUv.x * 10.0) / animateSin(10.0);
       break;
     }
 
     case 22: {
-      strength = floor(vUv.x * 10.0) / 10.0;
-      strength *= floor(vUv.y * 10.0) / 10.0;
+      strength = floor(vUv.x * 10.0) / animateSin(10.0);
+      strength *= floor(vUv.y * 10.0) / animateSin(10.0);
       break;
     }
 
     case 23: {
-      strength = random(vUv);
+      strength = random(vUv * animateSin(1.0));
       break;
     }
 
     case 24: {
       vec2 gridUv = vec2(floor(vUv.x * 10.0) / 10.0, floor(vUv.y * 10.0) / 10.0);
-      strength = random(gridUv);
+      strength = random(gridUv * animateSin(1.0));
       break;
     }
 
     case 25: {
       // vec2 gridUv = vec2(floor(vUv.x * 10.0) / 10.0, floor((vUv.y + vUv.x * 0.5) * 10.0) / 10.0);
-      vec2 gridUv = vec2(floor(vUv.x * 10.0) / 10.0, floor(vUv.y * 10.0 + vUv.x * 5.0) / 10.0);
-      strength = random(gridUv);
+      vec2 gridUv = vec2(                                      //
+          floor(vUv.x * 10.0) / 10.0,                          //
+          floor(vUv.y * 10.0 + animateSin(vUv.x * 5.0)) / 10.0 //
+      );
+      strength = random(gridUv * animateSin(1.0));
       break;
     }
 
     case 26: {
-      strength = length(vUv);
+      strength = length(vUv * animateSin(1.0));
       break;
     }
 
     case 27: {
       // strength = length(vUv - 0.5);
-      strength = distance(vUv, vec2(0.5));
+      strength = distance(vUv, vec2(0.5) * animateSin(1.0));
       break;
     }
 
     case 28: {
-      strength = 1.0 - distance(vUv, vec2(0.5));
+      strength = 1.0 - distance(vUv, vec2(0.5) * animateSin(1.0));
       break;
     }
 
     case 29: {
-      strength = 0.015 / distance(vUv, vec2(0.5));
+      strength = animateSin(0.015) / distance(vUv, vec2(0.5));
       break;
     }
 
@@ -229,7 +250,7 @@ void main() {
       // vec2 lightUv = vec2(vUv.x * 0.1 + 0.45, vUv.y * 0.5 + 0.25);
       // strength = 0.015 / distance(lightUv, vec2(0.5));
 
-      strength = 0.15 / distance(vec2(vUv.x, (vUv.y - 0.5) * 5.0 + 0.5), vec2(0.5));
+      strength = 0.15 / distance(vec2(vUv.x, (vUv.y - 0.5) * animateSin(5.0) + 0.5), vec2(0.5));
       break;
     }
 
@@ -242,140 +263,142 @@ void main() {
 
       // strength = lightX * lightY;
 
-      strength = 0.15 / distance(vec2(vUv.x, (vUv.y - 0.5) * 5.0 + 0.5), vec2(0.5));
-      strength *= 0.15 / distance(vec2(vUv.y, (vUv.x - 0.5) * 5.0 + 0.5), vec2(0.5));
+      strength = animateSin(0.15) / distance(vec2(vUv.x, (vUv.y - 0.5) * 5.0 + 0.5), vec2(0.5));
+      strength *= animateSin(0.15) / distance(vec2(vUv.y, (vUv.x - 0.5) * 5.0 + 0.5), vec2(0.5));
       break;
     }
 
     case 32: {
-      vec2 rUv = rotate(vUv, PI * 0.25, vec2(0.5, 0.5));
-      strength = 0.15 / distance(vec2(rUv.x, (rUv.y - 0.5) * 5.0 + 0.5), vec2(0.5));
-      strength *= 0.15 / distance(vec2(rUv.y, (rUv.x - 0.5) * 5.0 + 0.5), vec2(0.5));
+      vec2 rUv = rotate(vUv, uAnimate ? PI * 0.25 * uTime : PI * 0.25, vec2(0.5, 0.5));
+      strength = animateSin(0.15) / distance(vec2(rUv.x, (rUv.y - 0.5) * 5.0 + 0.5), vec2(0.5));
+      strength *= animateSin(0.15) / distance(vec2(rUv.y, (rUv.x - 0.5) * 5.0 + 0.5), vec2(0.5));
       break;
     }
 
     case 33: {
-      strength = step(0.25, distance(vUv, vec2(0.5)));
+      strength = step(animateSin(0.25), distance(vUv, vec2(0.5)));
       break;
     }
 
     case 34: {
-      strength = abs(distance(vUv, vec2(0.5)) - 0.25);
+      strength = abs(distance(vUv, vec2(0.5)) - animateSin(0.25));
       break;
     }
 
     case 35: {
-      strength = step(0.01, abs(distance(vUv, vec2(0.5)) - 0.25));
+      strength = step(animateSin(0.01), abs(distance(vUv, vec2(0.5)) - animateSin(0.25)));
       break;
     }
 
     case 36: {
-      strength = 1.0 - step(0.01, abs(distance(vUv, vec2(0.5)) - 0.25));
+      strength = 1.0 - step(animateSin(0.01), abs(distance(vUv, vec2(0.5)) - animateSin(0.25)));
       break;
     }
 
     case 37: {
-      vec2 waveUv = vec2(                 //
-          vUv.x,                          //
-          vUv.y + sin(vUv.x * 30.0) * 0.1 //
+      vec2 waveUv = vec2(                             //
+          vUv.x,                                      //
+          vUv.y + animateSin(sin(vUv.x * 30.0) * 0.1) //
       );
       strength = 1.0 - step(0.01, abs(distance(waveUv, vec2(0.5)) - 0.25));
       break;
     }
 
     case 38: {
-      vec2 waveUv = vec2(                  //
-          vUv.x + sin(vUv.y * 30.0) * 0.1, //
-          vUv.y + sin(vUv.x * 30.0) * 0.1  //
+      vec2 waveUv = vec2(                              //
+          vUv.x + animateSin(sin(vUv.y * 30.0) * 0.1), //
+          vUv.y + animateSin(sin(vUv.x * 30.0) * 0.1)  //
       );
       strength = 1.0 - step(0.01, abs(distance(waveUv, vec2(0.5)) - 0.25));
       break;
     }
 
     case 39: {
-      vec2 waveUv = vec2(                   //
-          vUv.x + sin(vUv.y * 100.0) * 0.1, //
-          vUv.y + sin(vUv.x * 100.0) * 0.1  //
+      vec2 waveUv = vec2(                               //
+          vUv.x + animateSin(sin(vUv.y * 100.0) * 0.1), //
+          vUv.y + animateSin(sin(vUv.x * 100.0) * 0.1)  //
       );
       strength = 1.0 - step(0.01, abs(distance(waveUv, vec2(0.5)) - 0.25));
       break;
     }
 
     case 40: {
-      float angle = atan(vUv.x, vUv.y);
+      float angle = atan(animateSin(vUv.x), animateCos(vUv.y));
       strength = angle;
       break;
     }
 
     case 41: {
       float angle = atan(vUv.x - 0.5, vUv.y - 0.5);
-      strength = angle;
+      strength = animateSin(angle);
       break;
     }
 
     case 42: {
       float angle = atan(vUv.x - 0.5, vUv.y - 0.5);
       angle /= PI * 2.0;
-      angle += 0.5;
+      angle += uAnimate ? sin(uTime) * 0.5 : 0.5;
       strength = angle;
       break;
     }
 
     case 43: {
-      float angle = atan(vUv.x - 0.5, vUv.y - 0.5) / (PI * 2.0) + 0.5;
+      vec2 rUv = uAnimate ? rotate(vUv, PI * 0.1 * uTime, vec2(0.5, 0.5)) : vUv;
+      float angle = atan(rUv.x - 0.5, rUv.y - 0.5) / (PI * 2.0) + 0.5;
       angle *= 20.0;
       strength = mod(angle, 1.0);
       break;
     }
 
     case 44: {
-      float angle = atan(vUv.x - 0.5, vUv.y - 0.5) / (PI * 2.0) + 0.5;
+      vec2 rUv = uAnimate ? rotate(vUv, PI * 0.1 * uTime, vec2(0.5, 0.5)) : vUv;
+      float angle = atan(rUv.x - 0.5, rUv.y - 0.5) / (PI * 2.0) + 0.5;
       strength = sin(angle * 100.0);
       break;
     }
 
     case 45: {
-      float sinusoid = sin((atan(vUv.x - 0.5, vUv.y - 0.5) / (PI * 2.0) + 0.5) * 100.0);
-      float radius = 0.25 + sinusoid * 0.02;
-      strength = 1.0 - step(0.01, abs(distance(vUv, vec2(0.5)) - radius));
+      vec2 rUv = uAnimate ? rotate(vUv, PI * 0.1 * uTime, vec2(0.5, 0.5)) : vUv;
+      float sinusoid = sin((atan(rUv.x - 0.5, rUv.y - 0.50) / (PI * 2.0) + 0.5) * 100.0);
+      float radius = (0.25) + animateSin(sinusoid) * 0.02;
+      strength = 1.0 - step(0.01, abs(distance(rUv, vec2(0.5)) - radius));
       break;
     }
 
     // Classic Perlin Noise
     case 46: {
-      strength = cnoise(vUv * 10.0);
+      strength = cnoise(vUv * 10.0 + animateTime());
       break;
     }
 
     case 47: {
-      strength = step(0.0, cnoise(vUv * 10.0));
+      strength = step(0.0, cnoise(vUv * 10.0 + animateTime()));
       break;
     }
 
     case 48: {
-      strength = 1.0 - abs(cnoise(vUv * 10.0));
+      strength = 1.0 - abs(cnoise(vUv * 10.0 + animateTime()));
       break;
     }
 
     case 49: {
-      strength = sin(cnoise(vUv * 10.0) * 20.0);
+      strength = sin(cnoise(vUv * 10.0 + animateTime()) * animateSin(20.0));
       break;
     }
 
     case 50: {
-      strength = step(0.9, sin(cnoise(vUv * 10.0) * 20.0));
+      strength = step(0.9, sin(cnoise(vUv * 10.0 + animateTime()) * animateSin(20.0)));
       break;
     }
   }
 
   if (uMixUVColor) {
-
     // Clamp
     strength = clamp(strength, 0.0, 1.0);
 
     // Mix colors
     vec3 blackColor = vec3(0.0);
-    vec3 uvColor = vec3(vUv, 1.0);
+    vec3 uvColor = vec3(vUv, animateSin(1.0));
     vec3 color = mix(blackColor, uvColor, strength);
 
     gl_FragColor = vec4(color, 1.0);

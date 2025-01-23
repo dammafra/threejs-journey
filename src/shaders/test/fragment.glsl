@@ -1,6 +1,7 @@
 #define PI 3.1415926535897932384626433832795
 
 uniform int uPattern;
+uniform bool uMixUVColor;
 
 varying vec2 vUv;
 
@@ -367,13 +368,18 @@ void main() {
     }
   }
 
-  // Clamp
-  strength = clamp(strength, 0.0, 1.0);
+  if (uMixUVColor) {
 
-  // Mix colors
-  vec3 blackColor = vec3(0.0);
-  vec3 uvColor = vec3(vUv, 1.0);
-  vec3 color = mix(blackColor, uvColor, strength);
+    // Clamp
+    strength = clamp(strength, 0.0, 1.0);
 
-  gl_FragColor = vec4(color, 1.0);
+    // Mix colors
+    vec3 blackColor = vec3(0.0);
+    vec3 uvColor = vec3(vUv, 1.0);
+    vec3 color = mix(blackColor, uvColor, strength);
+
+    gl_FragColor = vec4(color, 1.0);
+  } else {
+    gl_FragColor = vec4(vec3(strength), 1.0);
+  }
 }

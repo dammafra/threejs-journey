@@ -8,8 +8,8 @@ import testVertexShader from './shaders/test/vertex.glsl'
 const gui = new GUI()
 
 const debug = {
-  cycle: false,
-  speed: 1,
+  cycle: true,
+  speed: 0.5,
 }
 
 const cycleTweak = gui.add(debug, 'cycle')
@@ -31,11 +31,13 @@ const material = new THREE.ShaderMaterial({
   fragmentShader: testFragmentShader,
   side: THREE.DoubleSide,
   uniforms: {
-    uPattern: new THREE.Uniform(patternsCount),
+    uPattern: new THREE.Uniform(1),
+    uMixUVColor: new THREE.Uniform(false),
   },
 })
 
 const patternTweak = gui.add(material.uniforms.uPattern, 'value').min(1).max(patternsCount).step(1).name('pattern') //prettier-ignore
+gui.add(material.uniforms.uMixUVColor, 'value').min(1).name('mixUVColor')
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
@@ -77,7 +79,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-const clock = new THREE.Clock(false)
+const clock = new THREE.Clock()
 let lastElapsed = 0
 
 cycleTweak.onChange(value => {

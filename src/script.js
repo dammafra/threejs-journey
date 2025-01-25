@@ -62,8 +62,8 @@ const material = new THREE.ShaderMaterial({
   },
 })
 
-const mixColorTweak = gui.add(material.uniforms.uMixUVColor, 'value').name('mixUVColor').hide()
-const animateTweak = gui.add(material.uniforms.uAnimate, 'value').name('animate').hide()
+const mixColorTweak = gui.add(material.uniforms.uMixUVColor, 'value').name('mixUVColor').show(debug.pattern > 2) //prettier-ignore
+const animateTweak = gui.add(material.uniforms.uAnimate, 'value').name('animate').show(debug.pattern > 2) //prettier-ignore
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)

@@ -6,14 +6,35 @@ import testVertexShader from './shaders/test/vertex.glsl'
 
 // Debug
 const gui = new GUI()
-
 const debug = {
-  cycle: true,
-  speed: 0.5,
+  patternCount: 50,
+  pattern: 1,
+  previous: () => previousPattern(),
+  next: () => nextPattern(),
 }
 
-const cycleTweak = gui.add(debug, 'cycle')
-gui.add(debug, 'speed').min(0.25).max(2).step(0.25)
+const patternTweak = gui
+  .add(debug, 'pattern')
+  .min(1)
+  .max(debug.patternCount)
+  .step(1)
+  .onChange(pattern => {
+    material.uniforms.uPattern.value = pattern
+
+    mixColorTweak.show(pattern > 2)
+    animateTweak.show(pattern > 2)
+  })
+
+const previousPattern = () => {
+  patternTweak.setValue(Math.max(debug.pattern - 1, 1))
+}
+
+const nextPattern = () => {
+  patternTweak.setValue(Math.min(debug.pattern + 1, debug.patternCount))
+}
+
+gui.add(debug, 'previous')
+gui.add(debug, 'next')
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -25,22 +46,20 @@ const scene = new THREE.Scene()
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32)
 
 // Material
-const patternsCount = 50
 const material = new THREE.ShaderMaterial({
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,
   side: THREE.DoubleSide,
   uniforms: {
-    uPattern: new THREE.Uniform(1),
+    uPattern: new THREE.Uniform(debug.pattern),
     uMixUVColor: new THREE.Uniform(true),
     uAnimate: new THREE.Uniform(true),
     uTime: new THREE.Uniform(0),
   },
 })
 
-const patternTweak = gui.add(material.uniforms.uPattern, 'value').min(1).max(patternsCount).step(1).name('pattern') //prettier-ignore
-gui.add(material.uniforms.uMixUVColor, 'value').name('mixUVColor')
-gui.add(material.uniforms.uAnimate, 'value').name('animate')
+const mixColorTweak = gui.add(material.uniforms.uMixUVColor, 'value').name('mixUVColor').hide()
+const animateTweak = gui.add(material.uniforms.uAnimate, 'value').name('animate').hide()
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
@@ -83,28 +102,11 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 const clock = new THREE.Clock()
-let lastElapsed = 0
-
-cycleTweak.onChange(value => {
-  if (value) {
-    clock.start()
-    clock.elapsedTime = lastElapsed
-  } else {
-    clock.stop()
-    lastElapsed = clock.elapsedTime
-  }
-})
 
 // Animate
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
-
   material.uniforms.uTime.value = elapsedTime
-
-  if (debug.cycle) {
-    material.uniforms.uPattern.value = Math.floor((elapsedTime * debug.speed) % patternsCount) + 1
-    patternTweak.updateDisplay()
-  }
 
   // Update controls
   controls.update()

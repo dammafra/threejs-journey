@@ -5,10 +5,14 @@ import testFragmentShader from './shaders/test/fragment.glsl'
 import testVertexShader from './shaders/test/vertex.glsl'
 
 // Debug
+const patternCount = 50
+
+let patternHash = parseInt(window.location.hash.split('#').at(1)) || 1
+patternHash = patternHash < 1 || patternHash > patternCount ? 1 : patternHash
+
 const gui = new GUI()
 const debug = {
-  patternCount: 50,
-  pattern: 1,
+  pattern: patternHash,
   previous: () => previousPattern(),
   next: () => nextPattern(),
 }
@@ -16,7 +20,7 @@ const debug = {
 const patternTweak = gui
   .add(debug, 'pattern')
   .min(1)
-  .max(debug.patternCount)
+  .max(patternCount)
   .step(1)
   .onChange(pattern => {
     material.uniforms.uPattern.value = pattern
@@ -30,7 +34,7 @@ const previousPattern = () => {
 }
 
 const nextPattern = () => {
-  patternTweak.setValue(Math.min(debug.pattern + 1, debug.patternCount))
+  patternTweak.setValue(Math.min(debug.pattern + 1, patternCount))
 }
 
 gui.add(debug, 'previous')

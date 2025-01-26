@@ -1,10 +1,10 @@
 # Three.js Journey
 
-![](https://img.shields.io/badge/ThreeJs-black?style=for-the-badge&logo=three.js&logoColor=white)
-![](https://img.shields.io/badge/OpenGL-FFFFFF?style=for-the-badge&logo=opengl)
-![](https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white)
-![](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
-![](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Three.js](https://img.shields.io/badge/ThreeJs-black?style=for-the-badge&logo=three.js&logoColor=white)
+![OpenGL](https://img.shields.io/badge/OpenGL-FFFFFF?style=for-the-badge&logo=opengl)
+![Blender](https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
 This repository contains the exercises completed as part of the [Three.js Journey](https://threejs-journey.com/) course by [Bruno Simon](https://bruno-simon.com/).
 
@@ -45,7 +45,19 @@ This repository contains the exercises completed as part of the [Three.js Journe
 
 27. [Shaders](https://dammafra-27-shaders.vercel.app)
 28. [Shader patterns](https://dammafra-28-shader-patterns.vercel.app)
-29. TBD
+29. [Raging sea](https://dammafra-29-raging-sea.vercel.app)
+30. [Animated galaxy](https://dammafra-30-animated-galaxy.vercel.app)
+31. [Modified materials](https://dammafra-31-modified-materials.vercel.app)
+32. [Coffee smoke](https://dammafra-32-coffee-smoke.vercel.app)
+33. [Hologram](https://dammafra-33-hologram.vercel.app)
+34. [Fireworks](https://dammafra-34-fireworks.vercel.app)
+35. [Lights shading](https://dammafra-35-lights-shading.vercel.app)
+36. [Raging sea shading](https://dammafra-36-raging-sea-shading.vercel.app)
+37. [Halftone shading](https://dammafra-37-halftone-shading.vercel.app)
+38. [Earth](https://dammafra-38-earth.vercel.app)
+39. [Particles cursor animation](https://dammafra-39-particles-cursor-animation.vercel.app)
+40. [Particles morphing](https://dammafra-40-particles-morphing.vercel.app)
+41. [GPGPU Flow Field Particles](https://dammafra-41-gpgpu-flow-field-particles.vercel.app)
 
 <hr />
 

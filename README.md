@@ -8,6 +8,8 @@
 
 This repository contains the exercises completed as part of the [Three.js Journey](https://threejs-journey.com/) course by [Bruno Simon](https://bruno-simon.com/).
 
+## Lessons
+
 ### Chapter 01 - Basics
 
 3.  [First Three.js project](https://dammafra-03-first-threejs-project.vercel.app)
@@ -46,6 +48,10 @@ This repository contains the exercises completed as part of the [Three.js Journe
 27. [Shaders](https://dammafra-27-shaders.vercel.app)
 28. [Shader patterns](https://dammafra-28-shader-patterns.vercel.app)
 29. TBD
+
+## Challenges
+
+16. February 2025 - [Tamagotchi](https://dammafra-challenges-016-tamagotchi.vercel.app)
 
 <hr />
 

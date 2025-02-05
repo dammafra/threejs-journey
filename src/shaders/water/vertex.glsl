@@ -1,7 +1,10 @@
 uniform float uTime;
+
 uniform float uWavesElevation;
 uniform vec2 uWavesFrequency;
 uniform float uWavesSpeed;
+
+varying float vElevation;
 
 void main() {
   // gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
@@ -20,4 +23,6 @@ void main() {
   vec4 projectedPosition = projectionMatrix * viewPosition;
 
   gl_Position = projectedPosition;
+
+  vElevation = elevation;
 }

@@ -6,6 +6,10 @@ import waterVertexShader from './shaders/water/vertex.glsl'
 
 // Debug
 const gui = new GUI({ width: 340 })
+const debug = {
+  depthColor: '#186691',
+  surfaceColor: '#9bd8ff',
+}
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -20,9 +24,15 @@ const waterMaterial = new THREE.ShaderMaterial({
   fragmentShader: waterFragmentShader,
   uniforms: {
     uTime: new THREE.Uniform(0),
+
     uWavesElevation: new THREE.Uniform(0.2),
     uWavesFrequency: new THREE.Uniform(new THREE.Vector2(4, 1.5)),
     uWavesSpeed: new THREE.Uniform(0.75),
+
+    uDepthColor: new THREE.Uniform(new THREE.Color(debug.depthColor)),
+    uSurfaceColor: new THREE.Uniform(new THREE.Color(debug.surfaceColor)),
+    uColorOffset: new THREE.Uniform(0.1),
+    uColorMultiplier: new THREE.Uniform(1.5),
   },
 })
 
@@ -30,6 +40,11 @@ gui.add(waterMaterial.uniforms.uWavesElevation, 'value').min(0).max(1).step(0.00
 gui.add(waterMaterial.uniforms.uWavesFrequency.value, 'x').min(0).max(10).step(0.001).name('uWavesFrequencyX') //prettier-ignore
 gui.add(waterMaterial.uniforms.uWavesFrequency.value, 'y').min(0).max(10).step(0.001).name('uWavesFrequencyZ') //prettier-ignore
 gui.add(waterMaterial.uniforms.uWavesSpeed, 'value').min(0).max(4).step(0.001).name('uWavesSpeed') //prettier-ignore
+
+gui.addColor(debug, 'depthColor').onChange(value => {waterMaterial.uniforms.uDepthColor.value.set(value)}) // prettier-ignore
+gui.addColor(debug, 'surfaceColor').onChange(value => {waterMaterial.uniforms.uSurfaceColor.value.set(value)}) // prettier-ignore
+gui.add(waterMaterial.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('uColorOffset') //prettier-ignore
+gui.add(waterMaterial.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('uColorMultiplier') //prettier-ignore
 
 const water = new THREE.Mesh(waterGeometry, waterMaterial)
 water.rotation.x = -Math.PI * 0.5

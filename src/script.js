@@ -18,7 +18,7 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Water
-const waterGeometry = new THREE.PlaneGeometry(2, 2, 128, 128)
+const waterGeometry = new THREE.PlaneGeometry(2, 2, 512, 512)
 const waterMaterial = new THREE.ShaderMaterial({
   vertexShader: waterVertexShader,
   fragmentShader: waterFragmentShader,
@@ -29,6 +29,11 @@ const waterMaterial = new THREE.ShaderMaterial({
     uWavesFrequency: new THREE.Uniform(new THREE.Vector2(4, 1.5)),
     uWavesSpeed: new THREE.Uniform(0.75),
 
+    uNoiseElevation: new THREE.Uniform(0.15),
+    uNoiseFrequency: new THREE.Uniform(3),
+    uNoiseSpeed: new THREE.Uniform(0.2),
+    uNoiseIterations: new THREE.Uniform(4),
+
     uDepthColor: new THREE.Uniform(new THREE.Color(debug.depthColor)),
     uSurfaceColor: new THREE.Uniform(new THREE.Color(debug.surfaceColor)),
     uColorOffset: new THREE.Uniform(0.1),
@@ -36,15 +41,23 @@ const waterMaterial = new THREE.ShaderMaterial({
   },
 })
 
-gui.add(waterMaterial.uniforms.uWavesElevation, 'value').min(0).max(1).step(0.001).name('uWavesElevation') //prettier-ignore
-gui.add(waterMaterial.uniforms.uWavesFrequency.value, 'x').min(0).max(10).step(0.001).name('uWavesFrequencyX') //prettier-ignore
-gui.add(waterMaterial.uniforms.uWavesFrequency.value, 'y').min(0).max(10).step(0.001).name('uWavesFrequencyZ') //prettier-ignore
-gui.add(waterMaterial.uniforms.uWavesSpeed, 'value').min(0).max(4).step(0.001).name('uWavesSpeed') //prettier-ignore
+const bigWaves = gui.addFolder('big waves')
+bigWaves.add(waterMaterial.uniforms.uWavesElevation, 'value').min(0).max(1).step(0.001).name('elevation') //prettier-ignore
+bigWaves.add(waterMaterial.uniforms.uWavesFrequency.value, 'x').min(0).max(10).step(0.001).name('frequency X') //prettier-ignore
+bigWaves.add(waterMaterial.uniforms.uWavesFrequency.value, 'y').min(0).max(10).step(0.001).name('frequency Z') //prettier-ignore
+bigWaves.add(waterMaterial.uniforms.uWavesSpeed, 'value').min(0).max(4).step(0.001).name('speed') //prettier-ignore
 
-gui.addColor(debug, 'depthColor').onChange(value => {waterMaterial.uniforms.uDepthColor.value.set(value)}) // prettier-ignore
-gui.addColor(debug, 'surfaceColor').onChange(value => {waterMaterial.uniforms.uSurfaceColor.value.set(value)}) // prettier-ignore
-gui.add(waterMaterial.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('uColorOffset') //prettier-ignore
-gui.add(waterMaterial.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('uColorMultiplier') //prettier-ignore
+const smallWaves = gui.addFolder('small waves')
+smallWaves.add(waterMaterial.uniforms.uNoiseElevation, 'value').min(0).max(1).step(0.001).name('elevation') //prettier-ignore
+smallWaves.add(waterMaterial.uniforms.uNoiseFrequency, 'value').min(0).max(30).step(0.001).name('frequency') //prettier-ignore
+smallWaves.add(waterMaterial.uniforms.uNoiseSpeed, 'value').min(0).max(4).step(0.001).name('speed') //prettier-ignore
+smallWaves.add(waterMaterial.uniforms.uNoiseIterations, 'value').min(0).max(5).step(1).name('iterations') //prettier-ignore
+
+const colors = gui.addFolder('colors')
+colors.addColor(debug, 'depthColor').onChange(value => {waterMaterial.uniforms.uDepthColor.value.set(value)}) // prettier-ignore
+colors.addColor(debug, 'surfaceColor').onChange(value => {waterMaterial.uniforms.uSurfaceColor.value.set(value)}) // prettier-ignore
+colors.add(waterMaterial.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('uColorOffset') //prettier-ignore
+colors.add(waterMaterial.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('uColorMultiplier') //prettier-ignore
 
 const water = new THREE.Mesh(waterGeometry, waterMaterial)
 water.rotation.x = -Math.PI * 0.5

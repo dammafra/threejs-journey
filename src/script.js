@@ -2,6 +2,8 @@ import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import meshStandardBeginVertexShaderFragment from './shaders/mesh-standard/fragments/begin-vertex.glsl'
+import meshStandardCommonShaderFragment from './shaders/mesh-standard/fragments/common.glsl'
 
 // Debug
 const gui = new GUI()
@@ -52,6 +54,18 @@ const material = new THREE.MeshStandardMaterial({
   map: mapTexture,
   normalMap: normalTexture,
 })
+
+material.onBeforeCompile = shader => {
+  shader.vertexShader = shader.vertexShader.replace(
+    '#include <common>',
+    meshStandardCommonShaderFragment,
+  )
+
+  shader.vertexShader = shader.vertexShader.replace(
+    '#include <begin_vertex>',
+    meshStandardBeginVertexShaderFragment,
+  )
+}
 
 // Models
 gltfLoader.load('/models/LeePerrySmith/LeePerrySmith.glb', gltf => {

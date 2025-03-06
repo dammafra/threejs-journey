@@ -49,7 +49,8 @@ This repository contains the exercises completed as part of the [Three.js Journe
 28. [Shader patterns](https://dammafra-28-shader-patterns.vercel.app)
 29. [Raging sea](https://dammafra-29-raging-sea.vercel.app)
 30. [Animated galaxy](https://dammafra-30-animated-galaxy.vercel.app)
-31. TBD
+31. [Modified Materials](https://dammafra-31-modified-materials.vercel.app)
+32. TBD
 
 ## Challenges
 

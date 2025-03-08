@@ -5,6 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import depthdBeginVertexShaderFragment from './shaders/depth/fragments/begin-vertex.glsl'
 import depthdCommonShaderFragment from './shaders/depth/fragments/common.glsl'
 import meshStandardBeginVertexShaderFragment from './shaders/mesh-standard/fragments/begin-vertex.glsl'
+import meshStandardBeginNormalVertexShaderFragment from './shaders/mesh-standard/fragments/beginnormal-vertex.glsl'
 import meshStandardCommonShaderFragment from './shaders/mesh-standard/fragments/common.glsl'
 
 // Debug
@@ -67,6 +68,11 @@ material.onBeforeCompile = shader => {
   shader.vertexShader = shader.vertexShader.replace(
     '#include <common>',
     meshStandardCommonShaderFragment,
+  )
+
+  shader.vertexShader = shader.vertexShader.replace(
+    '#include <beginnormal_vertex>',
+    meshStandardBeginNormalVertexShaderFragment,
   )
 
   shader.vertexShader = shader.vertexShader.replace(

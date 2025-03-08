@@ -55,7 +55,13 @@ const material = new THREE.MeshStandardMaterial({
   normalMap: normalTexture,
 })
 
+const customUniforms = {
+  uTime: new THREE.Uniform(0),
+}
+
 material.onBeforeCompile = shader => {
+  shader.uniforms.uTime = customUniforms.uTime
+
   shader.vertexShader = shader.vertexShader.replace(
     '#include <common>',
     meshStandardCommonShaderFragment,
@@ -134,6 +140,9 @@ const clock = new THREE.Clock()
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
+
+  // Update material
+  customUniforms.uTime.value = elapsedTime
 
   // Update controls
   controls.update()

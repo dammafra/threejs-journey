@@ -2,6 +2,8 @@ import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import depthdBeginVertexShaderFragment from './shaders/depth/fragments/begin-vertex.glsl'
+import depthdCommonShaderFragment from './shaders/depth/fragments/common.glsl'
 import meshStandardBeginVertexShaderFragment from './shaders/mesh-standard/fragments/begin-vertex.glsl'
 import meshStandardCommonShaderFragment from './shaders/mesh-standard/fragments/common.glsl'
 
@@ -73,17 +75,40 @@ material.onBeforeCompile = shader => {
   )
 }
 
+const depthMaterial = new THREE.MeshDepthMaterial({
+  depthPacking: THREE.RGBADepthPacking,
+})
+
+depthMaterial.onBeforeCompile = shader => {
+  shader.uniforms.uTime = customUniforms.uTime
+
+  shader.vertexShader = shader.vertexShader.replace('#include <common>', depthdCommonShaderFragment)
+
+  shader.vertexShader = shader.vertexShader.replace(
+    '#include <begin_vertex>',
+    depthdBeginVertexShaderFragment,
+  )
+}
+
 // Models
 gltfLoader.load('/models/LeePerrySmith/LeePerrySmith.glb', gltf => {
   // Model
   const mesh = gltf.scene.children[0]
   mesh.rotation.y = Math.PI * 0.5
   mesh.material = material
+  mesh.customDepthMaterial = depthMaterial
   scene.add(mesh)
 
   // Update materials
   updateAllMaterials()
 })
+
+// Plane
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(15, 15, 15), new THREE.MeshStandardMaterial())
+plane.rotation.y = Math.PI
+plane.position.y = -5
+plane.position.z = 5
+scene.add(plane)
 
 // Lights
 const directionalLight = new THREE.DirectionalLight('#ffffff', 3)

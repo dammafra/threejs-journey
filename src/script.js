@@ -56,6 +56,21 @@ gltfLoader.load('./bakedModel.glb', gltf => {
   scene.add(gltf.scene)
 })
 
+// Smoke
+const smokeGeometry = new THREE.PlaneGeometry(1, 1, 16, 64)
+// on the first frame it's fine, don't do this kind of operations on each frame: it's bad for performance!
+smokeGeometry.translate(0, 0.5, 0)
+smokeGeometry.scale(1.5, 6, 0)
+
+const smokeMaterial = new THREE.MeshBasicMaterial({
+  color: 'cyan',
+  wireframe: true,
+})
+
+const smoke = new THREE.Mesh(smokeGeometry, smokeMaterial)
+smoke.position.y = 1.83
+scene.add(smoke)
+
 // Animate
 const clock = new THREE.Clock()
 

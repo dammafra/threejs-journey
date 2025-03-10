@@ -2,6 +2,8 @@ import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import coffeeSmokeFragmentShader from './shaders/coffe-smoke/fragment.glsl'
+import coffeSmokeVertexShader from './shaders/coffe-smoke/vertex.glsl'
 
 // Debug
 const gui = new GUI()
@@ -62,9 +64,11 @@ const smokeGeometry = new THREE.PlaneGeometry(1, 1, 16, 64)
 smokeGeometry.translate(0, 0.5, 0)
 smokeGeometry.scale(1.5, 6, 0)
 
-const smokeMaterial = new THREE.MeshBasicMaterial({
-  color: 'cyan',
-  wireframe: true,
+const smokeMaterial = new THREE.ShaderMaterial({
+  vertexShader: coffeSmokeVertexShader,
+  fragmentShader: coffeeSmokeFragmentShader,
+  side: THREE.DoubleSide,
+  // wireframe: true,
 })
 
 const smoke = new THREE.Mesh(smokeGeometry, smokeMaterial)

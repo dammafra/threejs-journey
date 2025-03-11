@@ -15,3 +15,12 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Going Further
+
+- [ ] Add tweaks to the fragment pattern
+- [ ] Add tweaks to the vertex animation
+- [ ] Add a tweak to the color
+- [ ] Use your own model for the scenery
+- [ ] Add floating marshmallows
+- [ ] Make the wind move with the cursor

@@ -10,9 +10,11 @@ const gui = new GUI()
 
 const debug = {
   autoRotate: true,
+  color: '#70c1ff',
 }
 
 gui.add(debug, 'autoRotate')
+gui.addColor(debug, 'color').onChange(color => material.uniforms.uColor.value.set(color))
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -74,6 +76,7 @@ const material = new THREE.ShaderMaterial({
   fragmentShader: holographicFragmentShader,
   uniforms: {
     uTime: new THREE.Uniform(0),
+    uColor: new THREE.Uniform(new THREE.Color(debug.color)),
   },
   transparent: true,
   side: THREE.DoubleSide,

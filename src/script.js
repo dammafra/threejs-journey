@@ -2,6 +2,8 @@ import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import holographicFragmentShader from './shaders/holographic/fragment.glsl'
+import holographicVertexShader from './shaders/holographic/vertex.glsl'
 
 // Debug
 const gui = new GUI()
@@ -61,7 +63,10 @@ gui.addColor(rendererParameters, 'clearColor').onChange(() => {
 })
 
 // Material
-const material = new THREE.MeshBasicMaterial()
+const material = new THREE.ShaderMaterial({
+  vertexShader: holographicVertexShader,
+  fragmentShader: holographicFragmentShader,
+})
 
 // Torus knot
 const torusKnot = new THREE.Mesh(new THREE.TorusKnotGeometry(0.6, 0.25, 128, 32), material)

@@ -9,9 +9,17 @@ Run this followed commands:
 # Install dependencies (only the first time)
 npm install
 
-# Run the local server at localhost:8080
+# Run the local server at localhost:5173
 npm run dev
 
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Going Further
+
+- [ ] Add tweaks to control the animation
+- [ ] Add tweaks to control the pattern
+- [ ] Add sounds
+- [ ] Add scenery like R2D2 displaying the hologram
+- [ ] Create color variation instead of a uniform color

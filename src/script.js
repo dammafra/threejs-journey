@@ -8,6 +8,12 @@ import holographicVertexShader from './shaders/holographic/vertex.glsl'
 // Debug
 const gui = new GUI()
 
+const debug = {
+  autoRotate: true,
+}
+
+gui.add(debug, 'autoRotate')
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -66,6 +72,10 @@ gui.addColor(rendererParameters, 'clearColor').onChange(() => {
 const material = new THREE.ShaderMaterial({
   vertexShader: holographicVertexShader,
   fragmentShader: holographicFragmentShader,
+  uniforms: {
+    uTime: new THREE.Uniform(0),
+  },
+  transparent: true,
 })
 
 // Torus knot
@@ -94,17 +104,22 @@ const clock = new THREE.Clock()
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
 
+  // Update material
+  material.uniforms.uTime.value = elapsedTime
+
   // Rotate objects
-  if (suzanne) {
-    suzanne.rotation.x = -elapsedTime * 0.1
-    suzanne.rotation.y = elapsedTime * 0.2
+  if (debug.autoRotate) {
+    if (suzanne) {
+      suzanne.rotation.x = -elapsedTime * 0.1
+      suzanne.rotation.y = elapsedTime * 0.2
+    }
+
+    sphere.rotation.x = -elapsedTime * 0.1
+    sphere.rotation.y = elapsedTime * 0.2
+
+    torusKnot.rotation.x = -elapsedTime * 0.1
+    torusKnot.rotation.y = elapsedTime * 0.2
   }
-
-  sphere.rotation.x = -elapsedTime * 0.1
-  sphere.rotation.y = elapsedTime * 0.2
-
-  torusKnot.rotation.x = -elapsedTime * 0.1
-  torusKnot.rotation.y = elapsedTime * 0.2
 
   // Update controls
   controls.update()

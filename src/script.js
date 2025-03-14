@@ -20,12 +20,16 @@ const textureLoader = new THREE.TextureLoader()
 const sizes = {
   width: window.innerWidth,
   height: window.innerHeight,
+  resolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
+  pixelRatio: Math.min(window.devicePixelRatio, 2),
 }
 
 window.addEventListener('resize', () => {
   // Update sizes
   sizes.width = window.innerWidth
   sizes.height = window.innerHeight
+  sizes.resolution.set(window.innerWidth, window.innerHeight)
+  sizes.pixelRatio = Math.min(window.devicePixelRatio, 2)
 
   // Update camera
   camera.aspect = sizes.width / sizes.height
@@ -33,7 +37,7 @@ window.addEventListener('resize', () => {
 
   // Update renderer
   renderer.setSize(sizes.width, sizes.height)
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  renderer.setPixelRatio(sizes.pixelRatio)
 })
 
 // Camera
@@ -51,7 +55,7 @@ const renderer = new THREE.WebGLRenderer({
   antialias: true,
 })
 renderer.setSize(sizes.width, sizes.height)
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.setPixelRatio(sizes.pixelRatio)
 
 // Fireworks
 const createFirework = ({ count, position, size }) => {
@@ -75,6 +79,8 @@ const createFirework = ({ count, position, size }) => {
     fragmentShader: fireworkFragmentShader,
     uniforms: {
       uSize: new THREE.Uniform(size),
+      uResolution: new THREE.Uniform(sizes.resolution),
+      uPixelRatio: new THREE.Uniform(sizes.pixelRatio),
     },
   })
 
@@ -84,7 +90,7 @@ const createFirework = ({ count, position, size }) => {
   scene.add(firework)
 }
 
-createFirework({ count: 100, position: new THREE.Vector3(), size: 50 })
+createFirework({ count: 100, position: new THREE.Vector3(), size: 0.5 })
 
 // Animate
 const tick = () => {

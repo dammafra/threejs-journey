@@ -30,6 +30,9 @@ void main() {
 
   // Final color
   gl_FragColor = vec4(uColor, holographic);
-#include <colorspace_fragment>
-#include <tonemapping_fragment>
+
+  // clang-format off
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+  // clang-format on
 }

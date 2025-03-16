@@ -142,25 +142,32 @@ const createFirework = ({ radius, count, position, size, texture, color }) => {
   })
 }
 
-createFirework({
-  radius: 1,
-  count: 100,
-  position: new THREE.Vector3(),
-  size: 0.5,
-  texture: textures[7],
-  color: new THREE.Color('#8affff'),
-})
+const createRandomFirework = () => {
+  const radius = 0.5 + Math.random()
+  const count = Math.round(400 + Math.random() * 1000)
+  const position = new THREE.Vector3(
+    (Math.random() - 0.5) * 2,
+    Math.random(),
+    (Math.random() - 0.5) * 2,
+  )
+  const size = 0.1 + Math.random() * 0.1
+  const texture = textures[Math.floor(Math.random() * textures.length)]
+  const color = new THREE.Color()
+  color.setHSL(Math.random(), 1, 0.7)
 
-window.addEventListener('click', () => {
   createFirework({
-    radius: 1,
-    count: 100,
-    position: new THREE.Vector3(),
-    size: 0.5,
-    texture: textures[7],
-    color: new THREE.Color('#8affff'),
+    radius,
+    count,
+    position,
+    size,
+    texture,
+    color,
   })
-})
+}
+
+createRandomFirework()
+
+window.addEventListener('click', createRandomFirework)
 
 // Animate
 const tick = () => {

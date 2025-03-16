@@ -8,6 +8,7 @@ import fireworkVertexShader from './shaders/firework/vertex.glsl'
 
 // Debug
 const gui = new GUI({ width: 340 })
+gui.close()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -169,6 +170,7 @@ const createRandomFirework = () => {
 createRandomFirework()
 
 window.addEventListener('click', createRandomFirework)
+window.addEventListener('touchend', createRandomFirework)
 
 // Sky
 const sky = new Sky()

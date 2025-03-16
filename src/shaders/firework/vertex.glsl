@@ -6,11 +6,7 @@ uniform vec2 uResolution;
 uniform float uPixelRatio;
 uniform float uProgress;
 
-// clang-format off
-float remap(float value, float originMin, float originMax, float destinationMin, float destinationMax) {
-  return destinationMin + (value - originMin) * (destinationMax - destinationMin) / (originMax - originMin);
-}
-// clang-format on
+#include '../includes/remap.glsl'
 
 void main() {
   vec3 newPosition = position;

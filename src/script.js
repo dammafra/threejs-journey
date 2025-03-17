@@ -20,6 +20,18 @@ const debug = {
     intensity: 1,
     specularPower: 20,
   },
+  pointLight1: {
+    color: new THREE.Color('#ff5959'),
+    intensity: 1,
+    specularPower: 20,
+    decay: 0.25,
+  },
+  pointLight2: {
+    color: new THREE.Color('#59ffbc'),
+    intensity: 1,
+    specularPower: 20,
+    decay: 0.25,
+  },
 }
 
 // Canvas
@@ -91,6 +103,18 @@ const material = new THREE.ShaderMaterial({
     uDirectionalLightColor: new THREE.Uniform(debug.directionalLight.color),
     uDirectionalLightIntensity: new THREE.Uniform(debug.directionalLight.intensity),
     uDirectionalLightSpecularPower: new THREE.Uniform(debug.directionalLight.specularPower),
+
+    uPointLight1Position: new THREE.Uniform(new THREE.Vector3(0, 2.5, 0)),
+    uPointLight1Color: new THREE.Uniform(debug.pointLight1.color),
+    uPointLight1Intensity: new THREE.Uniform(debug.pointLight1.intensity),
+    uPointLight1SpecularPower: new THREE.Uniform(debug.pointLight1.specularPower),
+    uPointLight1Decay: new THREE.Uniform(debug.pointLight1.decay),
+
+    uPointLight2Position: new THREE.Uniform(new THREE.Vector3(2, 2, 2)),
+    uPointLight2Color: new THREE.Uniform(debug.pointLight2.color),
+    uPointLight2Intensity: new THREE.Uniform(debug.pointLight2.intensity),
+    uPointLight2SpecularPower: new THREE.Uniform(debug.pointLight2.specularPower),
+    uPointLight2Decay: new THREE.Uniform(debug.pointLight2.decay),
   },
 })
 
@@ -149,24 +173,54 @@ directionalLightFolder.onChange(() => {
   material.uniforms.uDirectionalLightSpecularPower.value = debug.directionalLight.specularPower
 })
 
-const pointLightHelper = new THREE.Mesh(
+const pointLight1Helper = new THREE.Mesh(
   new THREE.IcosahedronGeometry(0.1, 2),
   new THREE.MeshBasicMaterial(),
 )
-pointLightHelper.material.color.setRGB(1, 0.1, 0.1)
-pointLightHelper.position.set(0, 2.5, 0)
-scene.add(pointLightHelper)
+pointLight1Helper.material.color.set(debug.pointLight1.color)
+pointLight1Helper.position.copy(material.uniforms.uPointLight1Position.value)
+scene.add(pointLight1Helper)
 
-const pointLightHelper2 = new THREE.Mesh(
+const pointLight1Folder = gui.addFolder('point light 1')
+pointLight1Folder.addColor(debug.pointLight1, 'color')
+pointLight1Folder.add(debug.pointLight1, 'intensity').min(0).max(10).step(0.01)
+pointLight1Folder.add(debug.pointLight1, 'specularPower').min(0).max(50)
+pointLight1Folder.add(debug.pointLight1, 'decay').min(0).max(10).step(0.01)
+pointLight1Folder.onChange(() => {
+  pointLight1Helper.material.color.set(debug.pointLight1.color)
+  material.uniforms.uPointLight1Color.value.set(debug.pointLight1.color)
+  material.uniforms.uPointLight1Intensity.value = debug.pointLight1.intensity
+  material.uniforms.uPointLight1SpecularPower.value = debug.pointLight1.specularPower
+  material.uniforms.uPointLight1Decay.value = debug.pointLight1.decay
+})
+
+const pointLight2Helper = new THREE.Mesh(
   new THREE.IcosahedronGeometry(0.1, 2),
   new THREE.MeshBasicMaterial(),
 )
-pointLightHelper2.material.color.setRGB(0.1, 1, 0.5)
-pointLightHelper2.position.set(2, 2, 2)
-scene.add(pointLightHelper2)
+pointLight2Helper.material.color.set(debug.pointLight2.color)
+pointLight2Helper.position.copy(material.uniforms.uPointLight2Position.value)
+scene.add(pointLight2Helper)
+
+const pointLight2Folder = gui.addFolder('point light 2')
+pointLight2Folder.addColor(debug.pointLight2, 'color')
+pointLight2Folder.add(debug.pointLight2, 'intensity').min(0).max(10).step(0.01)
+pointLight2Folder.add(debug.pointLight2, 'specularPower').min(0).max(50)
+pointLight2Folder.add(debug.pointLight2, 'decay').min(0).max(10).step(0.01)
+pointLight2Folder.onChange(() => {
+  pointLight2Helper.material.color.set(debug.pointLight2.color)
+  material.uniforms.uPointLight2Color.value.set(debug.pointLight2.color)
+  material.uniforms.uPointLight2Intensity.value = debug.pointLight2.intensity
+  material.uniforms.uPointLight2SpecularPower.value = debug.pointLight2.specularPower
+  material.uniforms.uPointLight2Decay.value = debug.pointLight2.decay
+})
 
 // Drag
-const drag = new DragControls([directionalLightHelper], camera, canvas)
+const drag = new DragControls(
+  [directionalLightHelper, pointLight1Helper, pointLight2Helper],
+  camera,
+  canvas,
+)
 drag.addEventListener('hoveron', () => canvas.classList.add('grab'))
 drag.addEventListener('hoveroff', () => canvas.classList.remove('grab'))
 drag.addEventListener('dragstart', () => {
@@ -180,6 +234,8 @@ drag.addEventListener('dragend', () => {
 drag.addEventListener('drag', () => {
   directionalLightHelper.lookAt(new THREE.Vector3(0, 0, 0))
   material.uniforms.uDirectionalLightPosition.value.copy(directionalLightHelper.position)
+  material.uniforms.uPointLight1Position.value.copy(pointLight1Helper.position)
+  material.uniforms.uPointLight2Position.value.copy(pointLight2Helper.position)
 })
 
 // Animate

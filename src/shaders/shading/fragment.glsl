@@ -13,6 +13,7 @@ varying vec3 vPosition;
 
 #include '../includes/ambient-light.glsl'
 #include '../includes/directional-light.glsl'
+#include '../includes/point-light.glsl'
 
 void main() {
   vec3 normal = normalize(vNormal);
@@ -24,12 +25,21 @@ void main() {
   light += ambientLight(uAmbientLightColor,    // color
                         uAmbientLightIntensity // intensity
   );
-  light += directionalLight(uDirectionalLightColor,        // color
-                            uDirectionalLightIntensity,    // intensity
-                            uDirectionalLightPosition,     // position
-                            normal,                        // normal
-                            viewDirection,                 // view direction
-                            uDirectionalLightSpecularPower // specular power
+  light += directionalLight(uDirectionalLightColor,         // color
+                            uDirectionalLightIntensity,     // intensity
+                            uDirectionalLightSpecularPower, // specular power
+                            uDirectionalLightPosition,      // position
+                            normal,                         // normal
+                            viewDirection                   // view direction
+  );
+  light += pointLight(vec3(1.0, 0.1, 0.1), // color
+                      1.0,                 // intensity
+                      20.0,                // specular power
+                      0.25,                // decay
+                      vec3(0.0, 2.5, 0.0), // position
+                      normal,              // normal
+                      viewDirection,       // view direction
+                      vPosition            // fragment position
   );
   color *= light;
 

@@ -149,6 +149,14 @@ directionalLightFolder.onChange(() => {
   material.uniforms.uDirectionalLightSpecularPower.value = debug.directionalLight.specularPower
 })
 
+const pointLightHelper = new THREE.Mesh(
+  new THREE.IcosahedronGeometry(0.1, 2),
+  new THREE.MeshBasicMaterial(),
+)
+pointLightHelper.material.color.setRGB(1.0, 0.1, 0.1)
+pointLightHelper.position.set(0, 2.5, 0)
+scene.add(pointLightHelper)
+
 // Drag
 const drag = new DragControls([directionalLightHelper], camera, canvas)
 drag.addEventListener('hoveron', () => canvas.classList.add('grab'))

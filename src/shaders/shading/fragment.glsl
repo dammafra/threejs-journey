@@ -3,6 +3,7 @@ uniform vec3 uColor;
 uniform vec3 uAmbientLightColor;
 uniform float uAmbientLightIntensity;
 
+uniform vec3 uDirectionalLightPosition;
 uniform vec3 uDirectionalLightColor;
 uniform float uDirectionalLightIntensity;
 uniform float uDirectionalLightSpecularPower;
@@ -25,7 +26,7 @@ void main() {
   );
   light += directionalLight(uDirectionalLightColor,        // color
                             uDirectionalLightIntensity,    // intensity
-                            vec3(0.0, 0.0, 3.0),           // position
+                            uDirectionalLightPosition,     // position
                             normal,                        // normal
                             viewDirection,                 // view direction
                             uDirectionalLightSpecularPower // specular power

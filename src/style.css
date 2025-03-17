@@ -14,3 +14,10 @@ body {
   left: 0;
   outline: none;
 }
+
+.webgl.grab {
+  cursor: grab !important;
+}
+.webgl.grabbing {
+  cursor: grabbing !important;
+}

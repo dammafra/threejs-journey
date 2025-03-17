@@ -1,5 +1,6 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
+import { DragControls } from 'three/addons/controls/DragControls.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import shadingFragmentShader from './shaders/shading/fragment.glsl'
@@ -86,6 +87,7 @@ const material = new THREE.ShaderMaterial({
     uAmbientLightColor: new THREE.Uniform(debug.ambientLight.color),
     uAmbientLightIntensity: new THREE.Uniform(debug.ambientLight.intensity),
 
+    uDirectionalLightPosition: new THREE.Uniform(new THREE.Vector3(0, 0, 3)),
     uDirectionalLightColor: new THREE.Uniform(debug.directionalLight.color),
     uDirectionalLightIntensity: new THREE.Uniform(debug.directionalLight.intensity),
     uDirectionalLightSpecularPower: new THREE.Uniform(debug.directionalLight.specularPower),
@@ -133,7 +135,7 @@ const directionalLightHelper = new THREE.Mesh(
 )
 directionalLightHelper.material.color.set(debug.directionalLight.color)
 directionalLightHelper.material.side = THREE.DoubleSide
-directionalLightHelper.position.set(0, 0, 3)
+directionalLightHelper.position.copy(material.uniforms.uDirectionalLightPosition.value)
 scene.add(directionalLightHelper)
 
 const directionalLightFolder = gui.addFolder('directional light')
@@ -145,6 +147,23 @@ directionalLightFolder.onChange(() => {
   material.uniforms.uDirectionalLightColor.value.set(debug.directionalLight.color)
   material.uniforms.uDirectionalLightIntensity.value = debug.directionalLight.intensity
   material.uniforms.uDirectionalLightSpecularPower.value = debug.directionalLight.specularPower
+})
+
+// Drag
+const drag = new DragControls([directionalLightHelper], camera, canvas)
+drag.addEventListener('hoveron', () => canvas.classList.add('grab'))
+drag.addEventListener('hoveroff', () => canvas.classList.remove('grab'))
+drag.addEventListener('dragstart', () => {
+  controls.enabled = false
+  canvas.classList.add('grabbing')
+})
+drag.addEventListener('dragend', () => {
+  controls.enabled = true
+  canvas.classList.remove('grabbing')
+})
+drag.addEventListener('drag', () => {
+  directionalLightHelper.lookAt(new THREE.Vector3(0, 0, 0))
+  material.uniforms.uDirectionalLightPosition.value.copy(directionalLightHelper.position)
 })
 
 // Animate

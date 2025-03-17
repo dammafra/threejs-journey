@@ -7,6 +7,19 @@ import shadingVertexShader from './shaders/shading/vertex.glsl'
 
 // Debug
 const gui = new GUI()
+gui.close()
+
+const debug = {
+  ambientLight: {
+    color: new THREE.Color('#ffffff'),
+    intensity: 0.03,
+  },
+  directionalLight: {
+    color: new THREE.Color('#5959ff'),
+    intensity: 1,
+    specularPower: 20,
+  },
+}
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -69,12 +82,20 @@ const material = new THREE.ShaderMaterial({
   fragmentShader: shadingFragmentShader,
   uniforms: {
     uColor: new THREE.Uniform(new THREE.Color(materialParameters.color)),
+
+    uAmbientLightColor: new THREE.Uniform(debug.ambientLight.color),
+    uAmbientLightIntensity: new THREE.Uniform(debug.ambientLight.intensity),
+
+    uDirectionalLightColor: new THREE.Uniform(debug.directionalLight.color),
+    uDirectionalLightIntensity: new THREE.Uniform(debug.directionalLight.intensity),
+    uDirectionalLightSpecularPower: new THREE.Uniform(debug.directionalLight.specularPower),
   },
 })
 
-gui.addColor(materialParameters, 'color').onChange(() => {
-  material.uniforms.uColor.value.set(materialParameters.color)
-})
+gui
+  .addColor(materialParameters, 'color')
+  .name('base color')
+  .onChange(() => material.uniforms.uColor.value.set(materialParameters.color))
 
 // Objects
 // Torus knot
@@ -98,14 +119,33 @@ gltfLoader.load('./suzanne.glb', gltf => {
 })
 
 // Light helpers
+const ambientLightFolder = gui.addFolder('ambient light')
+ambientLightFolder.addColor(debug.ambientLight, 'color')
+ambientLightFolder.add(debug.ambientLight, 'intensity').min(0).max(10).step(0.01)
+ambientLightFolder.onChange(() => {
+  material.uniforms.uAmbientLightColor.value.set(debug.ambientLight.color)
+  material.uniforms.uAmbientLightIntensity.value = debug.ambientLight.intensity
+})
+
 const directionalLightHelper = new THREE.Mesh(
   new THREE.PlaneGeometry(),
   new THREE.MeshBasicMaterial(),
 )
-directionalLightHelper.material.color.setRGB(0.1, 0.1, 1)
+directionalLightHelper.material.color.set(debug.directionalLight.color)
 directionalLightHelper.material.side = THREE.DoubleSide
 directionalLightHelper.position.set(0, 0, 3)
 scene.add(directionalLightHelper)
+
+const directionalLightFolder = gui.addFolder('directional light')
+directionalLightFolder.addColor(debug.directionalLight, 'color')
+directionalLightFolder.add(debug.directionalLight, 'intensity').min(0).max(10).step(0.01)
+directionalLightFolder.add(debug.directionalLight, 'specularPower').min(0).max(50)
+directionalLightFolder.onChange(() => {
+  directionalLightHelper.material.color.set(debug.directionalLight.color)
+  material.uniforms.uDirectionalLightColor.value.set(debug.directionalLight.color)
+  material.uniforms.uDirectionalLightIntensity.value = debug.directionalLight.intensity
+  material.uniforms.uDirectionalLightSpecularPower.value = debug.directionalLight.specularPower
+})
 
 // Animate
 const clock = new THREE.Clock()

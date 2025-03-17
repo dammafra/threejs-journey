@@ -15,3 +15,10 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Going Further
+
+- [ ] Animate the lights.
+- [ ] Add more control over the specular.
+- [ ] Support other types of lights like the hemisphere light or spotlight.
+- [x] Control the lights using the debug panel.

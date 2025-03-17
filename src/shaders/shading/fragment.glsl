@@ -41,6 +41,15 @@ void main() {
                       viewDirection,       // view direction
                       vPosition            // fragment position
   );
+  light += pointLight(vec3(0.1, 1.0, 0.5), // color
+                      1.0,                 // intensity
+                      20.0,                // specular power
+                      0.25,                // decay
+                      vec3(2.0, 2.0, 2.0), // position
+                      normal,              // normal
+                      viewDirection,       // view direction
+                      vPosition            // fragment position
+  );
   color *= light;
 
   // Final color

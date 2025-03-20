@@ -10,6 +10,8 @@ uniform float uNoiseSpeed;
 uniform float uNoiseIterations;
 
 varying float vElevation;
+varying vec3 vNormal;
+varying vec3 vPosition;
 
 #include '../includes/perlin-classic-3D.glsl'
 
@@ -38,4 +40,6 @@ void main() {
 
   // Varyings
   vElevation = elevation;
+  vNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
+  vPosition = modelPosition.xyz;
 }

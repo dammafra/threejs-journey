@@ -7,8 +7,8 @@ import waterVertexShader from './shaders/water/vertex.glsl'
 // Debug
 const gui = new GUI({ width: 340 })
 const debug = {
-  depthColor: '#186691',
-  surfaceColor: '#9bd8ff',
+  depthColor: '#ff4000',
+  surfaceColor: '#151c37',
 }
 
 // Canvas
@@ -36,8 +36,8 @@ const waterMaterial = new THREE.ShaderMaterial({
 
     uDepthColor: new THREE.Uniform(new THREE.Color(debug.depthColor)),
     uSurfaceColor: new THREE.Uniform(new THREE.Color(debug.surfaceColor)),
-    uColorOffset: new THREE.Uniform(0.1),
-    uColorMultiplier: new THREE.Uniform(1.5),
+    uColorOffset: new THREE.Uniform(0.925),
+    uColorMultiplier: new THREE.Uniform(1),
   },
 })
 

@@ -10,6 +10,9 @@ void main() {
 
   // Final color
   gl_FragColor = vec4(color, 1.0);
-#include <tonemapping_fragment>
-#include <colorspace_fragment>
+
+  // clang-format off
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+  // clang-format on
 }

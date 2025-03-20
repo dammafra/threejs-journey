@@ -6,7 +6,10 @@ import waterVertexShader from './shaders/water/vertex.glsl'
 
 // Debug
 const gui = new GUI({ width: 340 })
-const debugObject = {}
+const debug = {
+  depthColor: '#186691',
+  surfaceColor: '#9bd8ff',
+}
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -16,51 +19,45 @@ const scene = new THREE.Scene()
 
 // Water
 const waterGeometry = new THREE.PlaneGeometry(2, 2, 512, 512)
-
-debugObject.depthColor = '#186691'
-debugObject.surfaceColor = '#9bd8ff'
-
-gui.addColor(debugObject, 'depthColor').onChange(() => {
-  waterMaterial.uniforms.uDepthColor.value.set(debugObject.depthColor)
-})
-gui.addColor(debugObject, 'surfaceColor').onChange(() => {
-  waterMaterial.uniforms.uSurfaceColor.value.set(debugObject.surfaceColor)
-})
-
 const waterMaterial = new THREE.ShaderMaterial({
   vertexShader: waterVertexShader,
   fragmentShader: waterFragmentShader,
   uniforms: {
-    uTime: { value: 0 },
+    uTime: new THREE.Uniform(0),
 
-    uBigWavesElevation: { value: 0.2 },
-    uBigWavesFrequency: { value: new THREE.Vector2(4, 1.5) },
-    uBigWavesSpeed: { value: 0.75 },
+    uWavesElevation: new THREE.Uniform(0.2),
+    uWavesFrequency: new THREE.Uniform(new THREE.Vector2(4, 1.5)),
+    uWavesSpeed: new THREE.Uniform(0.75),
 
-    uSmallWavesElevation: { value: 0.15 },
-    uSmallWavesFrequency: { value: 3 },
-    uSmallWavesSpeed: { value: 0.2 },
-    uSmallIterations: { value: 4 },
+    uNoiseElevation: new THREE.Uniform(0.15),
+    uNoiseFrequency: new THREE.Uniform(3),
+    uNoiseSpeed: new THREE.Uniform(0.2),
+    uNoiseIterations: new THREE.Uniform(4),
 
-    uDepthColor: { value: new THREE.Color(debugObject.depthColor) },
-    uSurfaceColor: { value: new THREE.Color(debugObject.surfaceColor) },
-    uColorOffset: { value: 0.08 },
-    uColorMultiplier: { value: 5 },
+    uDepthColor: new THREE.Uniform(new THREE.Color(debug.depthColor)),
+    uSurfaceColor: new THREE.Uniform(new THREE.Color(debug.surfaceColor)),
+    uColorOffset: new THREE.Uniform(0.1),
+    uColorMultiplier: new THREE.Uniform(1.5),
   },
 })
 
-gui.add(waterMaterial.uniforms.uBigWavesElevation, 'value').min(0).max(1).step(0.001).name('uBigWavesElevation') //prettier-ignore
-gui.add(waterMaterial.uniforms.uBigWavesFrequency.value, 'x').min(0).max(10).step(0.001).name('uBigWavesFrequencyX') //prettier-ignore
-gui.add(waterMaterial.uniforms.uBigWavesFrequency.value, 'y').min(0).max(10).step(0.001).name('uBigWavesFrequencyY') //prettier-ignore
-gui.add(waterMaterial.uniforms.uBigWavesSpeed, 'value').min(0).max(4).step(0.001).name('uBigWavesSpeed') //prettier-ignore
+const bigWaves = gui.addFolder('big waves')
+bigWaves.add(waterMaterial.uniforms.uWavesElevation, 'value').min(0).max(1).step(0.001).name('elevation') //prettier-ignore
+bigWaves.add(waterMaterial.uniforms.uWavesFrequency.value, 'x').min(0).max(10).step(0.001).name('frequency X') //prettier-ignore
+bigWaves.add(waterMaterial.uniforms.uWavesFrequency.value, 'y').min(0).max(10).step(0.001).name('frequency Z') //prettier-ignore
+bigWaves.add(waterMaterial.uniforms.uWavesSpeed, 'value').min(0).max(4).step(0.001).name('speed') //prettier-ignore
 
-gui.add(waterMaterial.uniforms.uSmallWavesElevation, 'value').min(0).max(1).step(0.001).name('uSmallWavesElevation') //prettier-ignore
-gui.add(waterMaterial.uniforms.uSmallWavesFrequency, 'value').min(0).max(30).step(0.001).name('uSmallWavesFrequency') //prettier-ignore
-gui.add(waterMaterial.uniforms.uSmallWavesSpeed, 'value').min(0).max(4).step(0.001).name('uSmallWavesSpeed') //prettier-ignore
-gui.add(waterMaterial.uniforms.uSmallIterations, 'value').min(0).max(5).step(1).name('uSmallIterations') //prettier-ignore
+const smallWaves = gui.addFolder('small waves')
+smallWaves.add(waterMaterial.uniforms.uNoiseElevation, 'value').min(0).max(1).step(0.001).name('elevation') //prettier-ignore
+smallWaves.add(waterMaterial.uniforms.uNoiseFrequency, 'value').min(0).max(30).step(0.001).name('frequency') //prettier-ignore
+smallWaves.add(waterMaterial.uniforms.uNoiseSpeed, 'value').min(0).max(4).step(0.001).name('speed') //prettier-ignore
+smallWaves.add(waterMaterial.uniforms.uNoiseIterations, 'value').min(0).max(5).step(1).name('iterations') //prettier-ignore
 
-gui.add(waterMaterial.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('uColorOffset')
-gui.add(waterMaterial.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('uColorMultiplier') //prettier-ignore
+const colors = gui.addFolder('colors')
+colors.addColor(debug, 'depthColor').onChange(value => {waterMaterial.uniforms.uDepthColor.value.set(value)}) // prettier-ignore
+colors.addColor(debug, 'surfaceColor').onChange(value => {waterMaterial.uniforms.uSurfaceColor.value.set(value)}) // prettier-ignore
+colors.add(waterMaterial.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('uColorOffset') //prettier-ignore
+colors.add(waterMaterial.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('uColorMultiplier') //prettier-ignore
 
 const water = new THREE.Mesh(waterGeometry, waterMaterial)
 water.rotation.x = -Math.PI * 0.5

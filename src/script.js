@@ -17,6 +17,11 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+// Helper
+const axesHelper = new THREE.AxesHelper()
+axesHelper.position.y += 0.25
+scene.add(axesHelper)
+
 // Water
 const waterGeometry = new THREE.PlaneGeometry(2, 2, 512, 512)
 const waterMaterial = new THREE.ShaderMaterial({

@@ -21,7 +21,7 @@ const fragmentShaders = Object.keys(modules)
 // Debug
 const patternCount = fragmentShaders.length
 
-let patternHash = parseInt(window.location.hash.split('#').at(1)) || fragmentShaders.length
+let patternHash = parseInt(window.location.hash.split('#').at(1)) || 1
 patternHash = patternHash < 1 || patternHash > patternCount ? 1 : patternHash
 
 const gui = new GUI()
@@ -156,8 +156,8 @@ const updateCodeSnippet = () => {
     .replace(utilsFragment, '')
     .replace(/#define.*/g, '')
     .replace(/uniform.*/g, '')
-    .replace(/animate.*\((.*?)\)/g, '$1')
-    .replace(/\n\n\n/g, '\n') // TODO: improve
+    .replace(/animate\w*\(([^()]*)\)/g, '$1')
+    .replace(/^\s*$/gm, '')
     .trim()
 
   codeElement.removeAttribute('data-highlighted')

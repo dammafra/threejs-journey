@@ -9,6 +9,7 @@ varying vec2 vUv;
 
 void main() {
   float strength;
+
   // vec2 gridUv = vec2(floor(vUv.x * 10.0) / 10.0, floor((vUv.y + vUv.x * 0.5) * 10.0) / 10.0);
   vec2 gridUv = vec2(                                      //
       floor(vUv.x * 10.0) / 10.0,                          //

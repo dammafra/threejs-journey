@@ -8,6 +8,7 @@ varying vec2 vUv;
 
 void main() {
   float strength;
+
   // offset = 0.8 - 0.4 / 2.0
   float barsX = step(0.4, mod(vUv.x * 10.0, 1.0));
   barsX *= step(0.8, mod(vUv.y * 10.0 + animateSin(0.2), 1.0));

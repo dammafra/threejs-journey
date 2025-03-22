@@ -14,3 +14,14 @@ body {
   left: 0;
   outline: none;
 }
+
+.glsl {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #1f1f1f;
+  font-family: monospace;
+  padding: 16px;
+  white-space: pre-wrap; /* or pre */
+}

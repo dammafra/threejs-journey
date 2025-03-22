@@ -2,6 +2,8 @@ uniform vec3 uColor;
 uniform vec2 uResolution;
 uniform float uShadowRepetitions;
 uniform vec3 uShadowColor;
+uniform float uLightRepetitions;
+uniform vec3 uLightColor;
 
 varying vec3 vNormal;
 varying vec3 vPosition;
@@ -43,6 +45,16 @@ void main() {
       normal,               //
       -0.8,                 // intensity low
       1.5                   // intensity high
+  );
+
+  color = halftone(        //
+      color,               //
+      uLightColor,         // pointColor
+      uLightRepetitions,   // repetitions
+      vec3(1.0, 1.0, 0.0), // direction
+      normal,              //
+      0.5,                 // intensity low
+      1.5                  // intensity high
   );
 
   // Final color

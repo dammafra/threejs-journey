@@ -13,6 +13,8 @@ const debug = {
   color: '#ff794d',
   shadowRepetitions: 100,
   shadowColor: '#8e19b8',
+  lightRepetitions: 130,
+  lightColor: '#e5ffe0',
 }
 
 // Canvas
@@ -83,6 +85,8 @@ const material = new THREE.ShaderMaterial({
     uResolution: new THREE.Uniform(new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio)), //prettier-ignore
     uShadowRepetitions: new THREE.Uniform(debug.shadowRepetitions),
     uShadowColor: new THREE.Uniform(new THREE.Color(debug.shadowColor)),
+    uLightRepetitions: new THREE.Uniform(debug.lightRepetitions),
+    uLightColor: new THREE.Uniform(new THREE.Color(debug.lightColor)),
   },
 })
 
@@ -96,6 +100,15 @@ gui
 gui
   .addColor(debug, 'shadowColor')
   .onChange(() => material.uniforms.uShadowColor.value.set(debug.shadowColor))
+gui
+  .add(debug, 'lightRepetitions')
+  .min(1)
+  .max(300)
+  .step(1)
+  .onChange(() => (material.uniforms.uLightRepetitions.value = debug.lightRepetitions))
+gui
+  .addColor(debug, 'lightColor')
+  .onChange(() => material.uniforms.uLightColor.value.set(debug.lightColor))
 
 // Torus knot
 const torusKnot = new THREE.Mesh(new THREE.TorusKnotGeometry(0.6, 0.25, 128, 32), material)

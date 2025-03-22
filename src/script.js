@@ -8,6 +8,13 @@ import halftoneVertexShader from './shaders/halftone/vertex.glsl'
 // Debug
 const gui = new GUI()
 
+const debug = {
+  clearColor: '#26132f',
+  color: '#ff794d',
+  shadowRepetitions: 100,
+  shadowColor: '#8e19b8',
+}
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -57,38 +64,38 @@ const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
 // Renderer
-const rendererParameters = {}
-rendererParameters.clearColor = '#26132f'
-
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   antialias: true,
 })
-renderer.setClearColor(rendererParameters.clearColor)
+renderer.setClearColor(debug.clearColor)
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(sizes.pixelRatio)
 
-gui.addColor(rendererParameters, 'clearColor').onChange(() => {
-  renderer.setClearColor(rendererParameters.clearColor)
-})
+gui.addColor(debug, 'clearColor').onChange(() => renderer.setClearColor(debug.clearColor))
 
 // Material
-const materialParameters = {}
-materialParameters.color = '#ff794d'
-
 const material = new THREE.ShaderMaterial({
   vertexShader: halftoneVertexShader,
   fragmentShader: halftoneFragmentShader,
   uniforms: {
-    uColor: new THREE.Uniform(new THREE.Color(materialParameters.color)),
-    uShadeColor: new THREE.Uniform(new THREE.Color(materialParameters.shadeColor)),
+    uColor: new THREE.Uniform(new THREE.Color(debug.color)),
     uResolution: new THREE.Uniform(new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio)), //prettier-ignore
+    uShadowRepetitions: new THREE.Uniform(debug.shadowRepetitions),
+    uShadowColor: new THREE.Uniform(new THREE.Color(debug.shadowColor)),
   },
 })
 
-gui.addColor(materialParameters, 'color').onChange(() => {
-  material.uniforms.uColor.value.set(materialParameters.color)
-})
+gui.addColor(debug, 'color').onChange(() => material.uniforms.uColor.value.set(debug.color))
+gui
+  .add(debug, 'shadowRepetitions')
+  .min(1)
+  .max(300)
+  .step(1)
+  .onChange(() => (material.uniforms.uShadowRepetitions.value = debug.shadowRepetitions))
+gui
+  .addColor(debug, 'shadowColor')
+  .onChange(() => material.uniforms.uShadowColor.value.set(debug.shadowColor))
 
 // Torus knot
 const torusKnot = new THREE.Mesh(new THREE.TorusKnotGeometry(0.6, 0.25, 128, 32), material)

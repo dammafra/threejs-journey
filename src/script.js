@@ -1,6 +1,7 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { Lensflare, LensflareElement } from 'three/examples/jsm/Addons.js'
 import atmosphereFragmentShader from './shaders/atmosphere/fragment.glsl'
 import atmosphereVertexShader from './shaders/atmosphere/vertex.glsl'
 import earthFragmentShader from './shaders/earth/fragment.glsl'
@@ -8,7 +9,7 @@ import earthVertexShader from './shaders/earth/vertex.glsl'
 
 // Debug
 const gui = new GUI({ width: 350 })
-gui.close()
+gui.show(location.hash === '#debug')
 
 const debug = {
   atmosphereDayColor: '#00aaff',
@@ -50,15 +51,23 @@ scene.background = milkyWayTexture
 const sunSpherical = new THREE.Spherical(1, Math.PI * 0.5, 0.5)
 const sunDirection = new THREE.Vector3()
 
-const debugSun = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(0.1, 2),
-  new THREE.MeshBasicMaterial(),
-)
-scene.add(debugSun)
+const sunLight = new THREE.PointLight(0xffffff, 1.5, 2000, 0)
+scene.add(sunLight)
+
+const sunTexture = textureLoader.load('./lenses/lensflare0.png')
+const flareTexture = textureLoader.load('./lenses/lensflare1.png')
+
+const lensflare = new Lensflare()
+lensflare.addElement(new LensflareElement(sunTexture, 700, 0, sunLight.color))
+lensflare.addElement(new LensflareElement(flareTexture, 60, 0.6))
+lensflare.addElement(new LensflareElement(flareTexture, 70, 0.7))
+lensflare.addElement(new LensflareElement(flareTexture, 120, 0.9))
+lensflare.addElement(new LensflareElement(flareTexture, 70, 1))
+sunLight.add(lensflare)
 
 const updateSun = () => {
   sunDirection.setFromSpherical(sunSpherical)
-  debugSun.position.copy(sunDirection).multiplyScalar(5)
+  sunLight.position.copy(sunDirection).multiplyScalar(1000)
 }
 
 updateSun()
@@ -130,7 +139,7 @@ window.addEventListener('resize', () => {
 })
 
 // Camera
-const camera = new THREE.PerspectiveCamera(25, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(25, sizes.width / sizes.height, 0.1, 2000)
 camera.position.x = 12
 camera.position.y = 5
 camera.position.z = 4

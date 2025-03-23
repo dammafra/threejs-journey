@@ -1,6 +1,7 @@
 uniform sampler2D uDayTexture;
 uniform sampler2D uNightTexture;
 uniform sampler2D uSpecularCloudsTexture;
+uniform vec3 uSunDirection;
 
 varying vec2 vUv;
 varying vec3 vNormal;
@@ -12,8 +13,7 @@ void main() {
   vec3 color = vec3(0.0);
 
   // Sun orientation
-  vec3 sunDirection = vec3(0.0, 0.0, 1.0);
-  float sunOrientation = dot(sunDirection, normal);
+  float sunOrientation = dot(uSunDirection, normal);
 
   // Day / night color
   float dayMix = smoothstep(-0.25, 0.5, sunOrientation);

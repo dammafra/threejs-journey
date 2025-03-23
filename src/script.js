@@ -16,7 +16,27 @@ const scene = new THREE.Scene()
 // Loaders
 const textureLoader = new THREE.TextureLoader()
 
-//
+// Sun
+const sunSpherical = new THREE.Spherical(1, Math.PI * 0.5, 0.5)
+const sunDirection = new THREE.Vector3()
+
+const debugSun = new THREE.Mesh(
+  new THREE.IcosahedronGeometry(0.1, 2),
+  new THREE.MeshBasicMaterial(),
+)
+scene.add(debugSun)
+
+const updateSun = () => {
+  sunDirection.setFromSpherical(sunSpherical)
+  debugSun.position.copy(sunDirection).multiplyScalar(5)
+}
+
+updateSun()
+
+gui.add(sunSpherical, 'phi').min(0).max(Math.PI).onChange(updateSun)
+gui.add(sunSpherical, 'theta').min(-Math.PI).max(Math.PI).onChange(updateSun)
+
+// Earth
 const earthDayTexture = textureLoader.load('./earth/day.jpg')
 earthDayTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -33,6 +53,7 @@ const earthMaterial = new THREE.ShaderMaterial({
     uDayTexture: new THREE.Uniform(earthDayTexture),
     uNightTexture: new THREE.Uniform(earthNightTexture),
     uSpecularCloudsTexture: new THREE.Uniform(earthSpecularCloudsTexture),
+    uSunDirection: new THREE.Uniform(sunDirection),
   },
 })
 const earth = new THREE.Mesh(earthGeometry, earthMaterial)

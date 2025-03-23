@@ -40,7 +40,7 @@ const scene = new THREE.Scene()
 const textureLoader = new THREE.TextureLoader()
 
 // Environment map
-const milkyWayTexture = textureLoader.load('./milky-way.webp')
+const milkyWayTexture = textureLoader.load('./milky-way.png')
 milkyWayTexture.mapping = THREE.EquirectangularReflectionMapping
 milkyWayTexture.colorSpace = THREE.SRGBColorSpace
 scene.background = milkyWayTexture

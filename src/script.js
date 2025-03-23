@@ -1,6 +1,8 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import atmosphereFragmentShader from './shaders/atmosphere/fragment.glsl'
+import atmosphereVertexShader from './shaders/atmosphere/vertex.glsl'
 import earthFragmentShader from './shaders/earth/fragment.glsl'
 import earthVertexShader from './shaders/earth/vertex.glsl'
 
@@ -14,11 +16,17 @@ const debug = {
 gui
   .addColor(debug, 'atmosphereDayColor')
   .name('atmosphere day color')
-  .onChange(() => earthMaterial.uniforms.uAtmosphereDayColor.value.set(debug.atmosphereDayColor))
+  .onChange(() => {
+    earthMaterial.uniforms.uAtmosphereDayColor.value.set(debug.atmosphereDayColor)
+    atmosphereMaterial.uniforms.uAtmosphereDayColor.value.set(debug.atmosphereDayColor)
+  })
 gui
   .addColor(debug, 'atmosphereTwilightColor')
   .name('atmosphere twilight color')
-  .onChange(() => earthMaterial.uniforms.uAtmosphereTwilightColor.value.set(debug.atmosphereTwilightColor)) //prettier-ignore
+  .onChange(() => {
+    earthMaterial.uniforms.uAtmosphereTwilightColor.value.set(debug.atmosphereTwilightColor)
+    atmosphereMaterial.uniforms.uAtmosphereTwilightColor.value.set(debug.atmosphereTwilightColor)
+  })
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -76,6 +84,22 @@ const earthMaterial = new THREE.ShaderMaterial({
 })
 const earth = new THREE.Mesh(earthGeometry, earthMaterial)
 scene.add(earth)
+
+// Atmosphere
+const atmosphereMaterial = new THREE.ShaderMaterial({
+  vertexShader: atmosphereVertexShader,
+  fragmentShader: atmosphereFragmentShader,
+  uniforms: {
+    uSunDirection: new THREE.Uniform(sunDirection),
+    uAtmosphereDayColor: new THREE.Uniform(new THREE.Color(debug.atmosphereDayColor)),
+    uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color(debug.atmosphereTwilightColor)),
+  },
+  side: THREE.BackSide,
+  transparent: true,
+})
+const atmosphere = new THREE.Mesh(earthGeometry, atmosphereMaterial)
+atmosphere.scale.setScalar(1.04)
+scene.add(atmosphere)
 
 // Sizes
 const sizes = {

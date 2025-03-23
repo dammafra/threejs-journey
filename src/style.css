@@ -14,3 +14,21 @@ body {
   left: 0;
   outline: none;
 }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 16px;
+  color: white;
+  font-family: monospace;
+}
+
+footer a {
+  color: white;
+  text-decoration: underline;
+}
+
+footer a:hover {
+  color: lightblue;
+}

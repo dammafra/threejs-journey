@@ -5,7 +5,20 @@ import earthFragmentShader from './shaders/earth/fragment.glsl'
 import earthVertexShader from './shaders/earth/vertex.glsl'
 
 // Debug
-const gui = new GUI()
+const gui = new GUI({ width: 350 })
+const debug = {
+  atmosphereDayColor: '#00aaff',
+  atmosphereTwilightColor: '#ff6600',
+}
+
+gui
+  .addColor(debug, 'atmosphereDayColor')
+  .name('atmosphere day color')
+  .onChange(() => earthMaterial.uniforms.uAtmosphereDayColor.value.set(debug.atmosphereDayColor))
+gui
+  .addColor(debug, 'atmosphereTwilightColor')
+  .name('atmosphere twilight color')
+  .onChange(() => earthMaterial.uniforms.uAtmosphereTwilightColor.value.set(debug.atmosphereTwilightColor)) //prettier-ignore
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -33,8 +46,8 @@ const updateSun = () => {
 
 updateSun()
 
-gui.add(sunSpherical, 'phi').min(0).max(Math.PI).onChange(updateSun)
-gui.add(sunSpherical, 'theta').min(-Math.PI).max(Math.PI).onChange(updateSun)
+gui.add(sunSpherical, 'phi').min(0).max(Math.PI).name('sun phi').onChange(updateSun)
+gui.add(sunSpherical, 'theta').min(-Math.PI).max(Math.PI).name('sun theta').onChange(updateSun)
 
 // Earth
 const earthDayTexture = textureLoader.load('./earth/day.jpg')
@@ -57,6 +70,8 @@ const earthMaterial = new THREE.ShaderMaterial({
     uNightTexture: new THREE.Uniform(earthNightTexture),
     uSpecularCloudsTexture: new THREE.Uniform(earthSpecularCloudsTexture),
     uSunDirection: new THREE.Uniform(sunDirection),
+    uAtmosphereDayColor: new THREE.Uniform(new THREE.Color(debug.atmosphereDayColor)),
+    uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color(debug.atmosphereTwilightColor)),
   },
 })
 const earth = new THREE.Mesh(earthGeometry, earthMaterial)

@@ -40,7 +40,8 @@ const scene = new THREE.Scene()
 const textureLoader = new THREE.TextureLoader()
 
 // Environment map
-const milkyWayTexture = textureLoader.load('./milky-way.png')
+const isLowEndDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) || navigator.deviceMemory <= 4
+const milkyWayTexture = textureLoader.load(`./milky-way-${isLowEndDevice ? 4 : 8}k.png`)
 milkyWayTexture.mapping = THREE.EquirectangularReflectionMapping
 milkyWayTexture.colorSpace = THREE.SRGBColorSpace
 scene.background = milkyWayTexture

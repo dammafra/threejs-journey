@@ -68,14 +68,11 @@ gui.add(sunSpherical, 'theta').min(-Math.PI).max(Math.PI).name('sun theta').onCh
 // Earth
 const earthDayTexture = textureLoader.load('./earth/day.jpg')
 earthDayTexture.colorSpace = THREE.SRGBColorSpace
-earthDayTexture.anisotropy = 8
 
 const earthNightTexture = textureLoader.load('./earth/night.jpg')
 earthNightTexture.colorSpace = THREE.SRGBColorSpace
-earthNightTexture.anisotropy = 8
 
 const earthSpecularCloudsTexture = textureLoader.load('./earth/specularClouds.jpg')
-earthSpecularCloudsTexture.anisotropy = 8
 
 const earthGeometry = new THREE.SphereGeometry(2, 64, 64)
 const earthMaterial = new THREE.ShaderMaterial({
@@ -156,7 +153,12 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(sizes.pixelRatio)
 renderer.setClearColor('#000011')
-// console.log(renderer.capabilities.getMaxAnisotropy())
+
+const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
+const anisotropy = Math.min(8, maxAnisotropy)
+earthDayTexture.anisotropy = anisotropy
+earthNightTexture.anisotropy = anisotropy
+earthSpecularCloudsTexture.anisotropy = anisotropy
 
 // Animate
 const clock = new THREE.Clock()

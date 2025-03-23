@@ -24,4 +24,4 @@ npm run build
 - [ ] Animate the clouds by adding some displacement on the UV
 - [ ] Create clouds using a Perlin function or a Perlin texture
 - [ ] Add [Lensflare](https://threejs.org/docs/#examples/en/objects/Lensflare) ([example](https://threejs.org/examples/#webgl_lensflares)) for the sun (textures are provided in `static/lenses/`).
-- [ ] Add stars or a Milky Way environment map in the back
+- [x] Add stars or a Milky Way environment map in the back

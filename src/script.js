@@ -8,6 +8,8 @@ import earthVertexShader from './shaders/earth/vertex.glsl'
 
 // Debug
 const gui = new GUI({ width: 350 })
+gui.close()
+
 const debug = {
   atmosphereDayColor: '#00aaff',
   atmosphereTwilightColor: '#ff6600',
@@ -36,6 +38,12 @@ const scene = new THREE.Scene()
 
 // Loaders
 const textureLoader = new THREE.TextureLoader()
+
+// Environment map
+const milkyWayTexture = textureLoader.load('./milky-way.webp')
+milkyWayTexture.mapping = THREE.EquirectangularReflectionMapping
+milkyWayTexture.colorSpace = THREE.SRGBColorSpace
+scene.background = milkyWayTexture
 
 // Sun
 const sunSpherical = new THREE.Spherical(1, Math.PI * 0.5, 0.5)
@@ -128,6 +136,12 @@ const camera = new THREE.PerspectiveCamera(25, sizes.width / sizes.height, 0.1, 
 camera.position.x = 12
 camera.position.y = 5
 camera.position.z = 4
+
+if (camera.aspect < 1) {
+  camera.position.x *= 2
+  camera.position.z *= 2
+}
+
 scene.add(camera)
 
 // Controls

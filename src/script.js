@@ -16,12 +16,24 @@ const scene = new THREE.Scene()
 // Loaders
 const textureLoader = new THREE.TextureLoader()
 
-// Earth
+//
+const earthDayTexture = textureLoader.load('./earth/day.jpg')
+earthDayTexture.colorSpace = THREE.SRGBColorSpace
+
+const earthNightTexture = textureLoader.load('./earth/night.jpg')
+earthNightTexture.colorSpace = THREE.SRGBColorSpace
+
+const earthSpecularCloudsTexture = textureLoader.load('./earth/specularClouds.jpg')
+
 const earthGeometry = new THREE.SphereGeometry(2, 64, 64)
 const earthMaterial = new THREE.ShaderMaterial({
   vertexShader: earthVertexShader,
   fragmentShader: earthFragmentShader,
-  uniforms: {},
+  uniforms: {
+    uDayTexture: new THREE.Uniform(earthDayTexture),
+    uNightTexture: new THREE.Uniform(earthNightTexture),
+    uSpecularCloudsTexture: new THREE.Uniform(earthSpecularCloudsTexture),
+  },
 })
 const earth = new THREE.Mesh(earthGeometry, earthMaterial)
 scene.add(earth)

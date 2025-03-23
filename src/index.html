@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <canvas class="webgl"></canvas>
-    <div class="glsl">CODE</div>
+    <div class="flex max-md:flex-col h-svh">
+      <div class="max-md:h-1/2 md:w-1/2 relative"><canvas class="webgl outline-none"></canvas></div>
+      <div class="max-md:h-1/2 md:w-1/2 glsl"></div>
+    </div>
+
     <script type="module" src="./script.js"></script>
   </body>
 </html>

@@ -15,8 +15,10 @@
     "vite-plugin-restart": "^0.4.1"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.15",
     "highlight.js": "^11.11.1",
-    "lil-gui": "^0.19.2",
-    "three": "^0.166.1"
+    "tailwindcss": "^4.0.15",
+    "three": "^0.166.1",
+    "tweakpane": "^4.0.5"
   }
 }

@@ -1,5 +1,6 @@
-import restart from 'vite-plugin-restart'
+import tailwindcss from '@tailwindcss/vite'
 import glsl from 'vite-plugin-glsl'
+import restart from 'vite-plugin-restart'
 
 export default {
   root: 'src/',
@@ -17,5 +18,6 @@ export default {
   plugins: [
     restart({ restart: ['../static/**'] }), // Restart server on static file change
     glsl(), // Handle shader files
+    tailwindcss(),
   ],
 }

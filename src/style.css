@@ -1,27 +1,14 @@
-* {
-  margin: 0;
-  padding: 0;
-}
+@import 'tailwindcss';
 
 html,
 body {
-  overflow: hidden;
-}
-
-.webgl {
-  position: fixed;
-  top: 0;
-  left: 0;
-  outline: none;
+  @apply m-0 p-0 overflow-hidden;
 }
 
 .glsl {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  z-index: 10;
-  background-color: #1f1f1f;
-  font-family: monospace;
-  padding: 16px;
-  white-space: pre-wrap; /* or pre */
+  @apply bg-slate-700 font-mono p-8 whitespace-pre overflow-scroll;
+}
+
+.gui {
+  @apply absolute z-10 bottom-2 left-2;
 }

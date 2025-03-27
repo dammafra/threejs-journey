@@ -15,3 +15,10 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Going Further
+
+- [ ] Add more tweaks (particle count, particle size, various intensities, and thresholds).
+- [ ] Add color to the particles like a nice gradient from one corner to the other.
+- [ ] Make the particles move slowly all the time to add more life.
+- [ ] Try other pictures.

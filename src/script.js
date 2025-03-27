@@ -58,6 +58,26 @@ renderer.setClearColor('#181818')
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(sizes.pixelRatio)
 
+// Displacement
+const displacement = {}
+
+displacement.canvas = document.createElement('canvas')
+displacement.canvas.width = 128
+displacement.canvas.height = 128
+displacement.canvas.style.position = 'fixed'
+displacement.canvas.style.width = '512px'
+displacement.canvas.style.height = '512px'
+displacement.canvas.style.top = 0
+displacement.canvas.style.left = 0
+displacement.canvas.style.zIndex = 10
+document.body.append(displacement.canvas)
+
+displacement.context = displacement.canvas.getContext('2d')
+displacement.context.fillRect(0, 0, displacement.canvas.width, displacement.canvas.height)
+
+displacement.glowImage = new Image()
+displacement.glowImage.src = './glow.png'
+
 // Particles
 const particlesGeometry = new THREE.PlaneGeometry(10, 10, 128, 128)
 

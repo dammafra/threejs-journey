@@ -3,6 +3,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import particlesFragmentShader from './shaders/particles/fragment.glsl'
 import particlesVertexShader from './shaders/particles/vertex.glsl'
 
+// Debug
+const debug = window.location.hash === '#debug'
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -65,13 +68,13 @@ const displacement = {}
 displacement.canvas = document.createElement('canvas')
 displacement.canvas.width = 128
 displacement.canvas.height = 128
-displacement.canvas.style.position = 'fixed'
-displacement.canvas.style.width = '256px'
-displacement.canvas.style.height = '256px'
-displacement.canvas.style.top = 0
-displacement.canvas.style.left = 0
-displacement.canvas.style.zIndex = 10
-document.body.append(displacement.canvas)
+
+if (debug) {
+  displacement.canvas.style.position = 'fixed'
+  displacement.canvas.style.width = '256px'
+  displacement.canvas.style.height = '256px'
+  document.body.append(displacement.canvas)
+}
 
 displacement.context = displacement.canvas.getContext('2d')
 displacement.context.fillRect(0, 0, displacement.canvas.width, displacement.canvas.height)

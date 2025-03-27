@@ -81,7 +81,7 @@ displacement.glowSize = displacement.canvas.width * 0.25
 
 displacement.interactivePlane = new THREE.Mesh(
   new THREE.PlaneGeometry(10, 10),
-  new THREE.MeshBasicMaterial({ color: 'red' }),
+  new THREE.MeshBasicMaterial({ color: 'red', side: THREE.DoubleSide }),
 )
 displacement.interactivePlane.visible = false
 scene.add(displacement.interactivePlane)
@@ -89,6 +89,7 @@ scene.add(displacement.interactivePlane)
 displacement.raycaster = new THREE.Raycaster()
 displacement.screenCursor = new THREE.Vector2(9999, 9999)
 displacement.canvasCursor = new THREE.Vector2(9999, 9999)
+displacement.canvasCursorPrevious = displacement.canvasCursor.clone()
 window.addEventListener('pointermove', event => {
   displacement.screenCursor.x = (event.clientX / sizes.width) * 2 - 1
   displacement.screenCursor.y = -(event.clientY / sizes.height) * 2 + 1
@@ -98,6 +99,8 @@ displacement.texture = new THREE.CanvasTexture(displacement.canvas)
 
 // Particles
 const particlesGeometry = new THREE.PlaneGeometry(10, 10, 128, 128)
+particlesGeometry.setIndex(null)
+particlesGeometry.deleteAttribute('normal')
 
 const intensitiesArray = new Float32Array(particlesGeometry.attributes.position.count)
 const anglesArray = new Float32Array(particlesGeometry.attributes.position.count)
@@ -136,8 +139,12 @@ const tick = () => {
 
     displacement.canvasCursor.x = uv.x * displacement.canvas.width
     displacement.canvasCursor.y = (1 - uv.y) * displacement.canvas.height
-    console.log(displacement.canvasCursor)
   }
+
+  // Speed alpha
+  const cursorDistance = displacement.canvasCursorPrevious.distanceTo(displacement.canvasCursor)
+  displacement.canvasCursorPrevious.copy(displacement.canvasCursor)
+  const alpha = Math.min(cursorDistance * 0.1, 1)
 
   // Draw glow
   displacement.context.globalCompositeOperation = 'source-over'
@@ -145,7 +152,7 @@ const tick = () => {
   displacement.context.fillRect(0, 0, displacement.canvas.width, displacement.canvas.height)
 
   displacement.context.globalCompositeOperation = 'lighten'
-  displacement.context.globalAlpha = 1
+  displacement.context.globalAlpha = alpha
   displacement.context.drawImage(
     displacement.glowImage,
     displacement.canvasCursor.x - displacement.glowSize * 0.5,

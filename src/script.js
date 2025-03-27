@@ -65,8 +65,8 @@ displacement.canvas = document.createElement('canvas')
 displacement.canvas.width = 128
 displacement.canvas.height = 128
 displacement.canvas.style.position = 'fixed'
-displacement.canvas.style.width = '512px'
-displacement.canvas.style.height = '512px'
+displacement.canvas.style.width = '256px'
+displacement.canvas.style.height = '256px'
 displacement.canvas.style.top = 0
 displacement.canvas.style.left = 0
 displacement.canvas.style.zIndex = 10
@@ -77,6 +77,21 @@ displacement.context.fillRect(0, 0, displacement.canvas.width, displacement.canv
 
 displacement.glowImage = new Image()
 displacement.glowImage.src = './glow.png'
+displacement.glowSize = displacement.canvas.width * 0.25
+
+displacement.interactivePlane = new THREE.Mesh(
+  new THREE.PlaneGeometry(10, 10),
+  new THREE.MeshBasicMaterial({ color: 'red' }),
+)
+scene.add(displacement.interactivePlane)
+
+displacement.raycaster = new THREE.Raycaster()
+displacement.screenCursor = new THREE.Vector2(9999, 9999)
+displacement.canvasCursor = new THREE.Vector2(9999, 9999)
+window.addEventListener('pointermove', event => {
+  displacement.screenCursor.x = (event.clientX / sizes.width) * 2 - 1
+  displacement.screenCursor.y = -(event.clientY / sizes.height) * 2 + 1
+})
 
 // Particles
 const particlesGeometry = new THREE.PlaneGeometry(10, 10, 128, 128)
@@ -96,6 +111,28 @@ scene.add(particles)
 const tick = () => {
   // Update controls
   controls.update()
+
+  // Raycaster
+  displacement.raycaster.setFromCamera(displacement.screenCursor, camera)
+  const intersections = displacement.raycaster.intersectObject(displacement.interactivePlane)
+
+  if (intersections.length) {
+    const uv = intersections.at(0).uv
+
+    displacement.canvasCursor.x = uv.x * displacement.canvas.width
+    displacement.canvasCursor.y = (1 - uv.y) * displacement.canvas.height
+    console.log(displacement.canvasCursor)
+  }
+
+  // Draw glow
+  displacement.context.globalCompositeOperation = 'lighten'
+  displacement.context.drawImage(
+    displacement.glowImage,
+    displacement.canvasCursor.x - displacement.glowSize * 0.5,
+    displacement.canvasCursor.y - displacement.glowSize * 0.5,
+    displacement.glowSize,
+    displacement.glowSize,
+  )
 
   // Render
   renderer.render(scene, camera)

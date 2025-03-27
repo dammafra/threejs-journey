@@ -1,0 +1,8 @@
+void main() {
+  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+  // clang-format off
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+  // clang-format on
+}

@@ -108,6 +108,7 @@ gltfLoader.load('./models.glb', gltf => {
   // Geometry
   particles.geometry = new THREE.BufferGeometry()
   particles.geometry.setAttribute('position', particles.positions.at(1))
+  particles.geometry.setAttribute('aPositionTarget', particles.positions.at(3))
 
   // Material
   particles.material = new THREE.ShaderMaterial({
@@ -115,9 +116,8 @@ gltfLoader.load('./models.glb', gltf => {
     fragmentShader: particlesFragmentShader,
     uniforms: {
       uSize: new THREE.Uniform(0.2),
-      uResolution: new THREE.Uniform(
-        new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio),
-      ),
+      uResolution: new THREE.Uniform(new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio)), //prettier-ignore
+      uProgress: new THREE.Uniform(0),
     },
     blending: THREE.AdditiveBlending,
     depthWrite: false,
@@ -126,6 +126,8 @@ gltfLoader.load('./models.glb', gltf => {
   // Points
   particles.points = new THREE.Points(particles.geometry, particles.material)
   scene.add(particles.points)
+
+  gui.add(particles.material.uniforms.uProgress, 'value').min(0).max(1).step(0.001).name('uProgress') //prettier-ignore
 })
 
 // Animate

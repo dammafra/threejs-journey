@@ -79,6 +79,7 @@ const particles = {}
 
 // Geometry
 particles.geometry = new THREE.SphereGeometry(3)
+particles.geometry.setIndex(null)
 
 // Material
 particles.material = new THREE.ShaderMaterial({
@@ -90,6 +91,8 @@ particles.material = new THREE.ShaderMaterial({
       new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio),
     ),
   },
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
 })
 
 // Points

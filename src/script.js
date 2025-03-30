@@ -119,6 +119,9 @@ gltfLoader.load('./models.glb', gltf => {
   particles.geometry.setAttribute('aSize', new THREE.Float32BufferAttribute(sizesArray, 1))
 
   // Material
+  particles.colorA = '#ff7300'
+  particles.colorB = '#0091ff'
+
   particles.material = new THREE.ShaderMaterial({
     vertexShader: particlesVertexShader,
     fragmentShader: particlesFragmentShader,
@@ -126,6 +129,8 @@ gltfLoader.load('./models.glb', gltf => {
       uSize: new THREE.Uniform(0.4),
       uResolution: new THREE.Uniform(new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio)), //prettier-ignore
       uProgress: new THREE.Uniform(0),
+      uColorA: new THREE.Uniform(new THREE.Color(particles.colorA)),
+      uColorB: new THREE.Uniform(new THREE.Color(particles.colorB)),
     },
     blending: THREE.AdditiveBlending,
     depthWrite: false,
@@ -134,6 +139,11 @@ gltfLoader.load('./models.glb', gltf => {
   // Points
   particles.points = new THREE.Points(particles.geometry, particles.material)
   scene.add(particles.points)
+
+  // Tweaks
+  gui.addColor(particles, 'colorA').onChange(() => particles.material.uniforms.uColorA.value.set(particles.colorA)) //prettier-ignore
+  gui.addColor(particles, 'colorB').onChange(() => particles.material.uniforms.uColorB.value.set(particles.colorB)) //prettier-ignore
+  gui.add(particles.material.uniforms.uProgress, 'value').min(0).max(1).step(0.001).name('uProgress').listen() //prettier-ignore
 
   particles.morph = index => {
     particles.geometry.setAttribute('position', particles.positions.at(particles.index))
@@ -151,7 +161,6 @@ gltfLoader.load('./models.glb', gltf => {
   particles.morph2 = () => particles.morph(2)
   particles.morph3 = () => particles.morph(3)
 
-  gui.add(particles.material.uniforms.uProgress, 'value').min(0).max(1).step(0.001).name('uProgress').listen() //prettier-ignore
   gui.add(particles, 'morph0')
   gui.add(particles, 'morph1')
   gui.add(particles, 'morph2')

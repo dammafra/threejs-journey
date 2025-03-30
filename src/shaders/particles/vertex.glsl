@@ -1,4 +1,5 @@
 attribute vec3 aPositionTarget;
+attribute float aSize;
 
 uniform vec2 uResolution;
 uniform float uSize;
@@ -29,7 +30,7 @@ void main() {
   gl_Position = projectedPosition;
 
   // Point size
-  gl_PointSize = uSize * uResolution.y;
+  gl_PointSize = aSize * uSize * uResolution.y;
   gl_PointSize *= (1.0 / -viewPosition.z);
 
   // Varyings

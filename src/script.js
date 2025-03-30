@@ -1,3 +1,4 @@
+import gsap from 'gsap'
 import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
@@ -82,6 +83,7 @@ let particles = null
 gltfLoader.load('./models.glb', gltf => {
   // Particles
   particles = {}
+  particles.index = 0
 
   // Positions
   const positions = gltf.scene.children.map(child => child.geometry.attributes.position)
@@ -107,8 +109,7 @@ gltfLoader.load('./models.glb', gltf => {
 
   // Geometry
   particles.geometry = new THREE.BufferGeometry()
-  particles.geometry.setAttribute('position', particles.positions.at(1))
-  particles.geometry.setAttribute('aPositionTarget', particles.positions.at(3))
+  particles.geometry.setAttribute('position', particles.positions.at(particles.index))
 
   // Material
   particles.material = new THREE.ShaderMaterial({
@@ -127,7 +128,27 @@ gltfLoader.load('./models.glb', gltf => {
   particles.points = new THREE.Points(particles.geometry, particles.material)
   scene.add(particles.points)
 
-  gui.add(particles.material.uniforms.uProgress, 'value').min(0).max(1).step(0.001).name('uProgress') //prettier-ignore
+  particles.morph = index => {
+    particles.geometry.setAttribute('position', particles.positions.at(particles.index))
+    particles.geometry.setAttribute('aPositionTarget', particles.positions.at(index))
+    gsap.fromTo(
+      particles.material.uniforms.uProgress,
+      { value: 0 },
+      { value: 1, duration: 3, ease: 'linear' },
+    )
+    particles.index = index
+  }
+
+  particles.morph0 = () => particles.morph(0)
+  particles.morph1 = () => particles.morph(1)
+  particles.morph2 = () => particles.morph(2)
+  particles.morph3 = () => particles.morph(3)
+
+  gui.add(particles.material.uniforms.uProgress, 'value').min(0).max(1).step(0.001).name('uProgress').listen() //prettier-ignore
+  gui.add(particles, 'morph0')
+  gui.add(particles, 'morph1')
+  gui.add(particles, 'morph2')
+  gui.add(particles, 'morph3')
 })
 
 // Animate

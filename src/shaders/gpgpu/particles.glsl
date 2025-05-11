@@ -3,6 +3,7 @@
 uniform float uTime;
 uniform float uDeltaTime;
 uniform sampler2D uBase;
+uniform float uFlowFieldInfluence;
 
 void main() {
   float time = uTime * 0.2;
@@ -12,12 +13,17 @@ void main() {
 
   // Dead
   if (particle.a >= 1.0) {
-    particle.a = fract(particle.a); // this fixes long frames, i.e. when the browser tab is inactive
-                                    // - alternative: mod(particle.a, 1.0)
+    // this fixes long frames, i.e. when the browser tab is inactive
+    particle.a = fract(particle.a); // alternative: mod(particle.a, 1.0)
     particle.xyz = base.xyz;
   }
   // Alive
   else {
+    // Strength
+    float strength = simplexNoise4d(vec4(base.xyz * 0.2, time + 1.0));
+    // uFlowFieldInfluence goes from 0 to 1, but we need it from 1 to -1
+    float influence = (uFlowFieldInfluence - 0.5) * (-2.0);
+    strength = smoothstep(influence, 1.0, strength);
 
     // Flow field
     vec3 flowField = vec3(                              //
@@ -26,7 +32,7 @@ void main() {
         simplexNoise4d(vec4(particle.xyz + 2.0, time))  //
     );
     flowField = normalize(flowField);
-    particle.xyz += flowField * uDeltaTime * 0.5;
+    particle.xyz += flowField * uDeltaTime * strength * 0.5;
 
     // Decay
     particle.a += uDeltaTime * 0.3;

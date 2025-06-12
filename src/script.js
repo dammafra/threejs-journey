@@ -1,9 +1,12 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+import wobbleFragmentShader from './shaders/wobble/fragment.glsl'
+import wobbleVertexShader from './shaders/wobble/vertex.glsl'
 
 // Debug
 const gui = new GUI({ width: 325 })
@@ -32,7 +35,13 @@ rgbeLoader.load('./urban_alley_01_1k.hdr', environmentMap => {
 
 // Wobble -----------------------------------------------------------------------------------------
 // Material
-const material = new THREE.MeshPhysicalMaterial({
+const material = new CustomShaderMaterial({
+  // CSM
+  baseMaterial: THREE.MeshPhysicalMaterial,
+  vertexShader: wobbleVertexShader,
+  fragmentShader: wobbleFragmentShader,
+
+  // MeshPhysicalMaterial
   metalness: 0,
   roughness: 0.5,
   color: '#ffffff',

@@ -13,5 +13,5 @@ void main() {
     discard;
   }
 
-  csm_FragColor = vec4(vec3(angle), 1.0);
+  float csm_Slice;
 }

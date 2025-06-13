@@ -5,7 +5,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
-import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js'
 import wobbleFragmentShader from './shaders/wobble/fragment.glsl'
 import wobbleVertexShader from './shaders/wobble/vertex.glsl'
 
@@ -102,20 +101,31 @@ gui.add(material, 'ior', 0, 10, 0.001)
 gui.add(material, 'thickness', 0, 10, 0.001)
 
 // Geometry
-let geometry = new THREE.IcosahedronGeometry(2.5, 50)
+// let geometry = new THREE.IcosahedronGeometry(2.5, 50)
 
-if (!geometry.index) {
-  geometry = mergeVertices(geometry)
-}
+// if (!geometry.index) {
+//   geometry = mergeVertices(geometry)
+// }
 
-geometry.computeTangents()
+// geometry.computeTangents()
 
 // Mesh
-const wobble = new THREE.Mesh(geometry, material)
-wobble.receiveShadow = true
-wobble.castShadow = true
-wobble.customDepthMaterial = depthMaterial
-scene.add(wobble)
+// const wobble = new THREE.Mesh(geometry, material)
+// wobble.receiveShadow = true
+// wobble.castShadow = true
+// wobble.customDepthMaterial = depthMaterial
+// scene.add(wobble)
+
+// Model
+gltfLoader.load('./suzanne.glb', gltf => {
+  const wobble = gltf.scene.children[0]
+  wobble.receiveShadow = true
+  wobble.castShadow = true
+  wobble.material = material
+  wobble.customDepthMaterial = depthMaterial
+
+  scene.add(wobble)
+})
 // ------------------------------------------------------------------------------------------------
 
 // Plane

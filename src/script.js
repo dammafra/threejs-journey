@@ -71,7 +71,6 @@ gltfLoader.load('./gears.glb', gltf => {
 
   scene.add(model)
 })
-
 // ------------------------------------------------------------------------------------------------
 
 // Plane
@@ -138,8 +137,9 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
-renderer.toneMapping = THREE.ACESFilmicToneMapping
-renderer.toneMappingExposure = 1
+// renderer.toneMapping = THREE.ACESFilmicToneMapping
+// renderer.toneMappingExposure = 1
+renderer.outputColorSpace = THREE.LinearSRGBColorSpace
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(sizes.pixelRatio)
 

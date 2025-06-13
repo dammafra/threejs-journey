@@ -15,3 +15,12 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Going Further
+
+As always, feel free to go further. Here are some suggestions:
+
+- [ ] Add a uniform to control the color
+- [ ] Animate the slicing on whatever user interaction
+- [ ] Test with your own model
+- [ ] Create a more fancy reveal than a radial slicing. Why don’t you try using the Simplex Noise?

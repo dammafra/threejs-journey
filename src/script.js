@@ -1,9 +1,12 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+import slicedFragmentShader from './shaders/sliced/fragment.glsl'
+import slicedVertexShader from './shaders/sliced/vertex.glsl'
 
 // Debug
 const gui = new GUI({ width: 325 })
@@ -40,6 +43,19 @@ const material = new THREE.MeshStandardMaterial({
   color: '#858080',
 })
 
+const slicedMaterial = new CustomShaderMaterial({
+  // CSM
+  baseMaterial: THREE.MeshStandardMaterial,
+  vertexShader: slicedVertexShader,
+  fragmentShader: slicedFragmentShader,
+
+  // MeshStandardMaterial
+  metalness: 0.5,
+  roughness: 0.25,
+  envMapIntensity: 0.5,
+  color: '#858080',
+})
+
 // Model
 let model = null
 gltfLoader.load('./gears.glb', gltf => {
@@ -47,7 +63,7 @@ gltfLoader.load('./gears.glb', gltf => {
 
   model.traverse(child => {
     if (child.isMesh) {
-      child.material = material
+      child.material = child.name === 'outerHull' ? slicedMaterial : material
       child.castShadow = true
       child.receiveShadow = true
     }

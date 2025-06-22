@@ -15,3 +15,15 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Going Further
+
+Here are some suggestions:
+
+- [ ] Try funny colors
+- [ ] Improve how colors are being mixed
+- [ ] Add textures
+- [ ] Add biomes
+- [ ] Control the translation on drag and drop
+- [ ] Add clouds
+- [ ] Add details and textures to the board

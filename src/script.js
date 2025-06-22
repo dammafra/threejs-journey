@@ -1,8 +1,11 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { Brush, Evaluator, SUBTRACTION } from 'three-bvh-csg'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+import terrainFragmentShader from './shaders/terrain/fragment.glsl'
+import terrainVertexShader from './shaders/terrain/vertex.glsl'
 
 // Base
 const gui = new GUI({ width: 325 })
@@ -26,14 +29,29 @@ rgbeLoader.load('/spruit_sunrise.hdr', environmentMap => {
   scene.environment = environmentMap
 })
 
-// Placeholder
-const placeholder = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(2, 5),
-  new THREE.MeshPhysicalMaterial(),
-)
-scene.add(placeholder)
+// Terrain ----------------------------------------------------------------------------------------
+const geometry = new THREE.PlaneGeometry(10, 10, 500, 500)
+geometry.rotateX(-Math.PI * 0.5)
 
-// Board
+const material = new CustomShaderMaterial({
+  // CSP
+  baseMaterial: THREE.MeshStandardMaterial,
+  vertexShader: terrainVertexShader,
+  fragmentShader: terrainFragmentShader,
+
+  // MeshStandardMaterial
+  metalness: 0,
+  roughness: 0.5,
+  color: '#85d534',
+})
+
+const terrain = new THREE.Mesh(geometry, material)
+terrain.receiveShadow = true
+terrain.castShadow = true
+scene.add(terrain)
+// ------------------------------------------------------------------------------------------------
+
+// Board ------------------------------------------------------------------------------------------
 const boardFill = new Brush(new THREE.BoxGeometry(11, 2, 11))
 const boardHole = new Brush(new THREE.BoxGeometry(10, 2.1, 10))
 // boardHole.position.y = 0.2
@@ -47,6 +65,7 @@ board.material = new THREE.MeshStandardMaterial({ color: '#ffffff', metalness: 0
 board.castShadow = true
 board.receiveShadow = true
 scene.add(board)
+// ------------------------------------------------------------------------------------------------
 
 // Lights
 const directionalLight = new THREE.DirectionalLight('#ffffff', 2)

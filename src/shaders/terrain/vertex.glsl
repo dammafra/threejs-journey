@@ -1,8 +1,13 @@
 #include '../includes/simplexNoise2d.glsl'
 
 float getElevation(vec2 position) {
+  float uPositionFrequency = 0.2;
+
   float elevation = 0.0;
-  elevation += simplexNoise2d(position);
+  elevation += simplexNoise2d(position * uPositionFrequency) / 2.0;
+  elevation += simplexNoise2d(position * uPositionFrequency * 2.0) / 4.0;
+  elevation += simplexNoise2d(position * uPositionFrequency * 4.0) / 8.0;
+
   return elevation;
 }
 

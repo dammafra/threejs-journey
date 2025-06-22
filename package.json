@@ -18,6 +18,7 @@
     "install": "^0.13.0",
     "lil-gui": "^0.20.0",
     "three": "^0.174.0",
+    "three-bvh-csg": "^0.0.17",
     "three-custom-shader-material": "^6.3.1"
   }
 }

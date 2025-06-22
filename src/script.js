@@ -1,5 +1,6 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
+import { Brush, Evaluator, SUBTRACTION } from 'three-bvh-csg'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 
@@ -31,6 +32,21 @@ const placeholder = new THREE.Mesh(
   new THREE.MeshPhysicalMaterial(),
 )
 scene.add(placeholder)
+
+// Board
+const boardFill = new Brush(new THREE.BoxGeometry(11, 2, 11))
+const boardHole = new Brush(new THREE.BoxGeometry(10, 2.1, 10))
+// boardHole.position.y = 0.2
+// boardHole.updateMatrixWorld()
+
+const evaluator = new Evaluator()
+
+const board = evaluator.evaluate(boardFill, boardHole, SUBTRACTION)
+board.geometry.clearGroups()
+board.material = new THREE.MeshStandardMaterial({ color: '#ffffff', metalness: 0, roughness: 0.3 })
+board.castShadow = true
+board.receiveShadow = true
+scene.add(board)
 
 // Lights
 const directionalLight = new THREE.DirectionalLight('#ffffff', 2)

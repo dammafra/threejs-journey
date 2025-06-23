@@ -6,6 +6,8 @@ import {
   GlitchPass,
   OrbitControls,
   RenderPass,
+  RGBShiftShader,
+  ShaderPass,
 } from 'three/examples/jsm/Addons.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
@@ -121,8 +123,11 @@ effectComposer.addPass(dotScreenPass)
 
 const glitchPass = new GlitchPass()
 glitchPass.goWild = false
-glitchPass.enabled = true
+glitchPass.enabled = false
 effectComposer.addPass(glitchPass)
+
+const rgbShiftPass = new ShaderPass(RGBShiftShader)
+effectComposer.addPass(rgbShiftPass)
 
 // Animate
 const clock = new THREE.Clock()

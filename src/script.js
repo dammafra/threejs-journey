@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import {
   DotScreenPass,
   EffectComposer,
+  GammaCorrectionShader,
   GlitchPass,
   OrbitControls,
   RenderPass,
@@ -122,12 +123,16 @@ dotScreenPass.enabled = false
 effectComposer.addPass(dotScreenPass)
 
 const glitchPass = new GlitchPass()
-glitchPass.goWild = false
+// glitchPass.goWild = true
 glitchPass.enabled = false
 effectComposer.addPass(glitchPass)
 
 const rgbShiftPass = new ShaderPass(RGBShiftShader)
+rgbShiftPass.enabled = true
 effectComposer.addPass(rgbShiftPass)
+
+const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
+effectComposer.addPass(gammaCorrectionPass)
 
 // Animate
 const clock = new THREE.Clock()

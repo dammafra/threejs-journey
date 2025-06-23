@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import {
   DotScreenPass,
   EffectComposer,
+  GlitchPass,
   OrbitControls,
   RenderPass,
 } from 'three/examples/jsm/Addons.js'
@@ -115,7 +116,13 @@ const renderPass = new RenderPass(scene, camera)
 effectComposer.addPass(renderPass)
 
 const dotScreenPass = new DotScreenPass()
+dotScreenPass.enabled = false
 effectComposer.addPass(dotScreenPass)
+
+const glitchPass = new GlitchPass()
+glitchPass.goWild = false
+glitchPass.enabled = true
+effectComposer.addPass(glitchPass)
 
 // Animate
 const clock = new THREE.Clock()

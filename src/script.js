@@ -1,6 +1,11 @@
 import GUI from 'lil-gui'
 import * as THREE from 'three'
-import { EffectComposer, OrbitControls, RenderPass } from 'three/examples/jsm/Addons.js'
+import {
+  DotScreenPass,
+  EffectComposer,
+  OrbitControls,
+  RenderPass,
+} from 'three/examples/jsm/Addons.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 // Debug
@@ -108,6 +113,9 @@ effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 const renderPass = new RenderPass(scene, camera)
 effectComposer.addPass(renderPass)
+
+const dotScreenPass = new DotScreenPass()
+effectComposer.addPass(dotScreenPass)
 
 // Animate
 const clock = new THREE.Clock()

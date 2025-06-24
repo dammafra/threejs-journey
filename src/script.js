@@ -10,6 +10,7 @@ import {
   RGBShiftShader,
   ShaderPass,
   SMAAPass,
+  UnrealBloomPass,
 } from 'three/examples/jsm/Addons.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
@@ -133,12 +134,24 @@ effectComposer.addPass(dotScreenPass)
 
 const glitchPass = new GlitchPass()
 // glitchPass.goWild = true
-glitchPass.enabled = true
+glitchPass.enabled = false
 effectComposer.addPass(glitchPass)
 
 const rgbShiftPass = new ShaderPass(RGBShiftShader)
 rgbShiftPass.enabled = false
 effectComposer.addPass(rgbShiftPass)
+
+const unrealBloomPass = new UnrealBloomPass()
+rgbShiftPass.enabled = false
+unrealBloomPass.strength = 0.3
+unrealBloomPass.radius = 1
+unrealBloomPass.threshold = 0.6
+effectComposer.addPass(unrealBloomPass)
+
+gui.add(unrealBloomPass, 'enabled').name('unreal bloom')
+gui.add(unrealBloomPass, 'strength', 0, 2, 0.001).name('unreal bloom strength')
+gui.add(unrealBloomPass, 'radius', 0, 2, 0.001).name('unreal bloom radius')
+gui.add(unrealBloomPass, 'threshold', 0, 1, 0.001).name('unreal bloom threshold')
 
 const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
 effectComposer.addPass(gammaCorrectionPass)

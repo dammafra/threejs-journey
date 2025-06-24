@@ -157,7 +157,7 @@ gui.add(unrealBloomPass, 'threshold', 0, 1, 0.001).name('unreal bloom threshold'
 const TintShader = {
   uniforms: {
     tDiffuse: new THREE.Uniform(null),
-    uTint: new THREE.Uniform(new THREE.Vector3()),
+    uTint: new THREE.Uniform(null),
   },
   vertexShader: `
     varying vec2 vUv;
@@ -184,6 +184,9 @@ const TintShader = {
   `,
 }
 const tintPass = new ShaderPass(TintShader)
+// Don't put uniform values in the shader definition because it is like a template, you can use it multiple times with different values:
+// you instantiate it and then you can cahnge the values
+tintPass.material.uniforms.uTint.value = new THREE.Vector3()
 effectComposer.addPass(tintPass)
 
 gui.add(tintPass.material.uniforms.uTint.value, 'x', -1, 1, 0.001).name('tint R')
@@ -193,7 +196,7 @@ gui.add(tintPass.material.uniforms.uTint.value, 'z', -1, 1, 0.001).name('tint B'
 const DisplacementShader = {
   uniforms: {
     tDiffuse: new THREE.Uniform(null),
-    uTime: new THREE.Uniform(0),
+    uNormalMap: new THREE.Uniform(null),
   },
   vertexShader: `
     varying vec2 vUv;
@@ -206,22 +209,25 @@ const DisplacementShader = {
   `,
   fragmentShader: `
     uniform sampler2D tDiffuse;
-    uniform float uTime;
+    uniform sampler2D uNormalMap;
 
     varying vec2 vUv;
 
     void main() {
-      vec2 newUv = vec2(
-        vUv.x,
-        vUv.y + sin(vUv.x * 10.0 + uTime) * 0.1
-      );
+      vec3 normalColor = texture2D(uNormalMap, vUv).xyz * 2.0 - 1.0;
+      vec2 newUv = vUv + normalColor.xy * 0.1;
       vec4 color = texture2D(tDiffuse, newUv);
+
+      vec3 lightDirection = normalize(vec3(-1.0, 1.0, 0.0));
+      float lightness = clamp(dot(normalColor, lightDirection), 0.0, 1.0);
+      color.rgb += lightness * 2.0;
 
       gl_FragColor = color;
     }
   `,
 }
 const displacementPass = new ShaderPass(DisplacementShader)
+displacementPass.material.uniforms.uNormalMap.value = textureLoader.load('./textures/interfaceNormalMap.png') // prettier-ignore
 effectComposer.addPass(displacementPass)
 // ---
 
@@ -241,9 +247,6 @@ const clock = new THREE.Clock()
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
-
-  // Update passes
-  displacementPass.material.uniforms.uTime.value = elapsedTime
 
   // Update controls
   controls.update()

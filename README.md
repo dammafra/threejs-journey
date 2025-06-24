@@ -15,3 +15,10 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Going Further
+
+- [ ] Try other passes
+- [ ] Create new custom passes
+- [ ] Add displacement tweaks
+- [ ] Separate the shaders into different files

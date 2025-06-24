@@ -9,6 +9,7 @@ import {
   RenderPass,
   RGBShiftShader,
   ShaderPass,
+  SMAAPass,
 } from 'three/examples/jsm/Addons.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
@@ -114,9 +115,13 @@ renderer.toneMappingExposure = 1.5
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-// Post-processing
-const effectComposer = new EffectComposer(renderer)
-renderer.setSize(sizes.width, sizes.height)
+// Post-processing --------------------------------------------------------------------------------
+const renderTarget = new THREE.WebGLRenderTarget(800, 600, {
+  samples: renderer.getPixelRatio() === 1 ? 2 : 0,
+})
+
+const effectComposer = new EffectComposer(renderer, renderTarget)
+effectComposer.setSize(sizes.width, sizes.height)
 effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 const renderPass = new RenderPass(scene, camera)
@@ -137,6 +142,14 @@ effectComposer.addPass(rgbShiftPass)
 
 const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
 effectComposer.addPass(gammaCorrectionPass)
+
+if (renderer.getPixelRatio() === 1 && !renderer.capabilities.isWebGL2) {
+  console.log('Using SMAA')
+
+  const smaaPass = new SMAAPass()
+  effectComposer.addPass(smaaPass)
+}
+// ------------------------------------------------------------------------------------------------
 
 // Animate
 const clock = new THREE.Clock()

@@ -153,6 +153,43 @@ gui.add(unrealBloomPass, 'strength', 0, 2, 0.001).name('unreal bloom strength')
 gui.add(unrealBloomPass, 'radius', 0, 2, 0.001).name('unreal bloom radius')
 gui.add(unrealBloomPass, 'threshold', 0, 1, 0.001).name('unreal bloom threshold')
 
+// Custom passes
+const TintShader = {
+  uniforms: {
+    tDiffuse: new THREE.Uniform(null),
+    uTint: new THREE.Uniform(new THREE.Vector3()),
+  },
+  vertexShader: `
+    varying vec2 vUv;
+
+    // this positions the plane in front of the camera
+    void main() {
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+      vUv = uv;
+    }
+  `,
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform vec3 uTint;
+
+    varying vec2 vUv;
+
+    void main() {
+      vec4 color = texture2D(tDiffuse, vUv);
+      color.rgb += uTint;
+
+      gl_FragColor = color;
+    }
+  `,
+}
+const tintPass = new ShaderPass(TintShader)
+effectComposer.addPass(tintPass)
+
+gui.add(tintPass.material.uniforms.uTint.value, 'x', -1, 1, 0.001).name('tint R')
+gui.add(tintPass.material.uniforms.uTint.value, 'y', -1, 1, 0.001).name('tint G')
+gui.add(tintPass.material.uniforms.uTint.value, 'z', -1, 1, 0.001).name('tint B')
+
 const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
 effectComposer.addPass(gammaCorrectionPass)
 

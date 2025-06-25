@@ -1,5 +1,11 @@
+import Stats from 'stats.js'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
+// Stats
+const stats = new Stats()
+stats.showPanel(0)
+document.body.appendChild(stats.dom)
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -92,6 +98,8 @@ scene.add(directionalLight)
 const clock = new THREE.Clock()
 
 const tick = () => {
+  stats.begin()
+
   const elapsedTime = clock.getElapsedTime()
 
   // Update test mesh
@@ -103,6 +111,8 @@ const tick = () => {
   // Render
   renderer.render(scene, camera)
 
+  stats.end()
+
   // Call tick again on the next frame
   window.requestAnimationFrame(tick)
 }
@@ -111,8 +121,8 @@ tick()
 
 // Tips -------------------------------------------------------------------------------------------
 
-// // Tip 4
-// console.log(renderer.info)
+// Tip 4
+console.log(renderer.info)
 
 // // Tip 6
 // scene.remove(cube)

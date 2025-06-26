@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 // Loaders
+let sceneReady = false
 const loadingBarElement = document.querySelector('.loading-bar')
 const loadingManager = new THREE.LoadingManager(
   // Loaded
@@ -17,6 +18,10 @@ const loadingManager = new THREE.LoadingManager(
       loadingBarElement.classList.add('ended')
       loadingBarElement.style.transform = ''
     }, 500)
+
+    window.setTimeout(() => {
+      sceneReady = true
+    }, 2000)
   },
 
   // Progress
@@ -103,6 +108,15 @@ gltfLoader.load('/models/DamagedHelmet/glTF/DamagedHelmet.gltf', gltf => {
   updateAllMaterials()
 })
 
+// Points of interest
+const raycaster = new THREE.Raycaster()
+const points = [
+  {
+    position: new THREE.Vector3(1.55, 0.3, -0.6),
+    element: document.querySelector('.point-0'),
+  },
+]
+
 // Lights
 const directionalLight = new THREE.DirectionalLight('#ffffff', 3)
 directionalLight.castShadow = true
@@ -157,6 +171,30 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 const tick = () => {
   // Update controls
   controls.update()
+
+  // Update points
+  if (sceneReady) {
+    for (const point of points) {
+      const screenPosition = point.position.clone()
+      screenPosition.project(camera)
+
+      raycaster.setFromCamera(screenPosition, camera)
+      const intersects = raycaster.intersectObjects(scene.children, true)
+
+      if (!intersects.length) {
+        point.element.classList.add('visible')
+      } else {
+        const intersectionDistance = intersects[0].distance
+        const pointDistance = point.position.distanceTo(camera.position)
+
+        point.element.classList.toggle('visible', intersectionDistance >= pointDistance)
+      }
+
+      const translateX = screenPosition.x * sizes.width * 0.5
+      const translateY = -screenPosition.y * sizes.height * 0.5
+      point.element.style.transform = `translate(${translateX}px, ${translateY}px)`
+    }
+  }
 
   // Render
   renderer.render(scene, camera)

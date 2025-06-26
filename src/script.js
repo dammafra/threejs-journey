@@ -4,11 +4,21 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 // Loaders
+const loadingBarElement = document.querySelector('.loading-bar')
 const loadingManager = new THREE.LoadingManager(
   // Loaded
-  () => gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 }),
+  () => {
+    gsap.delayedCall(0.5, () => {
+      gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 })
+      loadingBarElement.classList.add('ended')
+      loadingBarElement.style.transform = ''
+    })
+  },
   // Progress
-  () => {},
+  (itemUrl, itemsLoaded, itemsTotal) => {
+    const progressRatio = itemsLoaded / itemsTotal
+    loadingBarElement.style.transform = `scaleX(${progressRatio})`
+  },
 )
 const gltfLoader = new GLTFLoader(loadingManager)
 const cubeTextureLoader = new THREE.CubeTextureLoader(loadingManager)

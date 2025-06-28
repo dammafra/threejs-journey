@@ -5,6 +5,10 @@ on:
   push:
     branches-ignore:
       - main
+      - 49-creating-a-scene-in-blender
+      - 50-baking-and-exporting-the-scene
+      - 51-importing-and-optimizing-the-scene
+      - 52-adding-details-to-the-scene
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

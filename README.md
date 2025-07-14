@@ -15,3 +15,10 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Going Further
+
+- [ ] Add more tweaks
+- [ ] Add more features
+- [ ] Add a better background
+- [ ] Create a brand new scene

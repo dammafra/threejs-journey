@@ -5,9 +5,8 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 // Debug
-const gui = new GUI({
-  width: 400,
-})
+const gui = new GUI({ width: 400 })
+gui.show(window.location.hash === '#debug')
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -48,6 +47,7 @@ gltfLoader.load('portal.glb', gltf => {
   poleLightAMesh.material = poleLightMaterial
   poleLightBMesh.material = poleLightMaterial
 
+  gltf.scene.position.y = -0.5
   scene.add(gltf.scene)
 })
 

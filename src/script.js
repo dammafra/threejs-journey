@@ -145,6 +145,8 @@ controls.enablePan = false
 controls.minDistance = 3
 controls.maxDistance = 10
 controls.maxPolarAngle = Math.PI * 0.45
+controls.autoRotate = true
+controls.autoRotateSpeed = 0.25
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({

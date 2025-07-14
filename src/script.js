@@ -5,6 +5,8 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import firefliesFragmentShader from './shaders/fireflies/fragment.glsl'
 import firefliesVertexShader from './shaders/fireflies/vertex.glsl'
+import portalFragmentShader from './shaders/portal/fragment.glsl'
+import portalVertexShader from './shaders/portal/vertex.glsl'
 
 // Debug
 const debug = {}
@@ -36,20 +38,36 @@ bakedTexture.colorSpace = THREE.SRGBColorSpace
 
 // Materials
 const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
-const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
 const poleLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffe5 })
+
+debug.portalColorStart = '#24acf0'
+debug.portalColorEnd = '#ffffff'
+
+gui.addColor(debug, 'portalColorStart').onChange(c => portalLightMaterial.uniforms.uColorStart.value.set(c)) // prettier-ignore
+gui.addColor(debug, 'portalColorEnd').onChange(c => portalLightMaterial.uniforms.uColorEnd.value.set(c)) // prettier-ignore
+
+const portalLightMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: new THREE.Uniform(0),
+    uColorStart: new THREE.Uniform(new THREE.Color(debug.portalColorStart)),
+    uColorEnd: new THREE.Uniform(new THREE.Color(debug.portalColorEnd)),
+  },
+  vertexShader: portalVertexShader,
+  fragmentShader: portalFragmentShader,
+  side: THREE.DoubleSide,
+})
 
 // Model
 gltfLoader.load('portal.glb', gltf => {
   const bakedMesh = gltf.scene.children.find(child => child.name === 'baked')
-  const portalLightMesh = gltf.scene.children.find(child => child.name === 'portalLight')
   const poleLightAMesh = gltf.scene.children.find(child => child.name === 'poleLightA')
   const poleLightBMesh = gltf.scene.children.find(child => child.name === 'poleLightB')
+  const portalLightMesh = gltf.scene.children.find(child => child.name === 'portalLight')
 
   bakedMesh.material = bakedMaterial
-  portalLightMesh.material = portalLightMaterial
   poleLightAMesh.material = poleLightMaterial
   poleLightBMesh.material = poleLightMaterial
+  portalLightMesh.material = portalLightMaterial
 
   gltf.scene.position.y = -0.5
   scene.add(gltf.scene)
@@ -145,9 +163,10 @@ const clock = new THREE.Clock()
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
-  firefliesMaterial.uniforms.uTime.value = elapsedTime
 
   // Update materials
+  firefliesMaterial.uniforms.uTime.value = elapsedTime
+  portalLightMaterial.uniforms.uTime.value = elapsedTime
 
   // Update controls
   controls.update()

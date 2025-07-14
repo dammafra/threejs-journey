@@ -51,6 +51,15 @@ gltfLoader.load('portal.glb', gltf => {
   scene.add(gltf.scene)
 })
 
+// Floor
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(4, 4),
+  new THREE.MeshBasicMaterial({ color: 0x5a4e07 }),
+)
+floor.position.y = -0.001
+floor.rotation.x = Math.PI * 0.5
+scene.add(floor)
+
 // Sizes
 const sizes = {
   width: window.innerWidth,
@@ -81,6 +90,9 @@ scene.add(camera)
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
+controls.minDistance = 3
+controls.maxDistance = 10
+controls.maxPolarAngle = Math.PI * 0.45
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -89,6 +101,7 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.setClearColor(0x1a0f0f)
 
 // Animate
 const clock = new THREE.Clock()

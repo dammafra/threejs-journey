@@ -1,3 +1,4 @@
+import gsap from 'gsap'
 import GUI from 'lil-gui'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -57,20 +58,63 @@ const portalLightMaterial = new THREE.ShaderMaterial({
   side: THREE.DoubleSide,
 })
 
+// Realtime light
+const shadowPlane = new THREE.Mesh(
+  new THREE.CircleGeometry(0.175, 10),
+  new THREE.MeshStandardMaterial({
+    transparent: true,
+    opacity: 0.1,
+    roughness: 1,
+    metalness: 0,
+    color: 'black',
+  }),
+)
+shadowPlane.rotation.x = -Math.PI * 0.5
+shadowPlane.rotation.z = Math.PI * 0.5
+shadowPlane.position.set(1.315, -0.3195, 0.86)
+shadowPlane.receiveShadow = true
+scene.add(shadowPlane)
+
+const directionalLight = new THREE.DirectionalLight('#ffffff', 100)
+directionalLight.position.set(1, 0, 0)
+directionalLight.target.position.copy(shadowPlane.position)
+directionalLight.castShadow = true
+directionalLight.shadow.camera.left = -0.25
+directionalLight.shadow.camera.right = 0.25
+directionalLight.shadow.camera.top = 0.25
+directionalLight.shadow.camera.bottom = -0.25
+directionalLight.shadow.camera.near = 0.8
+directionalLight.shadow.camera.far = 1.25
+scene.add(directionalLight, directionalLight.target)
+
 // Model
 gltfLoader.load('portal.glb', gltf => {
+  gltf.scene.position.y = -0.5
+  scene.add(gltf.scene)
+
   const bakedMesh = gltf.scene.children.find(child => child.name === 'baked')
+  const axeMesh = gltf.scene.children.find(child => child.name === 'axe')
   const poleLightAMesh = gltf.scene.children.find(child => child.name === 'poleLightA')
   const poleLightBMesh = gltf.scene.children.find(child => child.name === 'poleLightB')
   const portalLightMesh = gltf.scene.children.find(child => child.name === 'portalLight')
 
   bakedMesh.material = bakedMaterial
+  axeMesh.material = bakedMaterial
   poleLightAMesh.material = poleLightMaterial
   poleLightBMesh.material = poleLightMaterial
   portalLightMesh.material = portalLightMaterial
 
-  gltf.scene.position.y = -0.5
-  scene.add(gltf.scene)
+  axeMesh.castShadow = true
+  bakedMesh.receiveShadow = true
+  directionalLight.shadow.needsUpdate = true
+
+  // prettier-ignore
+  gsap
+    .timeline({ repeat: -1, repeatDelay: 0.5 })
+    .to(axeMesh.position, { y: '+=0.25', ease: 'back.out' })
+    .to(axeMesh.rotation, { x: '+=0.5', y: '-=0.8', z: '+=0.5', ease: 'back.out' }, '<=')
+    .to(axeMesh.position, { y: '-=0.25', duration: 0.25, delay: 0.25, ease: 'back.in' })
+    .to(axeMesh.rotation, { x: '-=0.5', y: '+=0.8', z: '-=0.5', duration: 0.25, ease: 'back.in' }, '<=')
 })
 
 // Fireflies
@@ -153,6 +197,8 @@ const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   antialias: true,
 })
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 

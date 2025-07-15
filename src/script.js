@@ -21,15 +21,55 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
-// Texture loader
-const textureLoader = new THREE.TextureLoader()
+// Overlay
+const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1)
+const overlayMaterial = new THREE.ShaderMaterial({
+  transparent: true,
+  uniforms: { uAlpha: new THREE.Uniform(1) },
+  vertexShader: 'void main() { gl_Position = vec4(position, 1.0); }',
+  fragmentShader: 'uniform float uAlpha; void main() { gl_FragColor = vec4(0.102, 0.059,  0.059, uAlpha); }', // prettier-ignore
+})
+const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial)
+scene.add(overlay)
 
-// Draco loader
-const dracoLoader = new DRACOLoader()
-dracoLoader.setDecoderPath('draco/')
+// Loading Manager
+const loadingBarElement = document.querySelector('.loading-bar')
+const loadingManager = new THREE.LoadingManager(
+  () => {
+    window.setTimeout(() => {
+      gsap.to(overlayMaterial.uniforms.uAlpha, {
+        duration: 3,
+        value: 0,
+        delay: 1,
+        onStart: () => {
+          overlayMaterial.depthWrite = false
+          controls.autoRotate = true
+        },
+        onComplete: () => {
+          overlayGeometry.dispose()
+          overlayMaterial.dispose()
+          scene.remove(overlay)
+        },
+      })
+
+      loadingBarElement.classList.add('ended')
+      loadingBarElement.style.transform = ''
+    }, 500)
+  },
+
+  (_, loaded, total) => {
+    const progressRatio = loaded / total
+    loadingBarElement.style.transform = `scaleX(${progressRatio})`
+  },
+)
+
+// Texture loader
+const textureLoader = new THREE.TextureLoader(loadingManager)
 
 // GLTF loader
-const gltfLoader = new GLTFLoader()
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('draco/')
+const gltfLoader = new GLTFLoader(loadingManager)
 gltfLoader.setDRACOLoader(dracoLoader)
 
 // Textures
@@ -58,7 +98,7 @@ const portalLightMaterial = new THREE.ShaderMaterial({
   side: THREE.DoubleSide,
 })
 
-// Realtime light
+// Realtime Light
 const shadowPlane = new THREE.Mesh(
   new THREE.CircleGeometry(0.175, 10),
   new THREE.MeshStandardMaterial({
@@ -125,7 +165,7 @@ const scaleArray = new Float32Array(firefliesCount)
 
 for (let i = 0; i < firefliesCount; i++) {
   positionArray[i * 3 + 0] = (Math.random() - 0.5) * 4
-  positionArray[i * 3 + 1] = Math.random() * 1.5 - 0.5
+  positionArray[i * 3 + 1] = Math.random() * 1.5 - 0.6
   positionArray[i * 3 + 2] = (Math.random() - 0.5) * 4
 
   scaleArray[i] = Math.random()
@@ -189,7 +229,6 @@ controls.enablePan = false
 controls.minDistance = 3
 controls.maxDistance = 10
 controls.maxPolarAngle = Math.PI * 0.45
-controls.autoRotate = true
 controls.autoRotateSpeed = 0.25
 
 // Renderer

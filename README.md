@@ -78,6 +78,13 @@ This repository contains the exercises completed as part of the [Three.js Journe
 51. Importing and optimizing the scene
 52. Adding details to the scene
 
+### Chapter 07 - React Three Fiber
+
+53. What are React and React Three Fiber
+54. [First React Application](https://dammafra-54-first-react-application.vercel.app)
+55. [First R3F Application](https://dammafra-55-first-r3f-application.vercel.app)
+56. TBD
+
 <hr />
 
 ## Setup

@@ -1,6 +1,12 @@
+import { Canvas } from '@react-three/fiber'
 import ReactDOM from 'react-dom/client'
+import Experience from './Experience'
 import './style.css'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 
-root.render(<>Soon to be a badass R3F application</>)
+root.render(
+  <Canvas>
+    <Experience />
+  </Canvas>,
+)

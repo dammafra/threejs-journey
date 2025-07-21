@@ -1,14 +1,15 @@
 import { extend, useFrame, useThree } from '@react-three/fiber'
 import { useRef } from 'react'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
+import CustomObject from './CustomObject'
 
 extend({ OrbitControls })
 
 export default function Experience() {
   const { camera, gl } = useThree()
 
-  const cubeRef = useRef(null)
-  const groupRef = useRef(null)
+  const cubeRef = useRef()
+  const groupRef = useRef()
 
   useFrame((state, delta) => {
     cubeRef.current.rotation.y += delta
@@ -36,6 +37,8 @@ export default function Experience() {
         <planeGeometry />
         <meshStandardMaterial color="greenyellow" />
       </mesh>
+
+      <CustomObject verticesCount={10 * 3} />
     </>
   )
 }

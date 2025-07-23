@@ -1,4 +1,4 @@
-import { ContactShadows, OrbitControls, Sky } from '@react-three/drei'
+import { ContactShadows, Environment, Lightformer, OrbitControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -9,20 +9,27 @@ export default function Experience() {
   const directionalLightRef = useRef()
   // useHelper(directionalLightRef, DirectionalLightHelper, 1)
 
+  const lightformerRef = useRef()
+
   const { color, opacity, blur } = useControls('contact shadows', {
     color: '#1d8f75',
     opacity: { value: 0.4, min: 0, max: 1, step: 0.001 },
     blur: { value: 2.8, min: 0, max: 10, step: 0.001 },
   })
 
-  const { sunPosition } = useControls('sky', {
-    sunPosition: { value: [1, 2, 3] },
+  // const { sunPosition } = useControls('sky', {
+  //   sunPosition: { value: [1, 2, 3] },
+  // })
+
+  const { envMapIntensity } = useControls('environment map', {
+    envMapIntensity: { value: 3.5, min: 0, max: 12 },
   })
 
   useFrame((state, delta) => {
     // const time = state.clock.elapsedTime
     // cubeRef.current.position.x = 2 + Math.sin(time)
     cubeRef.current.rotation.y += delta * 0.2
+    // lightformerRef.current.rotation.y += delta * 0.2
   })
 
   return (
@@ -64,7 +71,7 @@ export default function Experience() {
 
       <OrbitControls makeDefault />
 
-      <directionalLight
+      {/* <directionalLight
         ref={directionalLightRef}
         position={sunPosition}
         intensity={4.5}
@@ -76,10 +83,41 @@ export default function Experience() {
         shadow-camera-right={5}
         shadow-camera-bottom={-5}
         shadow-camera-left={-5}
-      />
-      <ambientLight intensity={1.5} />
+      /> */}
+      {/* <ambientLight intensity={1.5} /> */}
 
-      <Sky sunPosition={sunPosition} />
+      {/* <Sky sunPosition={sunPosition} /> */}
+
+      <Environment
+        // files={[
+        //   './environmentMaps/2/px.jpg',
+        //   './environmentMaps/2/nx.jpg',
+        //   './environmentMaps/2/py.jpg',
+        //   './environmentMaps/2/ny.jpg',
+        //   './environmentMaps/2/pz.jpg',
+        //   './environmentMaps/2/nz.jpg',
+        // ]}
+        // files={'./environmentMaps/the_sky_is_on_fire_2k.hdr'}
+        // preset="sunset"
+        environmentIntensity={envMapIntensity}
+        background
+        resolution={1024}
+        // frames={Infinity}
+      >
+        <color args={['#000000']} attach="background" />
+        {/* <mesh position-z={-5} scale={10}>
+          <planeGeometry />
+          <meshBasicMaterial color={[10, 0, 0]} />
+        </mesh> */}
+        <Lightformer
+          ref={lightformerRef}
+          position-z={-5}
+          scale={10}
+          color="red"
+          intensity={10}
+          form="ring"
+        />
+      </Environment>
 
       <mesh position-x={-2} castShadow>
         <sphereGeometry />

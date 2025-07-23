@@ -1,4 +1,4 @@
-import { ContactShadows, OrbitControls } from '@react-three/drei'
+import { ContactShadows, OrbitControls, Sky } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -13,6 +13,10 @@ export default function Experience() {
     color: '#1d8f75',
     opacity: { value: 0.4, min: 0, max: 1, step: 0.001 },
     blur: { value: 2.8, min: 0, max: 10, step: 0.001 },
+  })
+
+  const { sunPosition } = useControls('sky', {
+    sunPosition: { value: [1, 2, 3] },
   })
 
   useFrame((state, delta) => {
@@ -62,7 +66,7 @@ export default function Experience() {
 
       <directionalLight
         ref={directionalLightRef}
-        position={[1, 2, 3]}
+        position={sunPosition}
         intensity={4.5}
         castShadow
         shadow-mapSize={[1024, 1024]}
@@ -74,6 +78,8 @@ export default function Experience() {
         shadow-camera-left={-5}
       />
       <ambientLight intensity={1.5} />
+
+      <Sky sunPosition={sunPosition} />
 
       <mesh position-x={-2} castShadow>
         <sphereGeometry />

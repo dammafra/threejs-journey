@@ -1,4 +1,4 @@
-import { ContactShadows, Environment, OrbitControls } from '@react-three/drei'
+import { OrbitControls, Stage } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -60,7 +60,7 @@ export default function Experience() {
           bias={0.001}
         />
       </AccumulativeShadows> */}
-      <ContactShadows
+      {/* <ContactShadows
         scale={10}
         resolution={512}
         far={5}
@@ -68,9 +68,9 @@ export default function Experience() {
         opacity={opacity}
         blur={blur}
         frames={1}
-      />
+      /> */}
 
-      <color args={['ivory']} attach="background" />
+      {/* <color args={['ivory']} attach="background" /> */}
 
       <Perf position="top-left" />
 
@@ -93,7 +93,7 @@ export default function Experience() {
 
       {/* <Sky sunPosition={sunPosition} /> */}
 
-      <Environment
+      {/* <Environment
         // files={[
         //   './environmentMaps/2/px.jpg',
         //   './environmentMaps/2/nx.jpg',
@@ -113,13 +113,13 @@ export default function Experience() {
         }}
         // resolution={1024}
         // frames={Infinity}
-      >
-        {/* <color args={['#000000']} attach="background" /> */}
-        {/* <mesh position-z={-5} scale={10}>
+      > */}
+      {/* <color args={['#000000']} attach="background" /> */}
+      {/* <mesh position-z={-5} scale={10}>
           <planeGeometry />
           <meshBasicMaterial color={[10, 0, 0]} />
         </mesh> */}
-        {/* <Lightformer
+      {/* <Lightformer
           ref={lightformerRef}
           position-z={-5}
           scale={10}
@@ -127,9 +127,9 @@ export default function Experience() {
           intensity={10}
           form="ring"
         /> */}
-      </Environment>
+      {/* </Environment> */}
 
-      <mesh position-x={-2} position-y={1} castShadow>
+      {/* <mesh position-x={-2} position-y={1} castShadow>
         <sphereGeometry />
         <meshStandardMaterial color="orange" />
       </mesh>
@@ -137,12 +137,29 @@ export default function Experience() {
       <mesh ref={cubeRef} position-x={2} position-y={1} scale={1.5} castShadow>
         <boxGeometry />
         <meshStandardMaterial color="mediumpurple" />
-      </mesh>
+      </mesh> */}
 
       {/* <mesh rotation-x={-Math.PI * 0.5} scale={10}>
         <planeGeometry />
         <meshStandardMaterial color="greenyellow" />
       </mesh> */}
+
+      <Stage
+        shadows={{ type: 'contact', opacity: 0.5, blur: 3 }}
+        environment="sunset"
+        preset="portrait"
+        intensity={envMapIntensity}
+      >
+        <mesh position-x={-2} position-y={1} castShadow>
+          <sphereGeometry />
+          <meshStandardMaterial color="orange" />
+        </mesh>
+
+        <mesh ref={cubeRef} position-x={2} position-y={1} scale={1.5} castShadow>
+          <boxGeometry />
+          <meshStandardMaterial color="mediumpurple" />
+        </mesh>
+      </Stage>
     </>
   )
 }

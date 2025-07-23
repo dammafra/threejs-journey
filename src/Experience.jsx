@@ -1,4 +1,4 @@
-import { BakeShadows, OrbitControls, useHelper } from '@react-three/drei'
+import { OrbitControls, SoftShadows, useHelper } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { Perf } from 'r3f-perf'
 import { useRef } from 'react'
@@ -15,7 +15,8 @@ export default function Experience() {
 
   return (
     <>
-      <BakeShadows />
+      {/* <BakeShadows /> */}
+      <SoftShadows size={25} samples={10} focus={0} />
 
       <color args={['ivory']} attach="background" />
 

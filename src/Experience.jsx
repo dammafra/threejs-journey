@@ -1,4 +1,4 @@
-import { ContactShadows, Environment, Lightformer, OrbitControls } from '@react-three/drei'
+import { ContactShadows, Environment, OrbitControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -12,7 +12,7 @@ export default function Experience() {
   const lightformerRef = useRef()
 
   const { color, opacity, blur } = useControls('contact shadows', {
-    color: '#1d8f75',
+    color: '#4b2709',
     opacity: { value: 0.4, min: 0, max: 1, step: 0.001 },
     blur: { value: 2.8, min: 0, max: 10, step: 0.001 },
   })
@@ -21,9 +21,15 @@ export default function Experience() {
   //   sunPosition: { value: [1, 2, 3] },
   // })
 
-  const { envMapIntensity } = useControls('environment map', {
-    envMapIntensity: { value: 3.5, min: 0, max: 12 },
-  })
+  const { envMapIntensity, envMapHeight, envMapRadius, envMapScale } = useControls(
+    'environment map',
+    {
+      envMapIntensity: { value: 7, min: 0, max: 12 },
+      envMapHeight: { value: 7, min: 0, max: 100 },
+      envMapRadius: { value: 28, min: 10, max: 1000 },
+      envMapScale: { value: 100, min: 10, max: 1000 },
+    },
+  )
 
   useFrame((state, delta) => {
     // const time = state.clock.elapsedTime
@@ -55,7 +61,6 @@ export default function Experience() {
         />
       </AccumulativeShadows> */}
       <ContactShadows
-        position={[0, -0.99, 0]}
         scale={10}
         resolution={512}
         far={5}
@@ -98,41 +103,46 @@ export default function Experience() {
         //   './environmentMaps/2/nz.jpg',
         // ]}
         // files={'./environmentMaps/the_sky_is_on_fire_2k.hdr'}
-        // preset="sunset"
+        preset="sunset"
         environmentIntensity={envMapIntensity}
-        background
-        resolution={1024}
+        // background
+        ground={{
+          height: envMapHeight,
+          radius: envMapRadius,
+          scale: envMapScale,
+        }}
+        // resolution={1024}
         // frames={Infinity}
       >
-        <color args={['#000000']} attach="background" />
+        {/* <color args={['#000000']} attach="background" /> */}
         {/* <mesh position-z={-5} scale={10}>
           <planeGeometry />
           <meshBasicMaterial color={[10, 0, 0]} />
         </mesh> */}
-        <Lightformer
+        {/* <Lightformer
           ref={lightformerRef}
           position-z={-5}
           scale={10}
           color="red"
           intensity={10}
           form="ring"
-        />
+        /> */}
       </Environment>
 
-      <mesh position-x={-2} castShadow>
+      <mesh position-x={-2} position-y={1} castShadow>
         <sphereGeometry />
         <meshStandardMaterial color="orange" />
       </mesh>
 
-      <mesh ref={cubeRef} position-x={2} scale={1.5} castShadow>
+      <mesh ref={cubeRef} position-x={2} position-y={1} scale={1.5} castShadow>
         <boxGeometry />
         <meshStandardMaterial color="mediumpurple" />
       </mesh>
 
-      <mesh position-y={-1} rotation-x={-Math.PI * 0.5} scale={10}>
+      {/* <mesh rotation-x={-Math.PI * 0.5} scale={10}>
         <planeGeometry />
         <meshStandardMaterial color="greenyellow" />
-      </mesh>
+      </mesh> */}
     </>
   )
 }

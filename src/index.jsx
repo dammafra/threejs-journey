@@ -5,6 +5,11 @@ import './style.css'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 
+// const created = ({ gl, scene }) => {
+//   gl.setClearColor('#ff0000')
+//   scene.background = new Color('#ff0000')
+// }
+
 root.render(
   <Canvas
     camera={{
@@ -13,7 +18,9 @@ root.render(
       far: 200,
       position: [-4, 3, 6],
     }}
+    // onCreated={created}
   >
+    {/* <color args={['#ff0000']} attach="background" /> */}
     <Experience />
   </Canvas>,
 )

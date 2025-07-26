@@ -1,10 +1,15 @@
 import { OrbitControls } from '@react-three/drei'
 import { useLoader } from '@react-three/fiber'
 import { Perf } from 'r3f-perf'
-import { GLTFLoader } from 'three/examples/jsm/Addons.js'
+import { DRACOLoader, GLTFLoader } from 'three/examples/jsm/Addons.js'
 
 export default function Experience() {
-  const model = useLoader(GLTFLoader, './models/hamburger.glb')
+  // prettier-ignore
+  const model = useLoader(
+    GLTFLoader, 
+    './models/hamburger-draco.glb', 
+    loader => loader.setDRACOLoader(new DRACOLoader().setDecoderPath('./draco/'))
+  )
 
   return (
     <>

@@ -9,6 +9,8 @@ export default function Model() {
   const { animation } = useControls({ animation: { options: animations.names } })
 
   useEffect(() => {
+    model.scene.traverse(child => (child.castShadow = true))
+
     const action = animations.actions[animation]
     action.reset().fadeIn(0.5).play()
 

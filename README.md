@@ -87,7 +87,8 @@ This repository contains the exercises completed as part of the [Three.js Journe
 57. [Debug](https://dammafra-57-debug.vercel.app)
 58. [Environment and Staging](https://dammafra-58-environment-and-staging.vercel.app)
 59. [Load Models](https://dammafra-59-load-models.vercel.app)
-60. TBD
+60. [3D Text](https://dammafra-60-3d-text.vercel.app)
+61. TBD
 
 <hr />
 

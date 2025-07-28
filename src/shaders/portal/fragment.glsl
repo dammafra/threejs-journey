@@ -8,7 +8,7 @@ varying vec2 vUv;
 
 void main() {
   // Displace the UV
-  vec2 displacedUv = vUv * cnoise(vec3(vUv * 5.0, uTime * 0.1));
+  vec2 displacedUv = vUv + cnoise(vec3(vUv * 5.0, uTime * 0.1));
 
   // Perlin noise
   float strength = cnoise(vec3(displacedUv * 5.0, uTime * 0.2));

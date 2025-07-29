@@ -1,7 +1,8 @@
+import { useGSAP } from '@gsap/react'
 import { Center, shaderMaterial, Sparkles, useGLTF, useTexture } from '@react-three/drei'
 import { extend, useFrame } from '@react-three/fiber'
 import gsap from 'gsap'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { Color, DoubleSide } from 'three'
 import portalFragmentShader from './shaders/portal/fragment.glsl'
 import portalVertexShader from './shaders/portal/vertex.glsl'
@@ -28,7 +29,7 @@ export default function Portal() {
     portalMaterialRef.current.uTime += delta
   })
 
-  useEffect(() => {
+  useGSAP(() => {
     // TODO @react-spring/three
     gsap
       .timeline({ repeat: -1, repeatDelay: 0.5 })
@@ -36,7 +37,7 @@ export default function Portal() {
       .to(axeRef.current.rotation, { x: '+=0.5', y: '-=0.8', z: '+=0.5', ease: 'back.out' }, '<=')
       .to(axeRef.current.position, { y: '-=0.25', duration: 0.25, delay: 0.25, ease: 'back.in' })
       .to(axeRef.current.rotation, { x: '-=0.5', y: '+=0.8', z: '-=0.5', duration: 0.25, ease: 'back.in' }, '<=') //prettier-ignore
-  }, [])
+  })
 
   return (
     <Center>

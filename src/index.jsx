@@ -1,3 +1,4 @@
+import { Bvh } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import ReactDOM from 'react-dom/client'
 import Experience from './Experience.jsx'
@@ -13,7 +14,10 @@ root.render(
       far: 200,
       position: [-4, 3, 6],
     }}
+    onPointerMissed={() => console.log('missed')}
   >
-    <Experience />
+    <Bvh>
+      <Experience />
+    </Bvh>
   </Canvas>,
 )

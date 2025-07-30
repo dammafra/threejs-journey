@@ -1,9 +1,23 @@
 import { OrbitControls } from '@react-three/drei'
-import { DepthOfField, EffectComposer, ToneMapping } from '@react-three/postprocessing'
+import { EffectComposer, ToneMapping } from '@react-three/postprocessing'
+import { useControls } from 'leva'
 import { ToneMappingMode } from 'postprocessing'
 import { Perf } from 'r3f-perf'
+import { useEffect, useRef } from 'react'
+import Drunk from './Drunk'
 
 export default function Experience() {
+  const drunkRef = useRef()
+
+  useEffect(() => {
+    console.log(drunkRef.current)
+  }, [])
+
+  const drunkProps = useControls({
+    frequency: { value: 12, min: 1, max: 20 },
+    amplitude: { value: 0.1, min: 0, max: 1 },
+  })
+
   return (
     <>
       <color args={['#fffff0']} attach="background" />
@@ -24,7 +38,8 @@ export default function Experience() {
         /> */}
         {/* <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} /> */}
         {/* <Bloom mipmapBlur intensity={0.1} luminanceThreshold={0} /> */}
-        <DepthOfField focusDistance={0.025} focalLength={0.025} bokehScale={6} />
+        {/* <DepthOfField focusDistance={0.025} focalLength={0.025} bokehScale={6} /> */}
+        <Drunk ref={drunkRef} {...drunkProps} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       </EffectComposer>
 

@@ -1,6 +1,6 @@
 import { OrbitControls } from '@react-three/drei'
-import { EffectComposer, ToneMapping } from '@react-three/postprocessing'
-import { ToneMappingMode } from 'postprocessing'
+import { EffectComposer, Noise, ToneMapping } from '@react-three/postprocessing'
+import { BlendFunction, ToneMappingMode } from 'postprocessing'
 import { Perf } from 'r3f-perf'
 
 export default function Experience() {
@@ -22,6 +22,7 @@ export default function Experience() {
           duration={[0.1, 0.3]}
           strength={[0.2, 0.4]}
         /> */}
+        <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       </EffectComposer>
 
@@ -39,7 +40,7 @@ export default function Experience() {
 
       <mesh castShadow position-x={2} scale={1.5}>
         <boxGeometry />
-        <meshStandardMaterial color="mediumpurple" />
+        <meshBasicMaterial color="mediumpurple" />
       </mesh>
 
       <mesh receiveShadow position-y={-1} rotation-x={-Math.PI * 0.5} scale={10}>

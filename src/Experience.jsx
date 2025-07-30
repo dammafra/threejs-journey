@@ -1,12 +1,12 @@
 import { OrbitControls } from '@react-three/drei'
-import { EffectComposer, Noise, ToneMapping } from '@react-three/postprocessing'
-import { BlendFunction, ToneMappingMode } from 'postprocessing'
+import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing'
+import { ToneMappingMode } from 'postprocessing'
 import { Perf } from 'r3f-perf'
 
 export default function Experience() {
   return (
     <>
-      <color args={['#fffff0']} attach="background" />
+      <color args={['#000000']} attach="background" />
 
       <EffectComposer
         multisampling={8} //default
@@ -22,7 +22,8 @@ export default function Experience() {
           duration={[0.1, 0.3]}
           strength={[0.2, 0.4]}
         /> */}
-        <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} />
+        {/* <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} /> */}
+        <Bloom mipmapBlur intensity={0.1} luminanceThreshold={0} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       </EffectComposer>
 
@@ -40,7 +41,10 @@ export default function Experience() {
 
       <mesh castShadow position-x={2} scale={1.5}>
         <boxGeometry />
-        <meshBasicMaterial color="mediumpurple" />
+        {/* <meshBasicMaterial color="mediumpurple" /> */}
+        {/* Bloom */}
+        {/* <meshStandardMaterial color="white" emissive="orange" emissiveIntensity={10} /> */}
+        <meshBasicMaterial color={[1.5 * 10, 1 * 10, 4 * 10]} />
       </mesh>
 
       <mesh receiveShadow position-y={-1} rotation-x={-Math.PI * 0.5} scale={10}>

@@ -6,14 +6,23 @@ import './style.css'
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 
 root.render(
-  <Canvas
-    camera={{
-      fov: 45,
-      near: 0.1,
-      far: 2000,
-      position: [-3, 1.5, 4],
-    }}
-  >
-    <Experience />
-  </Canvas>,
+  <>
+    <Canvas
+      className="r3f"
+      camera={{
+        fov: 45,
+        near: 0.1,
+        far: 2000,
+        position: [-3, 1.5, 4],
+      }}
+    >
+      <Experience />
+    </Canvas>
+
+    {/* prettier-ignore */}
+    <footer>
+      <a href="https://skfb.ly/oqp6N" target="_blank"> "2021 Macbook Pro 14" (M1 Pro / M1 Max)"</a> by akshatmittal <br />
+      is licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution</a>.
+    </footer>
+  </>,
 )

@@ -45,15 +45,9 @@ export default function Experience() {
                 color={randomSite.color}
                 rotation-y={Math.PI}
               />
-              <mesh position-z={0.03} scale={[3, 2, 1]}>
+              <mesh position-z={0.001} scale={[3.05, 2, 1]}>
                 <planeGeometry />
-                <meshStandardMaterial
-                  transparent
-                  opacity={0.1}
-                  roughness={0}
-                  metalness={1}
-                  color="white"
-                />
+                <meshStandardMaterial transparent opacity={0.1} roughness={0} metalness={1} />
               </mesh>
             </group>
             <Macbook scale={0.1} position-y={-1}></Macbook>

@@ -9,44 +9,53 @@ import {
 import { Suspense } from 'react'
 import Macbook from './Macbook'
 
+const sites = [
+  { url: 'https://dammagotchi.vercel.app', color: '#ffffff' },
+  { url: 'https://drysland.vercel.app', color: '#76B0C3' },
+  { url: 'https://templerumble.vercel.app', color: '#6E5437' },
+]
+
+const randomSite = sites[Math.floor(Math.random() * sites.length)]
+
 export default function Experience() {
-  const sites = [
-    { url: 'https://dammagotchi.vercel.app', color: '#ffffff' },
-    { url: 'https://drysland.vercel.app', color: '#76B0C3' },
-    { url: 'https://templerumble.vercel.app', color: '#6E5437' },
-  ]
-
-  const randomSite = sites[Math.floor(Math.random() * sites.length)]
-
   return (
     <>
       <color args={['#FFC109']} attach="background" />
 
-      <Environment preset="city" />
+      <Environment preset="apartment" />
 
-      <PresentationControls
-        global
-        rotation={[0.13, 0.1, 0]}
-        polar={[-0.4, 0.2]}
-        azimuth={[-1, 0.5]}
-        damping={0.1}
-        snap
-      >
+      <PresentationControls global rotation={[0.13, 0.1, 0]} polar={[-0.4, 0.2]} damping={0.5} snap>
         <Float rotationIntensity={0.4}>
-          <group position={[0, 0, -1.58]} rotation-x={-0.35}>
-            <Html transform wrapperClass="html-screen" distanceFactor={1.7} scale={0.7}>
-              <iframe src={randomSite.url} />
-              <div className="overlay" onClick={() => window.open(randomSite.url)} />
-            </Html>
-            <rectAreaLight
-              width={3}
-              height={2}
-              intensity={65}
-              color={randomSite.color}
-              rotation-y={Math.PI}
-            />
-          </group>
           <Suspense>
+            <group position={[0, 0, -1.55]} rotation-x={-0.35}>
+              <Html
+                transform
+                wrapperClass="html-screen"
+                distanceFactor={1.7}
+                scale={0.7}
+                occlude="blending"
+              >
+                <iframe src={randomSite.url} />
+                <a className="overlay" target="_blank" href={randomSite.url} />
+              </Html>
+              <rectAreaLight
+                width={3}
+                height={2}
+                intensity={65}
+                color={randomSite.color}
+                rotation-y={Math.PI}
+              />
+              <mesh position-z={0.03} scale={[3, 2, 1]}>
+                <planeGeometry />
+                <meshStandardMaterial
+                  transparent
+                  opacity={0.1}
+                  roughness={0}
+                  metalness={1}
+                  color="white"
+                />
+              </mesh>
+            </group>
             <Macbook scale={0.1} position-y={-1}></Macbook>
           </Suspense>
         </Float>

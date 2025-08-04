@@ -14,12 +14,9 @@ export default function Macbook(props) {
 
   return (
     <group {...props} dispose={null}>
-      {/* <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.abgVijaHVNRUvcc.geometry}
-        material={materials.UpOvKwLUUXPmnPU}
-      /> */}
+      <mesh castShadow receiveShadow geometry={nodes.abgVijaHVNRUvcc.geometry}>
+        <meshBasicMaterial color="black" />
+      </mesh>
       <mesh
         castShadow
         receiveShadow

@@ -24,7 +24,7 @@ export default function Experience() {
 
       <Environment preset="apartment" />
 
-      <PresentationControls global rotation={[0.13, 0.1, 0]} polar={[-0.4, 0.2]} damping={0.5} snap>
+      <PresentationControls global rotation={[0.13, 0.1, 0]} polar={[-0.4, 0.2]} damping={0.1} snap>
         <Float rotationIntensity={0.4}>
           <Suspense>
             <group position={[0, 0, -1.55]} rotation-x={-0.35}>
@@ -34,6 +34,7 @@ export default function Experience() {
                 distanceFactor={1.7}
                 scale={0.7}
                 occlude="blending"
+                zIndexRange={[0, 1]}
               >
                 <iframe src={randomSite.url} />
                 <a className="overlay" target="_blank" href={randomSite.url} />

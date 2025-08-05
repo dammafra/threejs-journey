@@ -1,9 +1,11 @@
 import { Canvas } from '@react-three/fiber'
+import { Perf } from 'r3f-perf'
 import ReactDOM from 'react-dom/client'
 import Experience from './Experience.jsx'
 import './style.css'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
+const debug = import.meta.env.MODE === 'development' || location.hash === '#debug'
 
 root.render(
   <>
@@ -17,6 +19,7 @@ root.render(
       }}
     >
       <Experience />
+      {debug && <Perf position="top-left" />}
     </Canvas>
 
     {/* prettier-ignore */}

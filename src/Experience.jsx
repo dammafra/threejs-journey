@@ -1,3 +1,4 @@
+import { animated, useSpring } from '@react-spring/three'
 import {
   CameraControls,
   ContactShadows,
@@ -8,7 +9,7 @@ import {
   Text,
 } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import Macbook from './Macbook'
 
 const sites = [
@@ -18,14 +19,17 @@ const sites = [
 ]
 
 const randomSite = sites[Math.floor(Math.random() * sites.length)]
+const AnimatedText = animated(Text)
 
 export default function Experience({ debug }) {
   const { aspect } = useThree(state => state.viewport)
   const cameraControlsRef = useRef()
 
-  const [titlePosition, setTitlePosition] = useState()
-  const [titleRotationY, setTitleRotationY] = useState()
-  const [titleFontSize, setTitleFontSize] = useState()
+  const titleSprings = useSpring({
+    position: aspect > 1 ? [2, 0.5, 0.75] : [-0.05, 3, 0.75],
+    rotationY: aspect > 1 ? -1.25 : 0,
+    fontSize: aspect > 1 ? 1 : 0.5,
+  })
 
   useEffect(() => {
     cameraControlsRef.current.enabled = true
@@ -33,17 +37,9 @@ export default function Experience({ debug }) {
     if (aspect > 1) {
       cameraControlsRef.current.moveTo(0, 0, 0, true)
       cameraControlsRef.current.setPosition(-3, 1.5, 4, true)
-
-      setTitlePosition([2, 0.5, 0.75])
-      setTitleRotationY(-1.25)
-      setTitleFontSize(1)
     } else {
       cameraControlsRef.current.moveTo(0, 1.5, 0, true)
       cameraControlsRef.current.setPosition(0, 3, 6, true)
-
-      setTitlePosition([-0.05, 3, 0.75])
-      setTitleRotationY(0)
-      setTitleFontSize(0.5)
     }
 
     cameraControlsRef.current.enabled = false
@@ -51,8 +47,6 @@ export default function Experience({ debug }) {
 
   return (
     <>
-      <color args={['#FFC109']} attach="background" />
-
       <Environment preset="apartment" />
       <CameraControls ref={cameraControlsRef} />
 
@@ -62,7 +56,7 @@ export default function Experience({ debug }) {
             <group position={[0, 0, -1.55]} rotation-x={-0.35}>
               <Html
                 transform
-                wrapperClass="html-screen"
+                className="html-screen"
                 distanceFactor={1.7}
                 scale={0.7}
                 occlude="blending"
@@ -89,16 +83,16 @@ export default function Experience({ debug }) {
           </Float>
 
           <Float rotationIntensity={0.5}>
-            <Text
+            <AnimatedText
               font="./fonts/MonomaniacOne-Regular.ttf"
-              position={titlePosition}
-              rotation-y={titleRotationY}
-              fontSize={titleFontSize}
+              position={titleSprings.position}
+              rotation-y={titleSprings.rotationY}
+              fontSize={titleSprings.fontSize}
               textAlign="center"
               color="#0077b6"
             >
               dammafra
-            </Text>
+            </AnimatedText>
           </Float>
         </Suspense>
       </PresentationControls>

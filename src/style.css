@@ -7,7 +7,7 @@ body,
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #ffc109;
+  background: radial-gradient(circle, #ffffff 0%, #dfc169 35%, #ffc109 100%);
 }
 
 .r3f {
@@ -15,7 +15,7 @@ body,
 }
 
 .html-screen {
-  background: #000000;
+  background: black;
 }
 
 .html-screen iframe {
@@ -41,7 +41,7 @@ footer {
   right: 0;
   text-align: right;
   font-family: monospace;
-  font-size: 12px;
+  font-size: 10px;
   color: white;
   padding: 12px;
 }

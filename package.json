@@ -15,8 +15,11 @@
     "vite-plugin-restart": "^0.4.2"
   },
   "dependencies": {
+    "@react-spring/three": "^10.0.1",
     "@react-three/drei": "^10.0.4",
     "@react-three/fiber": "^9.1.0",
+    "i": "^0.3.7",
+    "npm": "^11.5.2",
     "r3f-perf": "^7.2.3",
     "react": "19.0",
     "react-dom": "19.0",

@@ -1,5 +1,5 @@
 import { OrbitControls } from '@react-three/drei'
-import { Physics, RigidBody } from '@react-three/rapier'
+import { BallCollider, CuboidCollider, Physics, RigidBody } from '@react-three/rapier'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
 
@@ -19,25 +19,21 @@ export default function Experience() {
 
       <Physics debug={debug}>
         <RigidBody colliders="ball">
-          <mesh castShadow position={[-2, 4, 0]}>
+          <mesh castShadow position={[0, 4, 0]}>
             <sphereGeometry />
             <meshStandardMaterial color="orange" />
           </mesh>
         </RigidBody>
 
-        <RigidBody>
-          <mesh castShadow position={[2, 2, 0]}>
-            <boxGeometry args={[2, 2, 1]} />
-            <meshStandardMaterial color="mediumpurple" />
-          </mesh>
-          <mesh castShadow position={[2, 2, 3]}>
-            <boxGeometry />
-            <meshStandardMaterial color="mediumpurple" />
-          </mesh>
-        </RigidBody>
-
-        <RigidBody colliders="trimesh">
-          <mesh castShadow position={[-2, 1, -0.25]} rotation-x={Math.PI * 0.1}>
+        <RigidBody colliders={false} position={[0, 1, -0.25]} rotation-x={Math.PI * 0.1}>
+          <CuboidCollider args={[1.5, 1.5, 0.5]} />
+          <CuboidCollider
+            args={[0.25, 1, 0.25]}
+            position={[0, 0, 1]}
+            rotation={[-Math.PI * 0.35, 0, 0]}
+          />
+          <BallCollider args={[1.5]} />
+          <mesh castShadow>
             <torusGeometry args={[1, 0.5, 16, 32]} />
             <meshStandardMaterial color="mediumpurple" />
           </mesh>

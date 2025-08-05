@@ -31,23 +31,19 @@ export default function Experience({ debug }) {
   const cameraControlsRef = useRef()
 
   const titleSprings = useSpring({
-    position: aspect > 1 ? [2, 0.5, 0.75] : [-0.05, 3, 0.75],
+    position: aspect > 1 ? [2, 0, 0.75] : [-0.05, 2.5, 0.75],
     rotationY: aspect > 1 ? -1.25 : 0,
-    fontSize: aspect > 1 ? 1 : 0.5,
+    fontSize: aspect > 1 ? 1 : 0.6,
   })
 
   useEffect(() => {
-    cameraControlsRef.current.enabled = true
-
     if (aspect > 1) {
       cameraControlsRef.current.moveTo(0, -0.25, 0, true)
       cameraControlsRef.current.setPosition(-3, 1.5, 4, true)
     } else {
-      cameraControlsRef.current.moveTo(0, 1, 0, true)
-      cameraControlsRef.current.setPosition(0, 3, 6, true)
+      cameraControlsRef.current.moveTo(0, 0.5, 0, true)
+      cameraControlsRef.current.setPosition(0, 3, 8, true)
     }
-
-    cameraControlsRef.current.enabled = false
   }, [aspect])
 
   return (
@@ -101,7 +97,7 @@ export default function Experience({ debug }) {
 
       <Environment preset="apartment" />
       <ContactShadows position-y={-2} opacity={0.4} scale={5} blur={2.4} far={3} />
-      <CameraControls ref={cameraControlsRef} />
+      <CameraControls enabled={false} ref={cameraControlsRef} />
     </>
   )
 }

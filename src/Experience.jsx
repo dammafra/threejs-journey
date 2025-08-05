@@ -9,19 +9,24 @@ import {
   Text,
 } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import Macbook from './Macbook'
 
+const debugSite = { url: 'https://bruno-simon.com/html', color: '#ffffff' }
+
 const sites = [
-  { url: 'https://dammagotchi.vercel.app', color: '#ffffff' },
   { url: 'https://drysland.vercel.app', color: '#76B0C3' },
   { url: 'https://templerumble.vercel.app', color: '#6E5437' },
+  { url: 'https://dammagotchi.vercel.app', color: '#ffffff' },
 ]
 
 const randomSite = sites[Math.floor(Math.random() * sites.length)]
+
 const AnimatedText = animated(Text)
 
 export default function Experience({ debug }) {
+  const [site, _setSite] = useState(debug ? debugSite : randomSite)
+
   const { aspect } = useThree(state => state.viewport)
   const cameraControlsRef = useRef()
 
@@ -35,10 +40,10 @@ export default function Experience({ debug }) {
     cameraControlsRef.current.enabled = true
 
     if (aspect > 1) {
-      cameraControlsRef.current.moveTo(0, 0, 0, true)
+      cameraControlsRef.current.moveTo(0, -0.25, 0, true)
       cameraControlsRef.current.setPosition(-3, 1.5, 4, true)
     } else {
-      cameraControlsRef.current.moveTo(0, 1.5, 0, true)
+      cameraControlsRef.current.moveTo(0, 1, 0, true)
       cameraControlsRef.current.setPosition(0, 3, 6, true)
     }
 
@@ -47,9 +52,6 @@ export default function Experience({ debug }) {
 
   return (
     <>
-      <Environment preset="apartment" />
-      <CameraControls ref={cameraControlsRef} />
-
       <PresentationControls global rotation={[0.13, 0.1, 0]} polar={[-0.4, 0.2]} damping={0.1} snap>
         <Suspense>
           <Float rotationIntensity={0.4}>
@@ -62,14 +64,14 @@ export default function Experience({ debug }) {
                 occlude="blending"
                 zIndexRange={[0, 1]}
               >
-                {!debug && <iframe src={randomSite.url} />}
-                <a className="overlay" target="_blank" href={randomSite.url} />
+                <iframe src={site.url} />
+                {!debug && <a className="overlay" target="_blank" href={site.url} />}
               </Html>
               <rectAreaLight
                 width={3}
                 height={2}
                 intensity={65}
-                color={randomSite.color}
+                color={site.color}
                 rotation-y={Math.PI}
               />
               {!debug && (
@@ -97,7 +99,9 @@ export default function Experience({ debug }) {
         </Suspense>
       </PresentationControls>
 
+      <Environment preset="apartment" />
       <ContactShadows position-y={-2} opacity={0.4} scale={5} blur={2.4} far={3} />
+      <CameraControls ref={cameraControlsRef} />
     </>
   )
 }

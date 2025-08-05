@@ -1,6 +1,6 @@
-import { Canvas } from '@react-three/fiber'
 import { Perf } from 'r3f-perf'
 import ReactDOM from 'react-dom/client'
+import Canvas from './Canvas'
 import Experience from './Experience'
 import './style.css'
 

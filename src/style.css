@@ -24,8 +24,7 @@ body,
 
 .html-screen iframe {
   width: 1024px;
-  height: 670px;
-  border: none;
+  height: 669px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   pointer-events: none;

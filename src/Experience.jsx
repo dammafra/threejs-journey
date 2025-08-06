@@ -2,7 +2,7 @@ import { OrbitControls } from '@react-three/drei'
 import { Physics } from '@react-three/rapier'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
-import Level from './Level.jsx'
+import { Level } from './Level.jsx'
 import Lights from './Lights.jsx'
 
 export default function Experience() {

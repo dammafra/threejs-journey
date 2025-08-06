@@ -24,6 +24,15 @@ export default {
         })
       },
     },
+
+    // disable HMR and force full reload
+    {
+      name: 'full-reload',
+      handleHotUpdate({ server }) {
+        server.ws.send({ type: 'full-reload' })
+        return []
+      },
+    },
   ],
   server: {
     host: true, // Open to local network and display URL

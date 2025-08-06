@@ -22,7 +22,7 @@ export default function Experience() {
     )
   }
 
-  useFrame(({ clock }, delta) => {
+  useFrame(({ clock }) => {
     const time = clock.getElapsedTime()
     const eulerRotation = new Euler(0, time * 3, 0)
     const quaternionRotation = new Quaternion()
@@ -38,7 +38,7 @@ export default function Experience() {
 
   return (
     <>
-      <Perf position="top-left" />
+      {debug && <Perf position="top-left" />}
 
       <OrbitControls makeDefault />
 
@@ -56,10 +56,14 @@ export default function Experience() {
         <RigidBody
           ref={cube}
           position={[1.5, 2, 0]}
-          colliders={false}
           gravityScale={1}
           restitution={0}
           friction={0.7}
+          colliders={false}
+          // onCollisionEnter={() => console.log('enter')}
+          // onCollisionExit={() => console.log('exit')}
+          // onSleep={() => console.log('sleep')}
+          // onWake={() => console.log('wake')}
         >
           <CuboidCollider mass={3} args={[0.5, 0.5, 0.5]} />
           <mesh castShadow onClick={cubeJump}>

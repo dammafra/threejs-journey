@@ -1,14 +1,16 @@
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { CuboidCollider, Physics, RigidBody } from '@react-three/rapier'
+import { CuboidCollider, CylinderCollider, Physics, RigidBody } from '@react-three/rapier'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Euler, Quaternion, Vector3 } from 'three'
 
 export default function Experience() {
   const cube = useRef()
   const twister = useRef()
+  const [hitSound] = useState(() => new Audio('./hit.mp3'))
+  const hamburger = useGLTF('./hamburger.glb')
 
   const { debug } = useControls({
     debug: process.env.NODE_ENV === 'development' || window.location.hash.includes('#debug'),
@@ -23,6 +25,8 @@ export default function Experience() {
   }
 
   useFrame(({ clock }) => {
+    if (!twister.current) return
+
     const time = clock.getElapsedTime()
     const eulerRotation = new Euler(0, time * 3, 0)
     const quaternionRotation = new Quaternion()
@@ -84,6 +88,11 @@ export default function Experience() {
             <boxGeometry />
             <meshStandardMaterial color="red" />
           </mesh>
+        </RigidBody>
+
+        <RigidBody colliders={false} position={[0, 4, 0]}>
+          <CylinderCollider args={[0.5, 1.25]} />
+          <primitive object={hamburger.scene} scale={0.25} />
         </RigidBody>
       </Physics>
     </>

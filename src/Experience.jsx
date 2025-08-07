@@ -4,6 +4,7 @@ import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
 import { Level } from './Level.jsx'
 import Lights from './Lights.jsx'
+import Player from './Player.jsx'
 
 export default function Experience() {
   const { debug } = useControls({
@@ -19,6 +20,7 @@ export default function Experience() {
       <Physics debug={debug}>
         <Lights />
         <Level />
+        <Player />
       </Physics>
     </>
   )

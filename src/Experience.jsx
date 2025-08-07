@@ -2,26 +2,31 @@ import { OrbitControls } from '@react-three/drei'
 import { Physics } from '@react-three/rapier'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
+import { Suspense } from 'react'
 import { Level } from './Level.jsx'
 import Lights from './Lights.jsx'
 import Player from './Player.jsx'
 
 export default function Experience() {
-  const { debug } = useControls({
-    debug: process.env.NODE_ENV === 'development' || window.location.hash.includes('#debug'),
+  const { monitor, orbitControls, physicsDebug } = useControls({
+    monitor: false,
+    orbitControls: false,
+    physicsDebug: false,
   })
 
   return (
     <>
-      {debug && <Perf position="top-left" />}
+      {monitor && <Perf position="top-left" />}
 
-      <OrbitControls makeDefault />
+      {orbitControls && <OrbitControls makeDefault />}
 
-      <Physics debug={debug}>
-        <Lights />
-        <Level />
-        <Player />
-      </Physics>
+      <Suspense>
+        <Physics debug={physicsDebug}>
+          <Lights />
+          <Level />
+          <Player cameraEnabled={!orbitControls} />
+        </Physics>
+      </Suspense>
     </>
   )
 }

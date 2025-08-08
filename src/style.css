@@ -42,6 +42,7 @@ body,
   padding-top: 10px;
   pointer-events: auto;
   cursor: pointer;
+  user-select: none;
 }
 
 .controls {

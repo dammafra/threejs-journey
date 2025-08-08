@@ -213,10 +213,10 @@ function Bounds({ length = 1 }) {
   )
 }
 
-export function Level({ count = 5, types = [BlockSpinner, BlockLimbo, BlockAxe] }) {
+export function Level({ count = 5, types = [BlockSpinner, BlockLimbo, BlockAxe], seed = 0 }) {
   const blocks = useMemo(
     () => [...Array(count)].map(() => types[Math.floor(Math.random() * types.length)]),
-    [count, types],
+    [count, types, seed],
   )
 
   return (

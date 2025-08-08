@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { RigidBody, useRapier } from '@react-three/rapier'
 import { useEffect, useRef, useState } from 'react'
 import { Euler, Vector3 } from 'three'
+import useGame from './stores/useGame.jsx'
 
 export default function Player({ cameraEnabled = true }) {
   const body = useRef()
@@ -10,6 +11,11 @@ export default function Player({ cameraEnabled = true }) {
   const [subscribeKeys, getKeys] = useKeyboardControls()
   const [smoothedCameraPosition] = useState(() => new Vector3(10, 10, 10))
   const [smoothedCameraTarget] = useState(() => new Vector3())
+
+  const blocksCount = useGame(state => state.blocksCount)
+  const start = useGame(state => state.start)
+  const end = useGame(state => state.end)
+  const restart = useGame(state => state.restart)
 
   useFrame((state, delta) => {
     const safeDelta = Math.min(delta, 0.1) // clamp to 100ms
@@ -64,6 +70,10 @@ export default function Player({ cameraEnabled = true }) {
 
     state.camera.position.copy(smoothedCameraPosition)
     state.camera.lookAt(smoothedCameraTarget)
+
+    // Phases
+    if (bodyPosition.z < -(blocksCount * 4 + 2)) end()
+    if (bodyPosition.y < -4) restart()
   })
 
   const jump = () => {
@@ -77,13 +87,30 @@ export default function Player({ cameraEnabled = true }) {
     hit.timeOfImpact < 0.15 && body.current.applyImpulse(new Vector3(0, 0.5, 0))
   }
 
+  const reset = () => {
+    body.current.setTranslation(new Vector3(0, 1, 0))
+    body.current.setLinvel(new Vector3())
+    body.current.setAngvel(new Vector3())
+  }
+
   useEffect(() => {
     const unsubscribeJump = subscribeKeys(
       state => state.jump,
       value => value && jump(),
     )
 
-    return unsubscribeJump
+    const unsubscribeAny = subscribeKeys(start)
+
+    const unsubscribeReset = useGame.subscribe(
+      state => state.phase,
+      phase => phase === 'ready' && reset(),
+    )
+
+    return () => {
+      unsubscribeJump()
+      unsubscribeAny()
+      unsubscribeReset()
+    }
   }, [subscribeKeys])
 
   return (

@@ -6,6 +6,7 @@ import { Suspense } from 'react'
 import { Level } from './Level.jsx'
 import Lights from './Lights.jsx'
 import Player from './Player.jsx'
+import useGame from './stores/useGame.jsx'
 
 export default function Experience() {
   const { monitor, orbitControls, physicsDebug } = useControls({
@@ -13,6 +14,9 @@ export default function Experience() {
     orbitControls: false,
     physicsDebug: false,
   })
+
+  const blocksCount = useGame(state => state.blocksCount)
+  const blocksSeed = useGame(state => state.blocksSeed)
 
   return (
     <>
@@ -23,7 +27,7 @@ export default function Experience() {
       <Suspense>
         <Physics debug={physicsDebug}>
           <Lights />
-          <Level />
+          <Level count={blocksCount} seed={blocksSeed} />
           <Player cameraEnabled={!orbitControls} />
         </Physics>
       </Suspense>
